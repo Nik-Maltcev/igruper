@@ -1,7 +1,7 @@
 [
   {
     "id": "renault_4",
-    "name": "Renault 4",
+    "name": "Renault 4 #1",
     "image": "/cars_sm/Renault%204_3.jpg",
     "price": 4800,
     "stats": {
@@ -30,7 +30,7 @@
   },
   {
     "id": "ford_capri",
-    "name": "Ford Capri",
+    "name": "Ford Capri #1",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 5000,
     "stats": {
@@ -59,7 +59,7 @@
   },
   {
     "id": "citroen_2_cv_4x4_sahara",
-    "name": "Citroen 2 CV 4x4 Sahara",
+    "name": "Citroen 2 CV 4x4 Sahara #1",
     "image": "/cars_sm/Citroen%202%20CV%204x4%20Sahara_160.jpg",
     "price": 6800,
     "stats": {
@@ -117,7 +117,7 @@
   },
   {
     "id": "ford_falcon",
-    "name": "Ford Falcon",
+    "name": "Ford Falcon #1",
     "image": "/cars_sm/Ford%20Falcon_113.jpg",
     "price": 8500,
     "stats": {
@@ -146,7 +146,7 @@
   },
   {
     "id": "renault_alpine_a108_sport",
-    "name": "Renault Alpine A108 Sport",
+    "name": "Renault Alpine A108 Sport #1",
     "image": "/cars_sm/Renault%20Alpine%20A108%20Sport_68.jpg",
     "price": 9600,
     "stats": {
@@ -264,7 +264,7 @@
   },
   {
     "id": "chevrolet_biscayne",
-    "name": "Chevrolet Biscayne",
+    "name": "Chevrolet Biscayne #1",
     "image": "/cars_sm/Chevrolet%20Biscayne_21.jpg",
     "price": 15000,
     "stats": {
@@ -353,7 +353,7 @@
   },
   {
     "id": "chevrolet_impala",
-    "name": "Chevrolet Impala",
+    "name": "Chevrolet Impala #1",
     "image": "/cars_sm/Chevrolet%20Impala_383.jpg",
     "price": 20000,
     "stats": {
@@ -414,7 +414,7 @@
   },
   {
     "id": "chevrolet_corvette",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #1",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 21500,
     "stats": {
@@ -472,7 +472,7 @@
   },
   {
     "id": "ford_thunderbird",
-    "name": "Ford Thunderbird",
+    "name": "Ford Thunderbird #1",
     "image": "/cars_sm/Ford%20Thunderbird_1413.jpg",
     "price": 26000,
     "stats": {
@@ -747,7 +747,7 @@
   },
   {
     "id": "ford_capri_2",
-    "name": "Ford Capri",
+    "name": "Ford Capri #2",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 5100,
     "stats": {
@@ -776,7 +776,7 @@
   },
   {
     "id": "citroen_2_cv_4x4_sahara_2",
-    "name": "Citroen 2 CV 4x4 Sahara",
+    "name": "Citroen 2 CV 4x4 Sahara #2",
     "image": "/cars_sm/Citroen%202%20CV%204x4%20Sahara_160.jpg",
     "price": 6000,
     "stats": {
@@ -950,7 +950,7 @@
   },
   {
     "id": "renault_alpine_a108_sport_2",
-    "name": "Renault Alpine A108 Sport",
+    "name": "Renault Alpine A108 Sport #2",
     "image": "/cars_sm/Renault%20Alpine%20A108%20Sport_68.jpg",
     "price": 9000,
     "stats": {
@@ -979,7 +979,7 @@
   },
   {
     "id": "renault_alpine_a_110",
-    "name": "Renault Alpine A 110",
+    "name": "Renault Alpine A 110 #1",
     "image": "/cars_sm/Renault%20Alpine%20A%20110_125.jpg",
     "price": 10600,
     "stats": {
@@ -1066,7 +1066,7 @@
   },
   {
     "id": "citroen_ds_21",
-    "name": "Citroen DS 21",
+    "name": "Citroen DS 21 #1",
     "image": "/cars_sm/Citroen%20DS%2021_178.jpg",
     "price": 13800,
     "stats": {
@@ -1125,7 +1125,7 @@
   },
   {
     "id": "ford_f_100_pickup",
-    "name": "Ford F-100 Pickup",
+    "name": "Ford F-100 Pickup #1",
     "image": "/cars_sm/Ford%20F-100%20Pickup_604.jpg",
     "price": 16000,
     "stats": {
@@ -1214,7 +1214,7 @@
   },
   {
     "id": "chevrolet_impala_2",
-    "name": "Chevrolet Impala",
+    "name": "Chevrolet Impala #2",
     "image": "/cars_sm/Chevrolet%20Impala_383.jpg",
     "price": 22000,
     "stats": {
@@ -1519,7 +1519,7 @@
   },
   {
     "id": "ford_capri_3",
-    "name": "Ford Capri",
+    "name": "Ford Capri #3",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 5500,
     "stats": {
@@ -1606,7 +1606,7 @@
   },
   {
     "id": "ford_falcon_2",
-    "name": "Ford Falcon",
+    "name": "Ford Falcon #2",
     "image": "/cars_sm/Ford%20Falcon_113.jpg",
     "price": 7600,
     "stats": {
@@ -1665,7 +1665,7 @@
   },
   {
     "id": "bmw_1800",
-    "name": "BMW 1800",
+    "name": "BMW 1800 #1",
     "image": "/cars_sm/BMW%201800_117.jpg",
     "price": 9800,
     "stats": {
@@ -1724,7 +1724,7 @@
   },
   {
     "id": "ford_mustang",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #1",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 9900,
     "stats": {
@@ -1784,7 +1784,7 @@
   },
   {
     "id": "renault_alpine_a_110_2",
-    "name": "Renault Alpine A 110",
+    "name": "Renault Alpine A 110 #2",
     "image": "/cars_sm/Renault%20Alpine%20A%20110_125.jpg",
     "price": 10900,
     "stats": {
@@ -1872,7 +1872,7 @@
   },
   {
     "id": "porsche_911_2_0",
-    "name": "Porsche 911 2.0",
+    "name": "Porsche 911 2.0 #1",
     "image": "https://placehold.co/600x300/111/555?text=Porsche%20911%202.0",
     "price": 18700,
     "stats": {
@@ -1901,7 +1901,7 @@
   },
   {
     "id": "chevrolet_corvette_2",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #2",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 20000,
     "stats": {
@@ -1930,7 +1930,7 @@
   },
   {
     "id": "ford_thunderbird_2",
-    "name": "Ford Thunderbird",
+    "name": "Ford Thunderbird #2",
     "image": "/cars_sm/Ford%20Thunderbird_1413.jpg",
     "price": 25000,
     "stats": {
@@ -2019,7 +2019,7 @@
   },
   {
     "id": "chevrolet_corvette_sting_ray",
-    "name": "Chevrolet Corvette Sting Ray",
+    "name": "Chevrolet Corvette Sting Ray #1",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 32000,
     "stats": {
@@ -2293,7 +2293,7 @@
   },
   {
     "id": "citroen_2_cv_4x4_sahara_3",
-    "name": "Citroen 2 CV 4x4 Sahara",
+    "name": "Citroen 2 CV 4x4 Sahara #3",
     "image": "/cars_sm/Citroen%202%20CV%204x4%20Sahara_160.jpg",
     "price": 5000,
     "stats": {
@@ -2322,7 +2322,7 @@
   },
   {
     "id": "ford_capri_4",
-    "name": "Ford Capri",
+    "name": "Ford Capri #4",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 5500,
     "stats": {
@@ -2380,7 +2380,7 @@
   },
   {
     "id": "ford_falcon_3",
-    "name": "Ford Falcon",
+    "name": "Ford Falcon #3",
     "image": "/cars_sm/Ford%20Falcon_113.jpg",
     "price": 7900,
     "stats": {
@@ -2469,7 +2469,7 @@
   },
   {
     "id": "renault_alpine_a_110_3",
-    "name": "Renault Alpine A 110",
+    "name": "Renault Alpine A 110 #3",
     "image": "/cars_sm/Renault%20Alpine%20A%20110_125.jpg",
     "price": 11400,
     "stats": {
@@ -2557,7 +2557,7 @@
   },
   {
     "id": "citroen_ds_21_2",
-    "name": "Citroen DS 21",
+    "name": "Citroen DS 21 #2",
     "image": "/cars_sm/Citroen%20DS%2021_178.jpg",
     "price": 13800,
     "stats": {
@@ -2618,7 +2618,7 @@
   },
   {
     "id": "porsche_911_2_0_2",
-    "name": "Porsche 911 2.0",
+    "name": "Porsche 911 2.0 #2",
     "image": "https://placehold.co/600x300/111/555?text=Porsche%20911%202.0",
     "price": 19300,
     "stats": {
@@ -2766,7 +2766,7 @@
   },
   {
     "id": "chevrolet_caprice",
-    "name": "Chevrolet Caprice",
+    "name": "Chevrolet Caprice #1",
     "image": "/cars_sm/Chevrolet%20Caprice_1285.jpg",
     "price": 27400,
     "stats": {
@@ -2827,7 +2827,7 @@
   },
   {
     "id": "chevrolet_biscayne_2",
-    "name": "Chevrolet Biscayne",
+    "name": "Chevrolet Biscayne #2",
     "image": "/cars_sm/Chevrolet%20Biscayne_21.jpg",
     "price": 29600,
     "stats": {
@@ -2917,7 +2917,7 @@
   },
   {
     "id": "ford_shelby_gt350",
-    "name": "Ford Shelby GT350",
+    "name": "Ford Shelby GT350 #1",
     "image": "/cars_sm/Ford%20Shelby%20GT350_1719.jpg",
     "price": 30000,
     "stats": {
@@ -3037,7 +3037,7 @@
   },
   {
     "id": "chevrolet_corvette_sting_ray_2",
-    "name": "Chevrolet Corvette Sting Ray",
+    "name": "Chevrolet Corvette Sting Ray #2",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 35000,
     "stats": {
@@ -3248,7 +3248,7 @@
   },
   {
     "id": "citroen_2_cv_4x4_sahara_4",
-    "name": "Citroen 2 CV 4x4 Sahara",
+    "name": "Citroen 2 CV 4x4 Sahara #4",
     "image": "/cars_sm/Citroen%202%20CV%204x4%20Sahara_160.jpg",
     "price": 5500,
     "stats": {
@@ -3277,7 +3277,7 @@
   },
   {
     "id": "ford_capri_5",
-    "name": "Ford Capri",
+    "name": "Ford Capri #5",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 6000,
     "stats": {
@@ -3306,7 +3306,7 @@
   },
   {
     "id": "chevrolet_camaro",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #1",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 9300,
     "stats": {
@@ -3337,7 +3337,7 @@
   },
   {
     "id": "bmw_1800_2",
-    "name": "BMW 1800",
+    "name": "BMW 1800 #2",
     "image": "/cars_sm/BMW%201800_117.jpg",
     "price": 10000,
     "stats": {
@@ -3396,7 +3396,7 @@
   },
   {
     "id": "ford_mustang_gt",
-    "name": "Ford Mustang GT",
+    "name": "Ford Mustang GT #1",
     "image": "/cars_sm/Ford%20Mustang%20GT_1885.jpg",
     "price": 12000,
     "stats": {
@@ -3427,7 +3427,7 @@
   },
   {
     "id": "chevrolet_camaro_rs",
-    "name": "Chevrolet Camaro RS",
+    "name": "Chevrolet Camaro RS #1",
     "image": "/cars_sm/Chevrolet%20Camaro%20RS_1171.jpg",
     "price": 13500,
     "stats": {
@@ -3458,7 +3458,7 @@
   },
   {
     "id": "bmw_2500",
-    "name": "BMW 2500",
+    "name": "BMW 2500 #1",
     "image": "/cars_sm/BMW%202500_239.jpg",
     "price": 14200,
     "stats": {
@@ -3578,7 +3578,7 @@
   },
   {
     "id": "chevrolet_c30",
-    "name": "Chevrolet C30",
+    "name": "Chevrolet C30 #1",
     "image": "/cars_sm/Chevrolet%20C30_247.jpg",
     "price": 15900,
     "stats": {
@@ -3607,7 +3607,7 @@
   },
   {
     "id": "porsche_911_2_0_3",
-    "name": "Porsche 911 2.0",
+    "name": "Porsche 911 2.0 #3",
     "image": "https://placehold.co/600x300/111/555?text=Porsche%20911%202.0",
     "price": 18000,
     "stats": {
@@ -3636,7 +3636,7 @@
   },
   {
     "id": "chevrolet_corvette_3",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #3",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 18800,
     "stats": {
@@ -3694,7 +3694,7 @@
   },
   {
     "id": "bmw_e9",
-    "name": "BMW E9",
+    "name": "BMW E9 #1",
     "image": "/cars_sm/BMW%20E9_255.jpg",
     "price": 22200,
     "stats": {
@@ -3932,7 +3932,7 @@
   },
   {
     "id": "lamborghini_espada",
-    "name": "Lamborghini Espada",
+    "name": "Lamborghini Espada #1",
     "image": "/cars_sm/LamborghiniEspada_271.jpg",
     "price": 32000,
     "stats": {
@@ -3961,7 +3961,7 @@
   },
   {
     "id": "ferrari_365_gtb_4_daytona",
-    "name": "Ferrari 365 GTB/4 Daytona",
+    "name": "Ferrari 365 GTB/4 Daytona #1",
     "image": "https://placehold.co/600x300/111/555?text=Ferrari%20365%20GTB%2F4%20Da",
     "price": 35000,
     "stats": {
@@ -3990,7 +3990,7 @@
   },
   {
     "id": "chevrolet_corvette_sting_ray_3",
-    "name": "Chevrolet Corvette Sting Ray",
+    "name": "Chevrolet Corvette Sting Ray #3",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 35000,
     "stats": {
@@ -4262,7 +4262,7 @@
   },
   {
     "id": "ford_shelby_gt500_super_snake",
-    "name": "Ford Shelby GT500 Super Snake",
+    "name": "Ford Shelby GT500 Super Snake #1",
     "image": "/cars_sm/Ford%20Shelby%20GT500%20Super%20Snake_1846.jpg",
     "price": 50000,
     "stats": {
@@ -4296,7 +4296,7 @@
   },
   {
     "id": "renault_4_2",
-    "name": "Renault 4",
+    "name": "Renault 4 #2",
     "image": "/cars_sm/Renault%204_3.jpg",
     "price": 5000,
     "stats": {
@@ -4412,7 +4412,7 @@
   },
   {
     "id": "porsche_914",
-    "name": "Porsche 914",
+    "name": "Porsche 914 #1",
     "image": "/cars_sm/Porsche%20914_432.jpg",
     "price": 10000,
     "stats": {
@@ -4588,7 +4588,7 @@
   },
   {
     "id": "chevrolet_corvette_4",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #4",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 18800,
     "stats": {
@@ -4677,7 +4677,7 @@
   },
   {
     "id": "bmw_e9_2",
-    "name": "BMW E9",
+    "name": "BMW E9 #2",
     "image": "/cars_sm/BMW%20E9_255.jpg",
     "price": 20200,
     "stats": {
@@ -4766,7 +4766,7 @@
   },
   {
     "id": "chevrolet_corvette_stingray",
-    "name": "Chevrolet Corvette Stingray",
+    "name": "Chevrolet Corvette Stingray #1",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 22900,
     "stats": {
@@ -5192,7 +5192,7 @@
   },
   {
     "id": "renault_5",
-    "name": "Renault 5",
+    "name": "Renault 5 #1",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5200,
     "stats": {
@@ -5250,7 +5250,7 @@
   },
   {
     "id": "renault_17",
-    "name": "Renault 17",
+    "name": "Renault 17 #1",
     "image": "/cars_sm/Renault%2017_361.jpg",
     "price": 6900,
     "stats": {
@@ -5279,7 +5279,7 @@
   },
   {
     "id": "citroen_mehari",
-    "name": "Citroen Mehari",
+    "name": "Citroen Mehari #1",
     "image": "/cars_sm/Citroen%20Mehari_363.jpg",
     "price": 7000,
     "stats": {
@@ -5308,7 +5308,7 @@
   },
   {
     "id": "ford_capri_6",
-    "name": "Ford Capri",
+    "name": "Ford Capri #6",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 7500,
     "stats": {
@@ -5337,7 +5337,7 @@
   },
   {
     "id": "renault_alpine_a_310",
-    "name": "Renault Alpine A 310",
+    "name": "Renault Alpine A 310 #1",
     "image": "/cars_sm/Renault%20Alpine%20A%20310_513.jpg",
     "price": 12000,
     "stats": {
@@ -5395,7 +5395,7 @@
   },
   {
     "id": "ford_mustang_mach_1",
-    "name": "Ford Mustang Mach 1",
+    "name": "Ford Mustang Mach 1 #1",
     "image": "/cars_sm/Ford%20Mustang%20Mach%201_371.jpg",
     "price": 13100,
     "stats": {
@@ -5574,7 +5574,7 @@
   },
   {
     "id": "chevrolet_impala_3",
-    "name": "Chevrolet Impala",
+    "name": "Chevrolet Impala #3",
     "image": "/cars_sm/Chevrolet%20Impala_383.jpg",
     "price": 19500,
     "stats": {
@@ -5604,7 +5604,7 @@
   },
   {
     "id": "bmw_3_0_cs",
-    "name": "BMW 3.0 CS",
+    "name": "BMW 3.0 CS #1",
     "image": "https://placehold.co/600x300/111/555?text=BMW%203.0%20CS",
     "price": 20300,
     "stats": {
@@ -5720,7 +5720,7 @@
   },
   {
     "id": "porsche_911_carrera_rs",
-    "name": "Porsche 911 Carrera RS",
+    "name": "Porsche 911 Carrera RS #1",
     "image": "/cars_sm/Porsche%20911%20Carrera%20RS_1051.jpg",
     "price": 24000,
     "stats": {
@@ -5900,7 +5900,7 @@
   },
   {
     "id": "lamborghini_espada_2",
-    "name": "Lamborghini Espada",
+    "name": "Lamborghini Espada #2",
     "image": "/cars_sm/LamborghiniEspada_271.jpg",
     "price": 32000,
     "stats": {
@@ -5929,7 +5929,7 @@
   },
   {
     "id": "ferrari_365_gtb_4_daytona_2",
-    "name": "Ferrari 365 GTB/4 Daytona",
+    "name": "Ferrari 365 GTB/4 Daytona #2",
     "image": "https://placehold.co/600x300/111/555?text=Ferrari%20365%20GTB%2F4%20Da",
     "price": 34000,
     "stats": {
@@ -6079,7 +6079,7 @@
   },
   {
     "id": "renault_4_pickup",
-    "name": "Renault 4 PickUp",
+    "name": "Renault 4 PickUp #1",
     "image": "/cars_sm/Renault%204%20PickUp_418.jpg",
     "price": 5000,
     "stats": {
@@ -6108,7 +6108,7 @@
   },
   {
     "id": "renault_5_2",
-    "name": "Renault 5",
+    "name": "Renault 5 #2",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5200,
     "stats": {
@@ -6195,7 +6195,7 @@
   },
   {
     "id": "ford_escort_rs2000",
-    "name": "Ford Escort RS2000",
+    "name": "Ford Escort RS2000 #1",
     "image": "/cars_sm/Ford%20Escort%20RS2000_426.jpg",
     "price": 8200,
     "stats": {
@@ -6224,7 +6224,7 @@
   },
   {
     "id": "ford_capri_7",
-    "name": "Ford Capri",
+    "name": "Ford Capri #7",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 9000,
     "stats": {
@@ -6253,7 +6253,7 @@
   },
   {
     "id": "renault_rodeo_6",
-    "name": "Renault Rodeo 6",
+    "name": "Renault Rodeo 6 #1",
     "image": "/cars_sm/Renault%20Rodeo%206_430.jpg",
     "price": 9400,
     "stats": {
@@ -6282,7 +6282,7 @@
   },
   {
     "id": "porsche_914_2",
-    "name": "Porsche 914",
+    "name": "Porsche 914 #2",
     "image": "/cars_sm/Porsche%20914_432.jpg",
     "price": 10000,
     "stats": {
@@ -6311,7 +6311,7 @@
   },
   {
     "id": "bmw_520i",
-    "name": "BMW 520i",
+    "name": "BMW 520i #1",
     "image": "/cars_sm/BMW%20520i_434.jpg",
     "price": 10400,
     "stats": {
@@ -6398,7 +6398,7 @@
   },
   {
     "id": "citroen_cx_2200",
-    "name": "Citroen CX 2200",
+    "name": "Citroen CX 2200 #1",
     "image": "/cars_sm/Citroen%20CX%202200_440.jpg",
     "price": 11500,
     "stats": {
@@ -6488,7 +6488,7 @@
   },
   {
     "id": "bmw_e9_3",
-    "name": "BMW E9",
+    "name": "BMW E9 #3",
     "image": "/cars_sm/BMW%20E9_255.jpg",
     "price": 17200,
     "stats": {
@@ -6575,7 +6575,7 @@
   },
   {
     "id": "chevrolet_c30_2",
-    "name": "Chevrolet C30",
+    "name": "Chevrolet C30 #2",
     "image": "/cars_sm/Chevrolet%20C30_247.jpg",
     "price": 18900,
     "stats": {
@@ -6604,7 +6604,7 @@
   },
   {
     "id": "chevrolet_camaro_z28",
-    "name": "Chevrolet Camaro Z28",
+    "name": "Chevrolet Camaro Z28 #1",
     "image": "/cars_sm/Chevrolet%20Camaro%20Z28_454.jpg",
     "price": 19000,
     "stats": {
@@ -6635,7 +6635,7 @@
   },
   {
     "id": "bmw_3_0_cs_2",
-    "name": "BMW 3.0 CS",
+    "name": "BMW 3.0 CS #2",
     "image": "https://placehold.co/600x300/111/555?text=BMW%203.0%20CS",
     "price": 19100,
     "stats": {
@@ -6694,7 +6694,7 @@
   },
   {
     "id": "porsche_911",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #1",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 20000,
     "stats": {
@@ -6752,7 +6752,7 @@
   },
   {
     "id": "chevrolet_corvette_5",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #5",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 24600,
     "stats": {
@@ -6811,7 +6811,7 @@
   },
   {
     "id": "porsche_911_turbo",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #1",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 27000,
     "stats": {
@@ -7117,7 +7117,7 @@
   },
   {
     "id": "renault_4_pickup_2",
-    "name": "Renault 4 PickUp",
+    "name": "Renault 4 PickUp #2",
     "image": "/cars_sm/Renault%204%20PickUp_418.jpg",
     "price": 5000,
     "stats": {
@@ -7146,7 +7146,7 @@
   },
   {
     "id": "renault_5_3",
-    "name": "Renault 5",
+    "name": "Renault 5 #3",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5200,
     "stats": {
@@ -7175,7 +7175,7 @@
   },
   {
     "id": "ford_fiesta",
-    "name": "Ford Fiesta",
+    "name": "Ford Fiesta #1",
     "image": "/cars_sm/Ford%20Fiesta_1153.jpg",
     "price": 5200,
     "stats": {
@@ -7262,7 +7262,7 @@
   },
   {
     "id": "renault_17_2",
-    "name": "Renault 17",
+    "name": "Renault 17 #2",
     "image": "/cars_sm/Renault%2017_361.jpg",
     "price": 7500,
     "stats": {
@@ -7407,7 +7407,7 @@
   },
   {
     "id": "bmw_2500_2",
-    "name": "BMW 2500",
+    "name": "BMW 2500 #2",
     "image": "/cars_sm/BMW%202500_239.jpg",
     "price": 11800,
     "stats": {
@@ -7466,7 +7466,7 @@
   },
   {
     "id": "renault_alpine_a_310_2",
-    "name": "Renault Alpine A 310",
+    "name": "Renault Alpine A 310 #2",
     "image": "/cars_sm/Renault%20Alpine%20A%20310_513.jpg",
     "price": 13000,
     "stats": {
@@ -7495,7 +7495,7 @@
   },
   {
     "id": "porsche_914_3",
-    "name": "Porsche 914",
+    "name": "Porsche 914 #3",
     "image": "/cars_sm/Porsche%20914_432.jpg",
     "price": 13000,
     "stats": {
@@ -7553,7 +7553,7 @@
   },
   {
     "id": "bmw_530i_sedan",
-    "name": "BMW 530i Sedan",
+    "name": "BMW 530i Sedan #1",
     "image": "/cars_sm/BMW%20530i%20Sedan_519.jpg",
     "price": 13800,
     "stats": {
@@ -7641,7 +7641,7 @@
   },
   {
     "id": "porsche_924",
-    "name": "Porsche 924",
+    "name": "Porsche 924 #1",
     "image": "/cars_sm/Porsche%20924_525.jpg",
     "price": 14700,
     "stats": {
@@ -7817,7 +7817,7 @@
   },
   {
     "id": "porsche_911_2",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #2",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 20000,
     "stats": {
@@ -8353,7 +8353,7 @@
   },
   {
     "id": "ford_fiesta_2",
-    "name": "Ford Fiesta",
+    "name": "Ford Fiesta #2",
     "image": "/cars_sm/Ford%20Fiesta_1153.jpg",
     "price": 5500,
     "stats": {
@@ -8411,7 +8411,7 @@
   },
   {
     "id": "renault_18",
-    "name": "Renault 18",
+    "name": "Renault 18 #1",
     "image": "/cars_sm/Renault%2018_578.jpg",
     "price": 7000,
     "stats": {
@@ -8469,7 +8469,7 @@
   },
   {
     "id": "citroen_mehari_2",
-    "name": "Citroen Mehari",
+    "name": "Citroen Mehari #2",
     "image": "/cars_sm/Citroen%20Mehari_363.jpg",
     "price": 8000,
     "stats": {
@@ -8498,7 +8498,7 @@
   },
   {
     "id": "ford_capri_8",
-    "name": "Ford Capri",
+    "name": "Ford Capri #8",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 8000,
     "stats": {
@@ -8527,7 +8527,7 @@
   },
   {
     "id": "ford_escort_rs2000_2",
-    "name": "Ford Escort RS2000",
+    "name": "Ford Escort RS2000 #2",
     "image": "/cars_sm/Ford%20Escort%20RS2000_426.jpg",
     "price": 8200,
     "stats": {
@@ -8556,7 +8556,7 @@
   },
   {
     "id": "renault_30_tx",
-    "name": "Renault 30 TX",
+    "name": "Renault 30 TX #1",
     "image": "/cars_sm/Renault%2030%20TX_588.jpg",
     "price": 9000,
     "stats": {
@@ -8616,7 +8616,7 @@
   },
   {
     "id": "ford_thunderbird_3",
-    "name": "Ford Thunderbird",
+    "name": "Ford Thunderbird #3",
     "image": "/cars_sm/Ford%20Thunderbird_1413.jpg",
     "price": 14000,
     "stats": {
@@ -8736,7 +8736,7 @@
   },
   {
     "id": "porsche_911_3",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #3",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 20000,
     "stats": {
@@ -8795,7 +8795,7 @@
   },
   {
     "id": "ford_f_100_pickup_2",
-    "name": "Ford F-100 Pickup",
+    "name": "Ford F-100 Pickup #2",
     "image": "/cars_sm/Ford%20F-100%20Pickup_604.jpg",
     "price": 21000,
     "stats": {
@@ -8824,7 +8824,7 @@
   },
   {
     "id": "chevrolet_suburban",
-    "name": "Chevrolet Suburban",
+    "name": "Chevrolet Suburban #1",
     "image": "/cars_sm/Chevrolet%20Suburban_2057.jpg",
     "price": 22000,
     "stats": {
@@ -9337,7 +9337,7 @@
   },
   {
     "id": "renault_5_4",
-    "name": "Renault 5",
+    "name": "Renault 5 #4",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5000,
     "stats": {
@@ -9366,7 +9366,7 @@
   },
   {
     "id": "ford_fiesta_3",
-    "name": "Ford Fiesta",
+    "name": "Ford Fiesta #3",
     "image": "/cars_sm/Ford%20Fiesta_1153.jpg",
     "price": 6000,
     "stats": {
@@ -9453,7 +9453,7 @@
   },
   {
     "id": "renault_fuego_gtl",
-    "name": "Renault Fuego GTL",
+    "name": "Renault Fuego GTL #1",
     "image": "/cars_sm/Renault%20Fuego%20GTL_649.jpg",
     "price": 7400,
     "stats": {
@@ -9482,7 +9482,7 @@
   },
   {
     "id": "ford_mustang_2",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #2",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 9000,
     "stats": {
@@ -9511,7 +9511,7 @@
   },
   {
     "id": "renault_rodeo_6_2",
-    "name": "Renault Rodeo 6",
+    "name": "Renault Rodeo 6 #2",
     "image": "/cars_sm/Renault%20Rodeo%206_430.jpg",
     "price": 9200,
     "stats": {
@@ -9540,7 +9540,7 @@
   },
   {
     "id": "renault_30_tx_2",
-    "name": "Renault 30 TX",
+    "name": "Renault 30 TX #2",
     "image": "/cars_sm/Renault%2030%20TX_588.jpg",
     "price": 9300,
     "stats": {
@@ -9570,7 +9570,7 @@
   },
   {
     "id": "renault_18_turbo_mt",
-    "name": "Renault 18 Turbo MT",
+    "name": "Renault 18 Turbo MT #1",
     "image": "/cars_sm/Renault%2018%20Turbo%20MT_657.jpg",
     "price": 10200,
     "stats": {
@@ -9629,7 +9629,7 @@
   },
   {
     "id": "citroen_cx_2200_2",
-    "name": "Citroen CX 2200",
+    "name": "Citroen CX 2200 #2",
     "image": "/cars_sm/Citroen%20CX%202200_440.jpg",
     "price": 11500,
     "stats": {
@@ -9718,7 +9718,7 @@
   },
   {
     "id": "porsche_924_2",
-    "name": "Porsche 924",
+    "name": "Porsche 924 #2",
     "image": "/cars_sm/Porsche%20924_525.jpg",
     "price": 15500,
     "stats": {
@@ -9867,7 +9867,7 @@
   },
   {
     "id": "porsche_911_4",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #4",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 20000,
     "stats": {
@@ -10076,7 +10076,7 @@
   },
   {
     "id": "porsche_911_turbo_2",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #2",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 29900,
     "stats": {
@@ -10350,7 +10350,7 @@
   },
   {
     "id": "renault_11",
-    "name": "Renault 11",
+    "name": "Renault 11 #1",
     "image": "/cars_sm/Renault%2011_710.jpg",
     "price": 4600,
     "stats": {
@@ -10408,7 +10408,7 @@
   },
   {
     "id": "renault_5_5",
-    "name": "Renault 5",
+    "name": "Renault 5 #5",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5500,
     "stats": {
@@ -10555,7 +10555,7 @@
   },
   {
     "id": "renault_18_2",
-    "name": "Renault 18",
+    "name": "Renault 18 #2",
     "image": "/cars_sm/Renault%2018_578.jpg",
     "price": 8500,
     "stats": {
@@ -10644,7 +10644,7 @@
   },
   {
     "id": "renault_18_turbo_mt_2",
-    "name": "Renault 18 Turbo MT",
+    "name": "Renault 18 Turbo MT #2",
     "image": "/cars_sm/Renault%2018%20Turbo%20MT_657.jpg",
     "price": 9100,
     "stats": {
@@ -10673,7 +10673,7 @@
   },
   {
     "id": "chevrolet_camaro_2",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #2",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 10000,
     "stats": {
@@ -10761,7 +10761,7 @@
   },
   {
     "id": "ford_ranger",
-    "name": "Ford Ranger",
+    "name": "Ford Ranger #1",
     "image": "/cars_sm/Ford%20Ranger_1616.jpg",
     "price": 15800,
     "stats": {
@@ -10848,7 +10848,7 @@
   },
   {
     "id": "chevrolet_camaro_z28_2",
-    "name": "Chevrolet Camaro Z28",
+    "name": "Chevrolet Camaro Z28 #2",
     "image": "/cars_sm/Chevrolet%20Camaro%20Z28_454.jpg",
     "price": 17700,
     "stats": {
@@ -10879,7 +10879,7 @@
   },
   {
     "id": "porsche_944",
-    "name": "Porsche 944",
+    "name": "Porsche 944 #1",
     "image": "/cars_sm/Porsche%20944_1002.jpg",
     "price": 18000,
     "stats": {
@@ -10909,7 +10909,7 @@
   },
   {
     "id": "bmw_528i",
-    "name": "BMW 528i",
+    "name": "BMW 528i #1",
     "image": "/cars_sm/BMW%20528i_1228.jpg",
     "price": 19200,
     "stats": {
@@ -10939,7 +10939,7 @@
   },
   {
     "id": "porsche_911_5",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #5",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 20000,
     "stats": {
@@ -11057,7 +11057,7 @@
   },
   {
     "id": "chevrolet_corvette_6",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #6",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 24600,
     "stats": {
@@ -11115,7 +11115,7 @@
   },
   {
     "id": "porsche_911_turbo_3",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #3",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 26000,
     "stats": {
@@ -11476,7 +11476,7 @@
   },
   {
     "id": "renault_5_6",
-    "name": "Renault 5",
+    "name": "Renault 5 #6",
     "image": "/cars_sm/Renault%205_357.jpg",
     "price": 5500,
     "stats": {
@@ -11534,7 +11534,7 @@
   },
   {
     "id": "renault_fuego_gtl_2",
-    "name": "Renault Fuego GTL",
+    "name": "Renault Fuego GTL #2",
     "image": "/cars_sm/Renault%20Fuego%20GTL_649.jpg",
     "price": 7500,
     "stats": {
@@ -11563,7 +11563,7 @@
   },
   {
     "id": "ford_crown_victoria",
-    "name": "Ford Crown Victoria",
+    "name": "Ford Crown Victoria #1",
     "image": "/cars_sm/Ford%20Crown%20Victoria_1226.jpg",
     "price": 9000,
     "stats": {
@@ -11624,7 +11624,7 @@
   },
   {
     "id": "renault_30_tx_3",
-    "name": "Renault 30 TX",
+    "name": "Renault 30 TX #3",
     "image": "/cars_sm/Renault%2030%20TX_588.jpg",
     "price": 9500,
     "stats": {
@@ -11863,7 +11863,7 @@
   },
   {
     "id": "ford_ranger_2",
-    "name": "Ford Ranger",
+    "name": "Ford Ranger #2",
     "image": "/cars_sm/Ford%20Ranger_1616.jpg",
     "price": 14200,
     "stats": {
@@ -11952,7 +11952,7 @@
   },
   {
     "id": "renault_alpine_gta_v6_gt",
-    "name": "Renault Alpine GTA V6 GT",
+    "name": "Renault Alpine GTA V6 GT #1",
     "image": "/cars_sm/Renault%20Alpine%20GTA%20V6%20GT_819.jpg",
     "price": 16500,
     "stats": {
@@ -12098,7 +12098,7 @@
   },
   {
     "id": "porsche_911_6",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #6",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 22000,
     "stats": {
@@ -12127,7 +12127,7 @@
   },
   {
     "id": "chevrolet_corvette_7",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #7",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 25000,
     "stats": {
@@ -12216,7 +12216,7 @@
   },
   {
     "id": "ferrari_testarossa",
-    "name": "Ferrari Testarossa",
+    "name": "Ferrari Testarossa #1",
     "image": "/cars_sm/FerrariTestarossa_1016.jpg",
     "price": 33500,
     "stats": {
@@ -12423,7 +12423,7 @@
   },
   {
     "id": "renault_11_2",
-    "name": "Renault 11",
+    "name": "Renault 11 #2",
     "image": "/cars_sm/Renault%2011_710.jpg",
     "price": 5300,
     "stats": {
@@ -12512,7 +12512,7 @@
   },
   {
     "id": "chevrolet_monte_carlo_ss",
-    "name": "Chevrolet Monte Carlo SS",
+    "name": "Chevrolet Monte Carlo SS #1",
     "image": "/cars_sm/Chevrolet%20Monte%20Carlo%20SS_858.jpg",
     "price": 10900,
     "stats": {
@@ -12958,7 +12958,7 @@
   },
   {
     "id": "porsche_911_turbo_4",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #4",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 27700,
     "stats": {
@@ -13381,7 +13381,7 @@
   },
   {
     "id": "ford_capri_9",
-    "name": "Ford Capri",
+    "name": "Ford Capri #9",
     "image": "/cars_sm/Ford%20Capri_162.jpg",
     "price": 8500,
     "stats": {
@@ -14093,7 +14093,7 @@
   },
   {
     "id": "renault_clio",
-    "name": "Renault Clio",
+    "name": "Renault Clio #1",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 4500,
     "stats": {
@@ -14418,7 +14418,7 @@
   },
   {
     "id": "bmw_535i_sedan",
-    "name": "BMW 535i Sedan",
+    "name": "BMW 535i Sedan #1",
     "image": "/cars_sm/BMW%20535i%20Sedan_1118.jpg",
     "price": 16600,
     "stats": {
@@ -14447,7 +14447,7 @@
   },
   {
     "id": "renault_alpine_gta_v6_gt_2",
-    "name": "Renault Alpine GTA V6 GT",
+    "name": "Renault Alpine GTA V6 GT #2",
     "image": "/cars_sm/Renault%20Alpine%20GTA%20V6%20GT_819.jpg",
     "price": 16800,
     "stats": {
@@ -14623,7 +14623,7 @@
   },
   {
     "id": "porsche_944_2",
-    "name": "Porsche 944",
+    "name": "Porsche 944 #2",
     "image": "/cars_sm/Porsche%20944_1002.jpg",
     "price": 19400,
     "stats": {
@@ -14830,7 +14830,7 @@
   },
   {
     "id": "ferrari_testarossa_2",
-    "name": "Ferrari Testarossa",
+    "name": "Ferrari Testarossa #2",
     "image": "/cars_sm/FerrariTestarossa_1016.jpg",
     "price": 33500,
     "stats": {
@@ -14919,7 +14919,7 @@
   },
   {
     "id": "renault_clio_2",
-    "name": "Renault Clio",
+    "name": "Renault Clio #2",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 4800,
     "stats": {
@@ -15006,7 +15006,7 @@
   },
   {
     "id": "renault_safrane",
-    "name": "Renault Safrane",
+    "name": "Renault Safrane #1",
     "image": "/cars_sm/Renault%20Safrane_1029.jpg",
     "price": 11000,
     "stats": {
@@ -15065,7 +15065,7 @@
   },
   {
     "id": "ford_mustang_3",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #3",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 12000,
     "stats": {
@@ -15124,7 +15124,7 @@
   },
   {
     "id": "chevrolet_caprice_2",
-    "name": "Chevrolet Caprice",
+    "name": "Chevrolet Caprice #2",
     "image": "/cars_sm/Chevrolet%20Caprice_1285.jpg",
     "price": 14200,
     "stats": {
@@ -15183,7 +15183,7 @@
   },
   {
     "id": "ford_mustang_gt_2",
-    "name": "Ford Mustang GT",
+    "name": "Ford Mustang GT #2",
     "image": "/cars_sm/Ford%20Mustang%20GT_1885.jpg",
     "price": 16400,
     "stats": {
@@ -15244,7 +15244,7 @@
   },
   {
     "id": "ford_f_150",
-    "name": "Ford F-150",
+    "name": "Ford F-150 #1",
     "image": "/cars_sm/Ford%20F-150_1234.jpg",
     "price": 19000,
     "stats": {
@@ -15304,7 +15304,7 @@
   },
   {
     "id": "chevrolet_suburban_2",
-    "name": "Chevrolet Suburban",
+    "name": "Chevrolet Suburban #2",
     "image": "/cars_sm/Chevrolet%20Suburban_2057.jpg",
     "price": 21000,
     "stats": {
@@ -15334,7 +15334,7 @@
   },
   {
     "id": "porsche_911_carrera_rs_2",
-    "name": "Porsche 911 Carrera RS",
+    "name": "Porsche 911 Carrera RS #2",
     "image": "/cars_sm/Porsche%20911%20Carrera%20RS_1051.jpg",
     "price": 21900,
     "stats": {
@@ -15363,7 +15363,7 @@
   },
   {
     "id": "chevrolet_corvette_8",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #8",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 23500,
     "stats": {
@@ -15509,7 +15509,7 @@
   },
   {
     "id": "porsche_911_turbo_5",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #5",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 29400,
     "stats": {
@@ -16015,7 +16015,7 @@
   },
   {
     "id": "ford_maverick",
-    "name": "Ford Maverick",
+    "name": "Ford Maverick #1",
     "image": "/cars_sm/Ford%20Maverick_1397.jpg",
     "price": 11000,
     "stats": {
@@ -16073,7 +16073,7 @@
   },
   {
     "id": "renault_safrane_2",
-    "name": "Renault Safrane",
+    "name": "Renault Safrane #2",
     "image": "/cars_sm/Renault%20Safrane_1029.jpg",
     "price": 11300,
     "stats": {
@@ -16161,7 +16161,7 @@
   },
   {
     "id": "ford_ranger_3",
-    "name": "Ford Ranger",
+    "name": "Ford Ranger #3",
     "image": "/cars_sm/Ford%20Ranger_1616.jpg",
     "price": 13800,
     "stats": {
@@ -16280,7 +16280,7 @@
   },
   {
     "id": "bmw_m3",
-    "name": "BMW M3",
+    "name": "BMW M3 #1",
     "image": "/cars_sm/BMW%20M3_1116.jpg",
     "price": 18300,
     "stats": {
@@ -16309,7 +16309,7 @@
   },
   {
     "id": "bmw_535i_sedan_2",
-    "name": "BMW 535i Sedan",
+    "name": "BMW 535i Sedan #2",
     "image": "/cars_sm/BMW%20535i%20Sedan_1118.jpg",
     "price": 19500,
     "stats": {
@@ -16339,7 +16339,7 @@
   },
   {
     "id": "chevrolet_tahoe",
-    "name": "Chevrolet Tahoe",
+    "name": "Chevrolet Tahoe #1",
     "image": "/cars_sm/Chevrolet%20Tahoe_1120.jpg",
     "price": 20000,
     "stats": {
@@ -16369,7 +16369,7 @@
   },
   {
     "id": "porsche_911_7",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #7",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 21000,
     "stats": {
@@ -16815,7 +16815,7 @@
   },
   {
     "id": "ford_fiesta_4",
-    "name": "Ford Fiesta",
+    "name": "Ford Fiesta #4",
     "image": "/cars_sm/Ford%20Fiesta_1153.jpg",
     "price": 5200,
     "stats": {
@@ -16844,7 +16844,7 @@
   },
   {
     "id": "renault_megane",
-    "name": "Renault Megane",
+    "name": "Renault Megane #1",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 6200,
     "stats": {
@@ -16873,7 +16873,7 @@
   },
   {
     "id": "renault_megane_coupe_1_9",
-    "name": "Renault Megane Coupe 1.9",
+    "name": "Renault Megane Coupe 1.9 #1",
     "image": "https://placehold.co/600x300/111/555?text=Renault%20Megane%20Coupe",
     "price": 8200,
     "stats": {
@@ -16902,7 +16902,7 @@
   },
   {
     "id": "renault_laguna_1_8",
-    "name": "Renault Laguna 1.8",
+    "name": "Renault Laguna 1.8 #1",
     "image": "https://placehold.co/600x300/111/555?text=Renault%20Laguna%201.8",
     "price": 8800,
     "stats": {
@@ -16960,7 +16960,7 @@
   },
   {
     "id": "chevrolet_camaro_3",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #3",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 12500,
     "stats": {
@@ -17076,7 +17076,7 @@
   },
   {
     "id": "chevrolet_camaro_rs_2",
-    "name": "Chevrolet Camaro RS",
+    "name": "Chevrolet Camaro RS #2",
     "image": "/cars_sm/Chevrolet%20Camaro%20RS_1171.jpg",
     "price": 14800,
     "stats": {
@@ -17107,7 +17107,7 @@
   },
   {
     "id": "porsche_boxster",
-    "name": "Porsche Boxster",
+    "name": "Porsche Boxster #1",
     "image": "/cars_sm/Porsche%20Boxster_1173.jpg",
     "price": 16500,
     "stats": {
@@ -17197,7 +17197,7 @@
   },
   {
     "id": "porsche_911_carrera_4s",
-    "name": "Porsche 911 Carrera 4S",
+    "name": "Porsche 911 Carrera 4S #1",
     "image": "/cars_sm/Porsche%20911%20Carrera%204S_1362.jpg",
     "price": 23300,
     "stats": {
@@ -17255,7 +17255,7 @@
   },
   {
     "id": "porsche_911_turbo_6",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #6",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 30000,
     "stats": {
@@ -17284,7 +17284,7 @@
   },
   {
     "id": "porsche_911_gt2",
-    "name": "Porsche 911 GT2",
+    "name": "Porsche 911 GT2 #1",
     "image": "/cars_sm/Porsche%20911%20GT2_1185.jpg",
     "price": 31700,
     "stats": {
@@ -17704,7 +17704,7 @@
   },
   {
     "id": "ford_ka",
-    "name": "Ford Ka",
+    "name": "Ford Ka #1",
     "image": "/cars_sm/Ford%20Ka_1214.jpg",
     "price": 4000,
     "stats": {
@@ -17733,7 +17733,7 @@
   },
   {
     "id": "renault_clio_3",
-    "name": "Renault Clio",
+    "name": "Renault Clio #3",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5000,
     "stats": {
@@ -17791,7 +17791,7 @@
   },
   {
     "id": "ford_focus_1_4",
-    "name": "Ford Focus 1.4",
+    "name": "Ford Focus 1.4 #1",
     "image": "https://placehold.co/600x300/111/555?text=Ford%20Focus%201.4",
     "price": 6200,
     "stats": {
@@ -17820,7 +17820,7 @@
   },
   {
     "id": "ford_mustang_4",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #4",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 12000,
     "stats": {
@@ -17879,7 +17879,7 @@
   },
   {
     "id": "ford_crown_victoria_2",
-    "name": "Ford Crown Victoria",
+    "name": "Ford Crown Victoria #2",
     "image": "/cars_sm/Ford%20Crown%20Victoria_1226.jpg",
     "price": 13400,
     "stats": {
@@ -17909,7 +17909,7 @@
   },
   {
     "id": "bmw_528i_2",
-    "name": "BMW 528i",
+    "name": "BMW 528i #2",
     "image": "/cars_sm/BMW%20528i_1228.jpg",
     "price": 13800,
     "stats": {
@@ -17997,7 +17997,7 @@
   },
   {
     "id": "ford_f_150_2",
-    "name": "Ford F-150",
+    "name": "Ford F-150 #2",
     "image": "/cars_sm/Ford%20F-150_1234.jpg",
     "price": 17000,
     "stats": {
@@ -18116,7 +18116,7 @@
   },
   {
     "id": "bmw_m5",
-    "name": "BMW M5",
+    "name": "BMW M5 #1",
     "image": "/cars_sm/BMW%20M5_1242.jpg",
     "price": 25000,
     "stats": {
@@ -18145,7 +18145,7 @@
   },
   {
     "id": "porsche_911_turbo_s",
-    "name": "Porsche 911 Turbo S",
+    "name": "Porsche 911 Turbo S #1",
     "image": "/cars_sm/Porsche%20911%20Turbo%20S_2172.jpg",
     "price": 32100,
     "stats": {
@@ -18356,7 +18356,7 @@
   },
   {
     "id": "renault_clio_4",
-    "name": "Renault Clio",
+    "name": "Renault Clio #4",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 4800,
     "stats": {
@@ -18416,7 +18416,7 @@
   },
   {
     "id": "renault_megane_2",
-    "name": "Renault Megane",
+    "name": "Renault Megane #2",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 6800,
     "stats": {
@@ -18506,7 +18506,7 @@
   },
   {
     "id": "renault_megane_coupe_1_9_2",
-    "name": "Renault Megane Coupe 1.9",
+    "name": "Renault Megane Coupe 1.9 #2",
     "image": "https://placehold.co/600x300/111/555?text=Renault%20Megane%20Coupe",
     "price": 9600,
     "stats": {
@@ -18598,7 +18598,7 @@
   },
   {
     "id": "renault_clio_rs",
-    "name": "Renault Clio RS",
+    "name": "Renault Clio RS #1",
     "image": "/cars_sm/Renault%20Clio%20RS_1275.jpg",
     "price": 10300,
     "stats": {
@@ -18630,7 +18630,7 @@
   },
   {
     "id": "chevrolet_monte_carlo_ss_2",
-    "name": "Chevrolet Monte Carlo SS",
+    "name": "Chevrolet Monte Carlo SS #2",
     "image": "/cars_sm/Chevrolet%20Monte%20Carlo%20SS_858.jpg",
     "price": 13400,
     "stats": {
@@ -18720,7 +18720,7 @@
   },
   {
     "id": "renault_clio_v6",
-    "name": "Renault Clio V6",
+    "name": "Renault Clio V6 #1",
     "image": "/cars_sm/Renault%20Clio%20V6_1283.jpg",
     "price": 16000,
     "stats": {
@@ -18754,7 +18754,7 @@
   },
   {
     "id": "chevrolet_caprice_3",
-    "name": "Chevrolet Caprice",
+    "name": "Chevrolet Caprice #3",
     "image": "/cars_sm/Chevrolet%20Caprice_1285.jpg",
     "price": 17000,
     "stats": {
@@ -18816,7 +18816,7 @@
   },
   {
     "id": "porsche_boxster_s",
-    "name": "Porsche Boxster S",
+    "name": "Porsche Boxster S #1",
     "image": "/cars_sm/Porsche%20Boxster%20S_1423.jpg",
     "price": 17800,
     "stats": {
@@ -18876,7 +18876,7 @@
   },
   {
     "id": "chevrolet_camaro_ss",
-    "name": "Chevrolet Camaro SS",
+    "name": "Chevrolet Camaro SS #1",
     "image": "/cars_sm/Chevrolet%20Camaro%20SS_1293.jpg",
     "price": 19500,
     "stats": {
@@ -19064,7 +19064,7 @@
   },
   {
     "id": "porsche_911_gt3",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #1",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 27700,
     "stats": {
@@ -19125,7 +19125,7 @@
   },
   {
     "id": "porsche_911_turbo_7",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #7",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 30500,
     "stats": {
@@ -19401,7 +19401,7 @@
   },
   {
     "id": "ford_fiesta_5",
-    "name": "Ford Fiesta",
+    "name": "Ford Fiesta #5",
     "image": "/cars_sm/Ford%20Fiesta_1153.jpg",
     "price": 4800,
     "stats": {
@@ -19431,7 +19431,7 @@
   },
   {
     "id": "renault_clio_5",
-    "name": "Renault Clio",
+    "name": "Renault Clio #5",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5300,
     "stats": {
@@ -19491,7 +19491,7 @@
   },
   {
     "id": "renault_laguna_1_8_2",
-    "name": "Renault Laguna 1.8",
+    "name": "Renault Laguna 1.8 #2",
     "image": "https://placehold.co/600x300/111/555?text=Renault%20Laguna%201.8",
     "price": 8400,
     "stats": {
@@ -19551,7 +19551,7 @@
   },
   {
     "id": "chevrolet_camaro_4",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #4",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 13200,
     "stats": {
@@ -19672,7 +19672,7 @@
   },
   {
     "id": "bmw_m3_2",
-    "name": "BMW M3",
+    "name": "BMW M3 #2",
     "image": "/cars_sm/BMW%20M3_1116.jpg",
     "price": 18500,
     "stats": {
@@ -19794,7 +19794,7 @@
   },
   {
     "id": "porsche_cayenne",
-    "name": "Porsche Cayenne",
+    "name": "Porsche Cayenne #1",
     "image": "/cars_sm/Porsche%20Cayenne_1354.jpg",
     "price": 21000,
     "stats": {
@@ -19824,7 +19824,7 @@
   },
   {
     "id": "porsche_911_8",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #8",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 22000,
     "stats": {
@@ -19914,7 +19914,7 @@
   },
   {
     "id": "porsche_911_carrera_4s_2",
-    "name": "Porsche 911 Carrera 4S",
+    "name": "Porsche 911 Carrera 4S #2",
     "image": "/cars_sm/Porsche%20911%20Carrera%204S_1362.jpg",
     "price": 24400,
     "stats": {
@@ -20007,7 +20007,7 @@
   },
   {
     "id": "porsche_911_gt2_2",
-    "name": "Porsche 911 GT2",
+    "name": "Porsche 911 GT2 #2",
     "image": "/cars_sm/Porsche%20911%20GT2_1185.jpg",
     "price": 32000,
     "stats": {
@@ -20256,7 +20256,7 @@
   },
   {
     "id": "renault_clio_6",
-    "name": "Renault Clio",
+    "name": "Renault Clio #6",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5000,
     "stats": {
@@ -20316,7 +20316,7 @@
   },
   {
     "id": "ford_fiesta_st",
-    "name": "Ford Fiesta ST",
+    "name": "Ford Fiesta ST #1",
     "image": "/cars_sm/Ford%20Fiesta%20ST_1958.jpg",
     "price": 10000,
     "stats": {
@@ -20380,7 +20380,7 @@
   },
   {
     "id": "renault_clio_rs_2",
-    "name": "Renault Clio RS",
+    "name": "Renault Clio RS #2",
     "image": "/cars_sm/Renault%20Clio%20RS_1275.jpg",
     "price": 12000,
     "stats": {
@@ -20444,7 +20444,7 @@
   },
   {
     "id": "ford_maverick_2",
-    "name": "Ford Maverick",
+    "name": "Ford Maverick #2",
     "image": "/cars_sm/Ford%20Maverick_1397.jpg",
     "price": 12800,
     "stats": {
@@ -20687,7 +20687,7 @@
   },
   {
     "id": "ford_thunderbird_4",
-    "name": "Ford Thunderbird",
+    "name": "Ford Thunderbird #4",
     "image": "/cars_sm/Ford%20Thunderbird_1413.jpg",
     "price": 15700,
     "stats": {
@@ -20717,7 +20717,7 @@
   },
   {
     "id": "porsche_boxster_2",
-    "name": "Porsche Boxster",
+    "name": "Porsche Boxster #2",
     "image": "/cars_sm/Porsche%20Boxster_1173.jpg",
     "price": 16300,
     "stats": {
@@ -20747,7 +20747,7 @@
   },
   {
     "id": "renault_clio_v6_2",
-    "name": "Renault Clio V6",
+    "name": "Renault Clio V6 #2",
     "image": "/cars_sm/Renault%20Clio%20V6_1283.jpg",
     "price": 16700,
     "stats": {
@@ -20842,7 +20842,7 @@
   },
   {
     "id": "porsche_boxster_s_2",
-    "name": "Porsche Boxster S",
+    "name": "Porsche Boxster S #2",
     "image": "/cars_sm/Porsche%20Boxster%20S_1423.jpg",
     "price": 18100,
     "stats": {
@@ -20965,7 +20965,7 @@
   },
   {
     "id": "porsche_911_gt3_2",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #2",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 27000,
     "stats": {
@@ -21087,7 +21087,7 @@
   },
   {
     "id": "ford_gt",
-    "name": "Ford GT",
+    "name": "Ford GT #1",
     "image": "/cars_sm/Ford%20GT_1439.jpg",
     "price": 32000,
     "stats": {
@@ -21270,7 +21270,7 @@
   },
   {
     "id": "renault_clio_7",
-    "name": "Renault Clio",
+    "name": "Renault Clio #7",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5000,
     "stats": {
@@ -21300,7 +21300,7 @@
   },
   {
     "id": "renault_megane_3",
-    "name": "Renault Megane",
+    "name": "Renault Megane #3",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 8300,
     "stats": {
@@ -21330,7 +21330,7 @@
   },
   {
     "id": "bmw_120i",
-    "name": "BMW 120i",
+    "name": "BMW 120i #1",
     "image": "/cars_sm/BMW%20120i_1527.jpg",
     "price": 9400,
     "stats": {
@@ -21482,7 +21482,7 @@
   },
   {
     "id": "ford_mustang_5",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #5",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 13700,
     "stats": {
@@ -21608,7 +21608,7 @@
   },
   {
     "id": "bmw_530i_sedan_2",
-    "name": "BMW 530i Sedan",
+    "name": "BMW 530i Sedan #2",
     "image": "/cars_sm/BMW%20530i%20Sedan_519.jpg",
     "price": 15200,
     "stats": {
@@ -21793,7 +21793,7 @@
   },
   {
     "id": "porsche_911_9",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #9",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 22000,
     "stats": {
@@ -21916,7 +21916,7 @@
   },
   {
     "id": "chevrolet_corvette_9",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #9",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 25600,
     "stats": {
@@ -21977,7 +21977,7 @@
   },
   {
     "id": "porsche_cayenne_turbo",
-    "name": "Porsche Cayenne Turbo",
+    "name": "Porsche Cayenne Turbo #1",
     "image": "/cars_sm/Porsche%20Cayenne%20Turbo_1498.jpg",
     "price": 30000,
     "stats": {
@@ -22287,7 +22287,7 @@
   },
   {
     "id": "ford_focus_1_4_2",
-    "name": "Ford Focus 1.4",
+    "name": "Ford Focus 1.4 #2",
     "image": "https://placehold.co/600x300/111/555?text=Ford%20Focus%201.4",
     "price": 5600,
     "stats": {
@@ -22409,7 +22409,7 @@
   },
   {
     "id": "bmw_120i_2",
-    "name": "BMW 120i",
+    "name": "BMW 120i #2",
     "image": "/cars_sm/BMW%20120i_1527.jpg",
     "price": 10700,
     "stats": {
@@ -22469,7 +22469,7 @@
   },
   {
     "id": "renault_koleos",
-    "name": "Renault Koleos",
+    "name": "Renault Koleos #1",
     "image": "/cars_sm/Renault%20Koleos_1693.jpg",
     "price": 12900,
     "stats": {
@@ -22499,7 +22499,7 @@
   },
   {
     "id": "bmw_320d_xdrive_sedan",
-    "name": "BMW 320d xDrive Sedan",
+    "name": "BMW 320d xDrive Sedan #1",
     "image": "/cars_sm/BMW%20320d%20xDrive%20Sedan_1533.jpg",
     "price": 13200,
     "stats": {
@@ -22620,7 +22620,7 @@
   },
   {
     "id": "ford_focus_st",
-    "name": "Ford Focus ST",
+    "name": "Ford Focus ST #1",
     "image": "/cars_sm/Ford%20Focus%20ST_1541.jpg",
     "price": 15000,
     "stats": {
@@ -22652,7 +22652,7 @@
   },
   {
     "id": "porsche_cayman",
-    "name": "Porsche Cayman",
+    "name": "Porsche Cayman #1",
     "image": "/cars_sm/Porsche%20Cayman_1543.jpg",
     "price": 16000,
     "stats": {
@@ -22871,7 +22871,7 @@
   },
   {
     "id": "porsche_cayenne_2",
-    "name": "Porsche Cayenne",
+    "name": "Porsche Cayenne #2",
     "image": "/cars_sm/Porsche%20Cayenne_1354.jpg",
     "price": 22000,
     "stats": {
@@ -22901,7 +22901,7 @@
   },
   {
     "id": "bmw_m3_3",
-    "name": "BMW M3",
+    "name": "BMW M3 #3",
     "image": "/cars_sm/BMW%20M3_1116.jpg",
     "price": 23000,
     "stats": {
@@ -22961,7 +22961,7 @@
   },
   {
     "id": "bmw_m5_2",
-    "name": "BMW M5",
+    "name": "BMW M5 #2",
     "image": "/cars_sm/BMW%20M5_1242.jpg",
     "price": 26500,
     "stats": {
@@ -22991,7 +22991,7 @@
   },
   {
     "id": "porsche_911_carrera_4s_3",
-    "name": "Porsche 911 Carrera 4S",
+    "name": "Porsche 911 Carrera 4S #3",
     "image": "/cars_sm/Porsche%20911%20Carrera%204S_1362.jpg",
     "price": 27000,
     "stats": {
@@ -23052,7 +23052,7 @@
   },
   {
     "id": "porsche_911_gt3_3",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #3",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 28000,
     "stats": {
@@ -23142,7 +23142,7 @@
   },
   {
     "id": "chevrolet_corvette_z06",
-    "name": "Chevrolet Corvette Z06",
+    "name": "Chevrolet Corvette Z06 #1",
     "image": "/cars_sm/Chevrolet%20Corvette%20Z06_1913.jpg",
     "price": 29000,
     "stats": {
@@ -23172,7 +23172,7 @@
   },
   {
     "id": "porsche_911_turbo_8",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #8",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 30000,
     "stats": {
@@ -23202,7 +23202,7 @@
   },
   {
     "id": "porsche_cayenne_turbo_2",
-    "name": "Porsche Cayenne Turbo",
+    "name": "Porsche Cayenne Turbo #2",
     "image": "/cars_sm/Porsche%20Cayenne%20Turbo_1498.jpg",
     "price": 31000,
     "stats": {
@@ -23262,7 +23262,7 @@
   },
   {
     "id": "porsche_911_gt2_3",
-    "name": "Porsche 911 GT2",
+    "name": "Porsche 911 GT2 #3",
     "image": "/cars_sm/Porsche%20911%20GT2_1185.jpg",
     "price": 32500,
     "stats": {
@@ -23483,7 +23483,7 @@
   },
   {
     "id": "ford_ka_2",
-    "name": "Ford Ka",
+    "name": "Ford Ka #2",
     "image": "/cars_sm/Ford%20Ka_1214.jpg",
     "price": 4000,
     "stats": {
@@ -23513,7 +23513,7 @@
   },
   {
     "id": "renault_clio_8",
-    "name": "Renault Clio",
+    "name": "Renault Clio #8",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5500,
     "stats": {
@@ -23573,7 +23573,7 @@
   },
   {
     "id": "renault_megane_4",
-    "name": "Renault Megane",
+    "name": "Renault Megane #4",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 6700,
     "stats": {
@@ -23755,7 +23755,7 @@
   },
   {
     "id": "ford_ranger_4",
-    "name": "Ford Ranger",
+    "name": "Ford Ranger #4",
     "image": "/cars_sm/Ford%20Ranger_1616.jpg",
     "price": 12700,
     "stats": {
@@ -23815,7 +23815,7 @@
   },
   {
     "id": "ford_mustang_6",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #6",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 14900,
     "stats": {
@@ -24005,7 +24005,7 @@
   },
   {
     "id": "porsche_cayman_2",
-    "name": "Porsche Cayman",
+    "name": "Porsche Cayman #2",
     "image": "/cars_sm/Porsche%20Cayman_1543.jpg",
     "price": 18500,
     "stats": {
@@ -24035,7 +24035,7 @@
   },
   {
     "id": "chevrolet_tahoe_2",
-    "name": "Chevrolet Tahoe",
+    "name": "Chevrolet Tahoe #2",
     "image": "/cars_sm/Chevrolet%20Tahoe_1120.jpg",
     "price": 19200,
     "stats": {
@@ -24066,7 +24066,7 @@
   },
   {
     "id": "porsche_panamera",
-    "name": "Porsche Panamera",
+    "name": "Porsche Panamera #1",
     "image": "/cars_sm/PorschePanamera_1636.jpg",
     "price": 21000,
     "stats": {
@@ -24097,7 +24097,7 @@
   },
   {
     "id": "porsche_911_10",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #10",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 22000,
     "stats": {
@@ -24374,7 +24374,7 @@
   },
   {
     "id": "ford_fiesta_s2000",
-    "name": "Ford Fiesta S2000",
+    "name": "Ford Fiesta S2000 #1",
     "image": "/cars_sm/Ford%20Fiesta%20S2000_1656.jpg",
     "price": 30000,
     "stats": {
@@ -24405,7 +24405,7 @@
   },
   {
     "id": "chevrolet_corvette_zr1",
-    "name": "Chevrolet Corvette ZR1",
+    "name": "Chevrolet Corvette ZR1 #1",
     "image": "/cars_sm/Chevrolet%20Corvette%20ZR1_2093.jpg",
     "price": 32500,
     "stats": {
@@ -24810,7 +24810,7 @@
   },
   {
     "id": "renault_clio_9",
-    "name": "Renault Clio",
+    "name": "Renault Clio #9",
     "image": "/cars_sm/Renault%20Clio_1385.jpg",
     "price": 5300,
     "stats": {
@@ -24931,7 +24931,7 @@
   },
   {
     "id": "renault_koleos_2",
-    "name": "Renault Koleos",
+    "name": "Renault Koleos #2",
     "image": "/cars_sm/Renault%20Koleos_1693.jpg",
     "price": 12800,
     "stats": {
@@ -24961,7 +24961,7 @@
   },
   {
     "id": "ford_ranger_5",
-    "name": "Ford Ranger",
+    "name": "Ford Ranger #5",
     "image": "/cars_sm/Ford%20Ranger_1616.jpg",
     "price": 12900,
     "stats": {
@@ -24991,7 +24991,7 @@
   },
   {
     "id": "bmw_320d_xdrive_sedan_2",
-    "name": "BMW 320d xDrive Sedan",
+    "name": "BMW 320d xDrive Sedan #2",
     "image": "/cars_sm/BMW%20320d%20xDrive%20Sedan_1533.jpg",
     "price": 13000,
     "stats": {
@@ -25051,7 +25051,7 @@
   },
   {
     "id": "porsche_boxster_3",
-    "name": "Porsche Boxster",
+    "name": "Porsche Boxster #3",
     "image": "/cars_sm/Porsche%20Boxster_1173.jpg",
     "price": 16500,
     "stats": {
@@ -25081,7 +25081,7 @@
   },
   {
     "id": "chevrolet_camaro_5",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #5",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 18000,
     "stats": {
@@ -25205,7 +25205,7 @@
   },
   {
     "id": "porsche_cayenne_3",
-    "name": "Porsche Cayenne",
+    "name": "Porsche Cayenne #3",
     "image": "/cars_sm/Porsche%20Cayenne_1354.jpg",
     "price": 21000,
     "stats": {
@@ -25328,7 +25328,7 @@
   },
   {
     "id": "ford_shelby_gt350_2",
-    "name": "Ford Shelby GT350",
+    "name": "Ford Shelby GT350 #2",
     "image": "/cars_sm/Ford%20Shelby%20GT350_1719.jpg",
     "price": 24300,
     "stats": {
@@ -25514,7 +25514,7 @@
   },
   {
     "id": "porsche_panamera_turbo",
-    "name": "Porsche Panamera Turbo",
+    "name": "Porsche Panamera Turbo #1",
     "image": "/cars_sm/PorschePanamera%20Turbo_1731.jpg",
     "price": 28500,
     "stats": {
@@ -25702,7 +25702,7 @@
   },
   {
     "id": "porsche_911_gt2_rs",
-    "name": "Porsche 911 GT2 RS",
+    "name": "Porsche 911 GT2 RS #1",
     "image": "/cars_sm/Porsche%20911%20GT2%20RS_1743.jpg",
     "price": 33000,
     "stats": {
@@ -26017,7 +26017,7 @@
   },
   {
     "id": "renault_megane_5",
-    "name": "Renault Megane",
+    "name": "Renault Megane #5",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 6900,
     "stats": {
@@ -26107,7 +26107,7 @@
   },
   {
     "id": "chevrolet_malibu",
-    "name": "Chevrolet Malibu",
+    "name": "Chevrolet Malibu #1",
     "image": "/cars_sm/Chevrolet%20Malibu_1770.jpg",
     "price": 11000,
     "stats": {
@@ -26230,7 +26230,7 @@
   },
   {
     "id": "renault_koleos_3",
-    "name": "Renault Koleos",
+    "name": "Renault Koleos #3",
     "image": "/cars_sm/Renault%20Koleos_1693.jpg",
     "price": 12800,
     "stats": {
@@ -26574,7 +26574,7 @@
   },
   {
     "id": "chevrolet_camaro_z28_3",
-    "name": "Chevrolet Camaro Z28",
+    "name": "Chevrolet Camaro Z28 #3",
     "image": "/cars_sm/Chevrolet%20Camaro%20Z28_454.jpg",
     "price": 22700,
     "stats": {
@@ -26637,7 +26637,7 @@
   },
   {
     "id": "porsche_panamera_4s",
-    "name": "Porsche Panamera 4S",
+    "name": "Porsche Panamera 4S #1",
     "image": "/cars_sm/Porsche%20Panamera%204S_1804.jpg",
     "price": 23300,
     "stats": {
@@ -26668,7 +26668,7 @@
   },
   {
     "id": "chevrolet_corvette_10",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #10",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 23600,
     "stats": {
@@ -26886,7 +26886,7 @@
   },
   {
     "id": "porsche_911_gt3_4",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #4",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 28000,
     "stats": {
@@ -26916,7 +26916,7 @@
   },
   {
     "id": "porsche_cayenne_turbo_s",
-    "name": "Porsche Cayenne Turbo S",
+    "name": "Porsche Cayenne Turbo S #1",
     "image": "/cars_sm/Porsche%20Cayenne%20Turbo%20S_1822.jpg",
     "price": 30000,
     "stats": {
@@ -27007,7 +27007,7 @@
   },
   {
     "id": "ford_mustang_nascar_nationwide_series_race_car",
-    "name": "Ford Mustang NASCAR Nationwide Series Race Car",
+    "name": "Ford Mustang NASCAR Nationwide Series Race Car #1",
     "image": "/cars_sm/Ford%20Mustang%20NASCAR%20Nationwide%20Series%20Race%20Car_2188.jpg",
     "price": 36000,
     "stats": {
@@ -27286,7 +27286,7 @@
   },
   {
     "id": "ford_shelby_gt500_super_snake_2",
-    "name": "Ford Shelby GT500 Super Snake",
+    "name": "Ford Shelby GT500 Super Snake #2",
     "image": "/cars_sm/Ford%20Shelby%20GT500%20Super%20Snake_1846.jpg",
     "price": 45500,
     "stats": {
@@ -27413,7 +27413,7 @@
   },
   {
     "id": "chevrolet_spark",
-    "name": "Chevrolet Spark",
+    "name": "Chevrolet Spark #1",
     "image": "/cars_sm/Chevrolet%20Spark_1855.jpg",
     "price": 3700,
     "stats": {
@@ -27443,7 +27443,7 @@
   },
   {
     "id": "ford_ka_3",
-    "name": "Ford Ka",
+    "name": "Ford Ka #3",
     "image": "/cars_sm/Ford%20Ka_1214.jpg",
     "price": 4000,
     "stats": {
@@ -27503,7 +27503,7 @@
   },
   {
     "id": "renault_megane_6",
-    "name": "Renault Megane",
+    "name": "Renault Megane #6",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 6000,
     "stats": {
@@ -27533,7 +27533,7 @@
   },
   {
     "id": "chevrolet_malibu_2",
-    "name": "Chevrolet Malibu",
+    "name": "Chevrolet Malibu #2",
     "image": "/cars_sm/Chevrolet%20Malibu_1770.jpg",
     "price": 8800,
     "stats": {
@@ -27624,7 +27624,7 @@
   },
   {
     "id": "renault_kadjar",
-    "name": "Renault Kadjar",
+    "name": "Renault Kadjar #1",
     "image": "/cars_sm/Renault%20Kadjar_1869.jpg",
     "price": 10500,
     "stats": {
@@ -27714,7 +27714,7 @@
   },
   {
     "id": "bmw_x3_xdrive20d",
-    "name": "BMW X3 xDrive20d",
+    "name": "BMW X3 xDrive20d #1",
     "image": "/cars_sm/BMW%20X3%20xDrive20d_1875.jpg",
     "price": 14000,
     "stats": {
@@ -27744,7 +27744,7 @@
   },
   {
     "id": "chevrolet_camaro_6",
-    "name": "Chevrolet Camaro",
+    "name": "Chevrolet Camaro #6",
     "image": "/cars_sm/Chevrolet%20Camaro_1338.jpg",
     "price": 15000,
     "stats": {
@@ -27776,7 +27776,7 @@
   },
   {
     "id": "ford_mustang_7",
-    "name": "Ford Mustang",
+    "name": "Ford Mustang #7",
     "image": "/cars_sm/Ford%20Mustang_1466.jpg",
     "price": 15700,
     "stats": {
@@ -27868,7 +27868,7 @@
   },
   {
     "id": "ford_mustang_gt_3",
-    "name": "Ford Mustang GT",
+    "name": "Ford Mustang GT #3",
     "image": "/cars_sm/Ford%20Mustang%20GT_1885.jpg",
     "price": 18900,
     "stats": {
@@ -27931,7 +27931,7 @@
   },
   {
     "id": "porsche_911_11",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #11",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 21500,
     "stats": {
@@ -28025,7 +28025,7 @@
   },
   {
     "id": "chevrolet_corvette_11",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #11",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 25000,
     "stats": {
@@ -28055,7 +28055,7 @@
   },
   {
     "id": "chevrolet_corvette_stingray_2",
-    "name": "Chevrolet Corvette Stingray",
+    "name": "Chevrolet Corvette Stingray #2",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 25500,
     "stats": {
@@ -28206,7 +28206,7 @@
   },
   {
     "id": "ford_fiesta_s2000_2",
-    "name": "Ford Fiesta S2000",
+    "name": "Ford Fiesta S2000 #2",
     "image": "/cars_sm/Ford%20Fiesta%20S2000_1656.jpg",
     "price": 30000,
     "stats": {
@@ -28299,7 +28299,7 @@
   },
   {
     "id": "chevrolet_corvette_z06_2",
-    "name": "Chevrolet Corvette Z06",
+    "name": "Chevrolet Corvette Z06 #2",
     "image": "/cars_sm/Chevrolet%20Corvette%20Z06_1913.jpg",
     "price": 33000,
     "stats": {
@@ -28360,7 +28360,7 @@
   },
   {
     "id": "ford_gt_2",
-    "name": "Ford GT",
+    "name": "Ford GT #2",
     "image": "/cars_sm/Ford%20GT_1439.jpg",
     "price": 35000,
     "stats": {
@@ -28702,7 +28702,7 @@
   },
   {
     "id": "ford_ka_4",
-    "name": "Ford Ka",
+    "name": "Ford Ka #4",
     "image": "/cars_sm/Ford%20Ka_1214.jpg",
     "price": 4000,
     "stats": {
@@ -28732,7 +28732,7 @@
   },
   {
     "id": "chevrolet_spark_2",
-    "name": "Chevrolet Spark",
+    "name": "Chevrolet Spark #2",
     "image": "/cars_sm/Chevrolet%20Spark_1855.jpg",
     "price": 4500,
     "stats": {
@@ -28792,7 +28792,7 @@
   },
   {
     "id": "renault_megane_7",
-    "name": "Renault Megane",
+    "name": "Renault Megane #7",
     "image": "/cars_sm/Renault%20Megane_1861.jpg",
     "price": 7200,
     "stats": {
@@ -28912,7 +28912,7 @@
   },
   {
     "id": "renault_koleos_4",
-    "name": "Renault Koleos",
+    "name": "Renault Koleos #4",
     "image": "/cars_sm/Renault%20Koleos_1693.jpg",
     "price": 10900,
     "stats": {
@@ -28942,7 +28942,7 @@
   },
   {
     "id": "renault_kadjar_2",
-    "name": "Renault Kadjar",
+    "name": "Renault Kadjar #2",
     "image": "/cars_sm/Renault%20Kadjar_1869.jpg",
     "price": 12100,
     "stats": {
@@ -28972,7 +28972,7 @@
   },
   {
     "id": "ford_fiesta_st_2",
-    "name": "Ford Fiesta ST",
+    "name": "Ford Fiesta ST #2",
     "image": "/cars_sm/Ford%20Fiesta%20ST_1958.jpg",
     "price": 13000,
     "stats": {
@@ -29034,7 +29034,7 @@
   },
   {
     "id": "bmw_520i_2",
-    "name": "BMW 520i",
+    "name": "BMW 520i #2",
     "image": "/cars_sm/BMW%20520i_434.jpg",
     "price": 13500,
     "stats": {
@@ -29217,7 +29217,7 @@
   },
   {
     "id": "chevrolet_tahoe_3",
-    "name": "Chevrolet Tahoe",
+    "name": "Chevrolet Tahoe #3",
     "image": "/cars_sm/Chevrolet%20Tahoe_1120.jpg",
     "price": 18100,
     "stats": {
@@ -29308,7 +29308,7 @@
   },
   {
     "id": "chevrolet_camaro_ss_2",
-    "name": "Chevrolet Camaro SS",
+    "name": "Chevrolet Camaro SS #2",
     "image": "/cars_sm/Chevrolet%20Camaro%20SS_1293.jpg",
     "price": 21000,
     "stats": {
@@ -29370,7 +29370,7 @@
   },
   {
     "id": "porsche_panamera_4s_2",
-    "name": "Porsche Panamera 4S",
+    "name": "Porsche Panamera 4S #2",
     "image": "/cars_sm/Porsche%20Panamera%204S_1804.jpg",
     "price": 23500,
     "stats": {
@@ -29431,7 +29431,7 @@
   },
   {
     "id": "porsche_panamera_turbo_2",
-    "name": "Porsche Panamera Turbo",
+    "name": "Porsche Panamera Turbo #2",
     "image": "/cars_sm/PorschePanamera%20Turbo_1731.jpg",
     "price": 29000,
     "stats": {
@@ -29462,7 +29462,7 @@
   },
   {
     "id": "porsche_911_gt3_5",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #5",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 30000,
     "stats": {
@@ -29617,7 +29617,7 @@
   },
   {
     "id": "porsche_911_gt2_4",
-    "name": "Porsche 911 GT2",
+    "name": "Porsche 911 GT2 #4",
     "image": "/cars_sm/Porsche%20911%20GT2_1185.jpg",
     "price": 35000,
     "stats": {
@@ -29711,7 +29711,7 @@
   },
   {
     "id": "porsche_911_gt2_rs_2",
-    "name": "Porsche 911 GT2 RS",
+    "name": "Porsche 911 GT2 RS #2",
     "image": "/cars_sm/Porsche%20911%20GT2%20RS_1743.jpg",
     "price": 36500,
     "stats": {
@@ -29933,7 +29933,7 @@
   },
   {
     "id": "ford_mustang_nascar_nationwide_series_race_car_2",
-    "name": "Ford Mustang NASCAR Nationwide Series Race Car",
+    "name": "Ford Mustang NASCAR Nationwide Series Race Car #2",
     "image": "/cars_sm/Ford%20Mustang%20NASCAR%20Nationwide%20Series%20Race%20Car_2188.jpg",
     "price": 44000,
     "stats": {
@@ -30093,7 +30093,7 @@
   },
   {
     "id": "renault_kadjar_3",
-    "name": "Renault Kadjar",
+    "name": "Renault Kadjar #3",
     "image": "/cars_sm/Renault%20Kadjar_1869.jpg",
     "price": 10800,
     "stats": {
@@ -30215,7 +30215,7 @@
   },
   {
     "id": "bmw_x3_xdrive20d_2",
-    "name": "BMW X3 xDrive20d",
+    "name": "BMW X3 xDrive20d #2",
     "image": "/cars_sm/BMW%20X3%20xDrive20d_1875.jpg",
     "price": 13800,
     "stats": {
@@ -30245,7 +30245,7 @@
   },
   {
     "id": "ford_focus_st_2",
-    "name": "Ford Focus ST",
+    "name": "Ford Focus ST #2",
     "image": "/cars_sm/Ford%20Focus%20ST_1541.jpg",
     "price": 14100,
     "stats": {
@@ -30459,7 +30459,7 @@
   },
   {
     "id": "ford_mustang_gt_4",
-    "name": "Ford Mustang GT",
+    "name": "Ford Mustang GT #4",
     "image": "/cars_sm/Ford%20Mustang%20GT_1885.jpg",
     "price": 19500,
     "stats": {
@@ -30491,7 +30491,7 @@
   },
   {
     "id": "chevrolet_suburban_3",
-    "name": "Chevrolet Suburban",
+    "name": "Chevrolet Suburban #3",
     "image": "/cars_sm/Chevrolet%20Suburban_2057.jpg",
     "price": 19700,
     "stats": {
@@ -30586,7 +30586,7 @@
   },
   {
     "id": "porsche_cayenne_4",
-    "name": "Porsche Cayenne",
+    "name": "Porsche Cayenne #4",
     "image": "/cars_sm/Porsche%20Cayenne_1354.jpg",
     "price": 21600,
     "stats": {
@@ -30616,7 +30616,7 @@
   },
   {
     "id": "porsche_911_12",
-    "name": "Porsche 911",
+    "name": "Porsche 911 #12",
     "image": "/cars_sm/Porsche%20911_1638.jpg",
     "price": 22000,
     "stats": {
@@ -30771,7 +30771,7 @@
   },
   {
     "id": "chevrolet_corvette_12",
-    "name": "Chevrolet Corvette",
+    "name": "Chevrolet Corvette #12",
     "image": "/cars_sm/Chevrolet%20Corvette_133.jpg",
     "price": 24000,
     "stats": {
@@ -30924,7 +30924,7 @@
   },
   {
     "id": "porsche_cayenne_turbo_s_2",
-    "name": "Porsche Cayenne Turbo S",
+    "name": "Porsche Cayenne Turbo S #2",
     "image": "/cars_sm/Porsche%20Cayenne%20Turbo%20S_1822.jpg",
     "price": 30000,
     "stats": {
@@ -30984,7 +30984,7 @@
   },
   {
     "id": "porsche_911_turbo_9",
-    "name": "Porsche 911 Turbo",
+    "name": "Porsche 911 Turbo #9",
     "image": "/cars_sm/Porsche%20911%20Turbo_888.jpg",
     "price": 30500,
     "stats": {
@@ -31045,7 +31045,7 @@
   },
   {
     "id": "chevrolet_corvette_zr1_2",
-    "name": "Chevrolet Corvette ZR1",
+    "name": "Chevrolet Corvette ZR1 #2",
     "image": "/cars_sm/Chevrolet%20Corvette%20ZR1_2093.jpg",
     "price": 32300,
     "stats": {
@@ -31636,7 +31636,7 @@
   },
   {
     "id": "renault_koleos_5",
-    "name": "Renault Koleos",
+    "name": "Renault Koleos #5",
     "image": "/cars_sm/Renault%20Koleos_1693.jpg",
     "price": 12200,
     "stats": {
@@ -31819,7 +31819,7 @@
   },
   {
     "id": "porsche_panamera_2",
-    "name": "Porsche Panamera",
+    "name": "Porsche Panamera #2",
     "image": "/cars_sm/PorschePanamera_1636.jpg",
     "price": 18000,
     "stats": {
@@ -31850,7 +31850,7 @@
   },
   {
     "id": "ford_mustang_mach_1_2",
-    "name": "Ford Mustang Mach 1",
+    "name": "Ford Mustang Mach 1 #2",
     "image": "/cars_sm/Ford%20Mustang%20Mach%201_371.jpg",
     "price": 19900,
     "stats": {
@@ -32005,7 +32005,7 @@
   },
   {
     "id": "chevrolet_corvette_stingray_3",
-    "name": "Chevrolet Corvette Stingray",
+    "name": "Chevrolet Corvette Stingray #3",
     "image": "/cars_sm/Chevrolet%20Corvette%20Sting%20Ray_210.jpg",
     "price": 25500,
     "stats": {
@@ -32035,7 +32035,7 @@
   },
   {
     "id": "porsche_911_carrera_4s_4",
-    "name": "Porsche 911 Carrera 4S",
+    "name": "Porsche 911 Carrera 4S #4",
     "image": "/cars_sm/Porsche%20911%20Carrera%204S_1362.jpg",
     "price": 26000,
     "stats": {
@@ -32128,7 +32128,7 @@
   },
   {
     "id": "porsche_911_gt3_6",
-    "name": "Porsche 911 GT3",
+    "name": "Porsche 911 GT3 #6",
     "image": "/cars_sm/Porsche%20911%20GT3_1990.jpg",
     "price": 28000,
     "stats": {
@@ -32250,7 +32250,7 @@
   },
   {
     "id": "porsche_911_turbo_s_2",
-    "name": "Porsche 911 Turbo S",
+    "name": "Porsche 911 Turbo S #2",
     "image": "/cars_sm/Porsche%20911%20Turbo%20S_2172.jpg",
     "price": 33000,
     "stats": {
@@ -32499,7 +32499,7 @@
   },
   {
     "id": "ford_mustang_nascar_nationwide_series_race_car_3",
-    "name": "Ford Mustang NASCAR Nationwide Series Race Car",
+    "name": "Ford Mustang NASCAR Nationwide Series Race Car #3",
     "image": "/cars_sm/Ford%20Mustang%20NASCAR%20Nationwide%20Series%20Race%20Car_2188.jpg",
     "price": 42000,
     "stats": {
