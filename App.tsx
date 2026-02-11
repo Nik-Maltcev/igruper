@@ -48,7 +48,7 @@ const App = () => {
   // Logic Handlers
   const handleBuyCar = (car: Car) => {
     setMoney(prev => prev - car.price);
-    setMyCars(prev => [...prev, { ...car, id: `my-${Date.now()}` }]); // unique ID
+    setMyCars(prev => [...prev, { ...car, id: `my-${Date.now()}`, originalId: car.id }]); // unique ID, keep original
     alert(`Вы купили ${car.name}! Проверьте гараж.`);
   };
 
@@ -117,6 +117,7 @@ const App = () => {
         {currentView === 'DEALER' && (
           <Dealer
             money={money}
+            ownedCarIds={new Set(myCars.map(c => c.originalId || c.id))}
             onBuyCar={handleBuyCar}
             onBack={() => navigate('DASHBOARD')}
           />

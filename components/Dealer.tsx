@@ -4,11 +4,12 @@ import { Car } from '../types';
 
 interface DealerProps {
   money: number;
+  ownedCarIds: Set<string>;
   onBuyCar: (car: Car) => void;
   onBack: () => void;
 }
 
-const Dealer: React.FC<DealerProps> = ({ money, onBuyCar, onBack }) => {
+const Dealer: React.FC<DealerProps> = ({ money, ownedCarIds, onBuyCar, onBack }) => {
   return (
     <div className="p-4 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -24,8 +25,10 @@ const Dealer: React.FC<DealerProps> = ({ money, onBuyCar, onBack }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
-        {AVAILABLE_CARS.map((car, idx) => (
-          <div key={`${car.id}-${idx}`} className="pixel-card p-0 overflow-hidden">
+        {AVAILABLE_CARS.map((car, idx) => {
+          const owned = ownedCarIds.has(car.id);
+          return (
+          <div key={`${car.id}-${idx}`} className={`pixel-card p-0 overflow-hidden ${owned ? 'opacity-50' : ''}`}>
             <div className="relative h-36 bg-[#111]">
               <img src={car.image} alt={car.name} className="w-full h-full object-cover opacity-90"
                 onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://placehold.co/600x300/111/555?text=NO+IMG'; }} />
@@ -52,19 +55,20 @@ const Dealer: React.FC<DealerProps> = ({ money, onBuyCar, onBack }) => {
               <div className="flex justify-between items-center">
                 <span className="text-[10px] text-[#00ff00]">${car.price.toLocaleString()}</span>
                 <button onClick={() => onBuyCar(car)}
-                  disabled={money < car.price}
+                  disabled={money < car.price || owned}
                   className="retro-btn text-[8px] py-1 px-3"
                   style={{
-                    backgroundColor: money >= car.price ? '#003300' : '#1a1a1a',
-                    border: `2px solid ${money >= car.price ? '#00ff00' : '#333'}`,
-                    color: money >= car.price ? '#00ff00' : '#555',
+                    backgroundColor: owned ? '#1a1a1a' : money >= car.price ? '#003300' : '#1a1a1a',
+                    border: `2px solid ${owned ? '#44ff44' : money >= car.price ? '#00ff00' : '#333'}`,
+                    color: owned ? '#44ff44' : money >= car.price ? '#00ff00' : '#555',
                   }}>
-                  {money >= car.price ? 'КУПИТЬ' : 'МАЛО $'}
+                  {owned ? 'КУПЛЕНО ✓' : money >= car.price ? 'КУПИТЬ' : 'МАЛО $'}
                 </button>
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export interface Car {
   installedParts: Part[];
   color: string;
   tags?: string[];      // Метки: "Классика", "Спорт", "Внедорожник" и т.д.
+  originalId?: string;  // Оригинальный ID из каталога (для проверки дубликатов)
 }
 
 export interface PartBoosts {
