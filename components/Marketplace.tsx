@@ -49,6 +49,37 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
     return items;
   };
 
+  // Проверка: есть ли уже деталь с таким слотом на машине
+  const hasSlotInstalled = (slot: string): boolean => {
+    if (!selectedCar) return false;
+    return selectedCar.installedParts.some(p => p.slot === slot);
+  };
+
+  // Проверка: выполнен ли пререквизит
+  const hasPrerequisite = (requiredSlot: string): boolean => {
+    if (!selectedCar) return false;
+    return selectedCar.installedParts.some(p => p.slot === requiredSlot);
+  };
+
+  // Статус детали: можно ли купить и почему нет
+  const getPartStatus = (part: Part): { blocked: boolean; reason?: string } => {
+    if (part.requires && !hasPrerequisite(part.requires)) {
+      const slotNames: Record<string, string> = {
+        intercooler: 'Интеркулер',
+        tires: 'Шины',
+        camshaft: 'Распредвал',
+        differential: 'Дифференциал',
+        turbo: 'Турбина',
+        compressor: 'Компрессор',
+      };
+      return { blocked: true, reason: `Нужен ${slotNames[part.requires] || part.requires}` };
+    }
+    if (part.slot && hasSlotInstalled(part.slot)) {
+      return { blocked: true, reason: 'Слот занят' };
+    }
+    return { blocked: false };
+  };
+
   const goBack = () => {
     if (selectedBrand) { setSelectedBrand(null); }
     else if (selectedCarId) { setSelectedCarId(null); }
@@ -229,11 +260,16 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
             const owned = ownedPartIds.has(part.id);
             const canAfford = money >= part.price;
             const boosts = boostSummary(part);
+            const { blocked, reason } = getPartStatus(part);
+            const disabled = owned || blocked || !canAfford;
 
             return (
               <div key={part.id}
                 className={`bg-gray-800 rounded-xl p-4 border-2 transition-all
-                  ${owned ? 'border-green-500/30 opacity-60' : canAfford ? 'border-gray-700 hover:border-blue-500' : 'border-gray-700 opacity-50'}`}>
+                  ${owned ? 'border-green-500/30 opacity-60'
+                    : blocked ? 'border-red-500/20 opacity-50'
+                    : canAfford ? 'border-gray-700 hover:border-blue-500'
+                    : 'border-gray-700 opacity-50'}`}>
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{part.icon}</span>
@@ -244,6 +280,9 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
                   </div>
                   {owned && (
                     <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-bold">Куплено ✓</span>
+                  )}
+                  {!owned && blocked && (
+                    <span className="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold">{reason}</span>
                   )}
                 </div>
 
@@ -261,10 +300,12 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
                   </span>
                   {owned ? (
                     <span className="text-gray-500 text-xs">Установлено</span>
+                  ) : blocked ? (
+                    <span className="text-red-400 text-xs flex items-center gap-1"><Lock size={12} />{reason}</span>
                   ) : (
                     <button
                       onClick={() => selectedCarId && onBuyPart(selectedCarId, part)}
-                      disabled={!canAfford}
+                      disabled={disabled}
                       className={`px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1 transition-all
                         ${canAfford
                           ? 'bg-blue-600 hover:bg-blue-500 text-white'

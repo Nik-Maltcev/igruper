@@ -32,6 +32,8 @@ export interface PartBoosts {
   accelerationPct?: number; // % к разгону (положительное = улучшение, т.е. уменьшение времени)
 }
 
+export type PartSlot = 'tires' | 'camshaft' | 'differential' | 'turbo' | 'compressor' | 'intercooler';
+
 export interface Part {
   id: string;
   name: string;
@@ -41,6 +43,8 @@ export interface Part {
   brand?: string;
   tier?: number;
   description?: string;
+  slot?: PartSlot;       // Слот: только одна деталь этого типа на машину
+  requires?: PartSlot;   // Пререквизит: нужна деталь этого слота для установки
 }
 
 export interface Track {
