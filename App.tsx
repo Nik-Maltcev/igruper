@@ -12,10 +12,11 @@ import Rules from './components/Rules';
 
 // Mock components for less critical views to keep file count low within constraints
 const PlaceholderView = ({ title, onBack }: { title: string, onBack: () => void }) => (
-  <div className="p-8 text-center">
-    <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
-    <p className="text-gray-400 mb-8">Этот раздел в разработке.</p>
-    <button onClick={onBack} className="px-4 py-2 bg-gray-700 rounded text-white">Назад</button>
+  <div className="p-8 text-center py-16">
+    <div className="text-2xl mb-4">🚧</div>
+    <h2 className="text-[10px] retro-title mb-4">{title}</h2>
+    <p className="text-[8px] text-[#555] mb-6">В РАЗРАБОТКЕ</p>
+    <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>НАЗАД</button>
   </div>
 );
 
@@ -71,16 +72,17 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
-      {/* Admin / Time Control Bar (To Simulate 22:00 Cron Job) */}
-      <div className="bg-black/50 p-2 text-xs flex justify-between items-center border-b border-gray-800">
-        <div className="font-mono text-gray-500 flex items-center gap-3">
-          <span>РЕЖИМ ОТЛАДКИ</span>
-          <span className="text-blue-400">Эпоха: {gameYear}</span>
+    <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
+      {/* Debug Bar — retro style */}
+      <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{boxShadow:'0 2px 0 #000'}}>
+        <div className="flex items-center gap-3">
+          <span className="text-[#555]">[ DEBUG ]</span>
+          <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
           <select
             value={gameYear}
             onChange={(e) => setGameYear(Number(e.target.value))}
-            className="bg-gray-800 text-white border border-gray-600 rounded px-2 py-0.5 text-xs"
+            className="bg-[#111] text-[#0f0] border-2 border-[#333] px-2 py-0.5 text-[8px]"
+            style={{fontFamily:"'Press Start 2P', monospace"}}
           >
             {EPOCHS.map(e => (
               <option key={e.year} value={e.year}>{e.label} ({e.year})</option>
@@ -89,9 +91,10 @@ const App = () => {
         </div>
         <button 
           onClick={togglePhase}
-          className="bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-yellow-500 font-bold border border-yellow-500/30"
+          className="retro-btn text-[#ffff00] text-[8px] py-1 px-3"
+          style={{backgroundColor:'#1a1a2e', border:'2px solid #ffff00', boxShadow:'2px 2px 0 #000'}}
         >
-          {gamePhase === 'PREPARATION' ? '>> 22:00 (НАЧАТЬ ГОНКУ)' : '>> СЛЕДУЮЩИЙ ДЕНЬ'}
+          {gamePhase === 'PREPARATION' ? '▶ 22:00 ГОНКА' : '▶ СЛЕД. ДЕНЬ'}
         </button>
       </div>
 

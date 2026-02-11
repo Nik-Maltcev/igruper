@@ -3,14 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Street King Manager</title>
+    <title>Superigruper</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,700;1,900&display=swap');
+      * { image-rendering: pixelated; }
       body {
-        font-family: 'Exo 2', sans-serif;
-        background-color: #111827;
-        color: #e5e7eb;
+        font-family: 'Press Start 2P', monospace;
+        background-color: #0a0a1a;
+        color: #e0e0e0;
+      }
+      /* Pixel border utility */
+      .pixel-border {
+        border: 4px solid;
+        border-image: repeating-linear-gradient(90deg, currentColor 0px, currentColor 4px, transparent 4px, transparent 8px) 4;
+      }
+      .pixel-box {
+        box-shadow: 
+          4px 0 0 0 currentColor,
+          -4px 0 0 0 currentColor,
+          0 4px 0 0 currentColor,
+          0 -4px 0 0 currentColor;
+      }
+      /* Retro button */
+      .retro-btn {
+        position: relative;
+        border: none;
+        padding: 12px 20px;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.1s;
+        box-shadow: 4px 4px 0px #000;
+      }
+      .retro-btn:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px #000;
+      }
+      .retro-btn:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0px 0px 0px #000;
+      }
+      .retro-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 4px 4px 0px #000;
+      }
+      /* Scanline overlay */
+      .scanlines::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,0,0,0.08) 2px,
+          rgba(0,0,0,0.08) 4px
+        );
+        pointer-events: none;
+        z-index: 9999;
+      }
+      /* Pixel card */
+      .pixel-card {
+        background: #1a1a2e;
+        border: 3px solid #333;
+        box-shadow: 4px 4px 0px #000;
+      }
+      .pixel-card:hover {
+        border-color: #5555ff;
+      }
+      /* Retro scrollbar */
+      ::-webkit-scrollbar { width: 12px; }
+      ::-webkit-scrollbar-track { background: #0a0a1a; }
+      ::-webkit-scrollbar-thumb { background: #333; border: 2px solid #0a0a1a; }
+      /* Blink animation */
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+      .blink { animation: blink 1s step-end infinite; }
+      /* Retro gradient text */
+      .retro-title {
+        background: linear-gradient(180deg, #ffff00 0%, #ff8800 50%, #ff0000 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(2px 2px 0px #000);
       }
     </style>
   <script type="importmap">
@@ -26,7 +104,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
+  <body class="scanlines">
     <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

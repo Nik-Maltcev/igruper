@@ -1,7 +1,6 @@
 import React from 'react';
 import { AVAILABLE_CARS } from '../constants';
 import { Car } from '../types';
-import { DollarSign } from 'lucide-react';
 
 interface DealerProps {
   money: number;
@@ -11,56 +10,61 @@ interface DealerProps {
 
 const Dealer: React.FC<DealerProps> = ({ money, onBuyCar, onBack }) => {
   return (
-    <div className="p-4 max-w-6xl mx-auto h-full flex flex-col">
+    <div className="p-4 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-white uppercase italic">Автосалон</h2>
-          <div className="text-green-400 font-mono text-xl flex items-center gap-1">
-            <DollarSign size={20} /> {money.toLocaleString()}
+          <h2 className="text-lg retro-title">🏪 АВТОСАЛОН</h2>
+          <div className="text-[10px] text-[#00ff00] mt-2">
+            💰 ${money.toLocaleString()}
           </div>
         </div>
-        <button onClick={onBack} className="text-gray-400 hover:text-white border border-gray-600 px-4 py-1 rounded">Назад</button>
+        <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
+          НАЗАД
+        </button>
       </div>
 
-      <div className="flex-grow overflow-y-auto pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {AVAILABLE_CARS.map((car, idx) => (
-            <div key={`${car.id}-${idx}`} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-blue-500 transition-colors shadow-lg flex flex-col">
-              <div className="relative h-48 bg-gray-900">
-                <img src={car.image} alt={car.name} className="w-full h-full object-cover object-center"
-                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://placehold.co/600x300/333333/ffffff?text=No+Image'; }} />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 pt-10">
-                  <h3 className="font-bold text-white text-xl drop-shadow-md">{car.name}</h3>
-                </div>
-                {car.tags && car.tags.length > 0 && (
-                  <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
-                    {car.tags.map(tag => (
-                      <span key={tag} className="bg-black/70 px-1.5 py-0.5 rounded text-[10px] text-gray-200">{tag}</span>
-                    ))}
-                  </div>
-                )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
+        {AVAILABLE_CARS.map((car, idx) => (
+          <div key={`${car.id}-${idx}`} className="pixel-card p-0 overflow-hidden">
+            <div className="relative h-36 bg-[#111]">
+              <img src={car.image} alt={car.name} className="w-full h-full object-cover opacity-90"
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = 'https://placehold.co/600x300/111/555?text=NO+IMG'; }} />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0a1a] to-transparent p-3 pt-8">
+                <h3 className="text-[10px] text-white" style={{textShadow:'2px 2px 0 #000'}}>{car.name}</h3>
               </div>
-              <div className="p-4 flex flex-col gap-3 flex-grow">
-                <div className="grid grid-cols-3 gap-1 text-center text-[11px] text-gray-400 bg-gray-900 rounded p-2">
-                  <div className="flex flex-col"><span className="text-red-400 font-bold">{car.stats.power}</span>лс</div>
-                  <div className="flex flex-col"><span className="text-orange-400 font-bold">{car.stats.torque}</span>Нм</div>
-                  <div className="flex flex-col"><span className="text-blue-400 font-bold">{car.stats.topSpeed}</span>км/ч</div>
-                  <div className="flex flex-col"><span className="text-purple-400 font-bold">{car.stats.acceleration}</span>сек</div>
-                  <div className="flex flex-col"><span className="text-green-400 font-bold">{car.stats.handling}</span>упр</div>
-                  <div className="flex flex-col"><span className="text-yellow-500 font-bold">{car.stats.offroad}</span>прох</div>
+              {car.tags && car.tags.length > 0 && (
+                <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
+                  {car.tags.map(tag => (
+                    <span key={tag} className="bg-[#000]/80 px-1.5 py-0.5 text-[7px] text-[#aaa] border border-[#333]">{tag}</span>
+                  ))}
                 </div>
-                <div className="flex justify-between items-center mt-auto pt-2">
-                  <span className="text-green-400 font-mono font-bold text-lg">${car.price.toLocaleString()}</span>
-                  <button onClick={() => onBuyCar(car)}
-                    disabled={money < car.price}
-                    className={`px-4 py-2 rounded font-bold uppercase text-xs tracking-wider ${money >= car.price ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'}`}>
-                    Купить
-                  </button>
-                </div>
+              )}
+            </div>
+            <div className="p-3">
+              <div className="grid grid-cols-3 gap-1 text-center text-[7px] bg-[#111] p-2 border border-[#222] mb-3">
+                <div><span className="text-[#ff4444] block">{car.stats.power}</span><span className="text-[#555]">ЛС</span></div>
+                <div><span className="text-[#ff8800] block">{car.stats.torque}</span><span className="text-[#555]">НМ</span></div>
+                <div><span className="text-[#4488ff] block">{car.stats.topSpeed}</span><span className="text-[#555]">КМ/Ч</span></div>
+                <div><span className="text-[#aa44ff] block">{car.stats.acceleration}</span><span className="text-[#555]">СЕК</span></div>
+                <div><span className="text-[#44ff44] block">{car.stats.handling}</span><span className="text-[#555]">УПР</span></div>
+                <div><span className="text-[#ffaa00] block">{car.stats.offroad}</span><span className="text-[#555]">ПРОХ</span></div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#00ff00]">${car.price.toLocaleString()}</span>
+                <button onClick={() => onBuyCar(car)}
+                  disabled={money < car.price}
+                  className="retro-btn text-[8px] py-1 px-3"
+                  style={{
+                    backgroundColor: money >= car.price ? '#003300' : '#1a1a1a',
+                    border: `2px solid ${money >= car.price ? '#00ff00' : '#333'}`,
+                    color: money >= car.price ? '#00ff00' : '#555',
+                  }}>
+                  {money >= car.price ? 'КУПИТЬ' : 'МАЛО $'}
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,17 +1,5 @@
 import React from 'react';
 import { View, GamePhase } from '../types';
-import { 
-  CarFront, 
-  CalendarDays, 
-  ShoppingBag, 
-  Store, 
-  Gavel, 
-  Trophy, 
-  Users, 
-  BookOpen,
-  ClipboardList,
-  Globe
-} from 'lucide-react';
 
 interface DashboardProps {
   onNavigate: (view: View) => void;
@@ -19,83 +7,54 @@ interface DashboardProps {
   day: number;
 }
 
+const MENU_ITEMS: { label: string; view: View; emoji: string; color: string }[] = [
+  { label: 'Гараж', view: 'GARAGE', emoji: '🏎️', color: '#ff4444' },
+  { label: 'Мультиплеер', view: 'MULTIPLAYER', emoji: '🌐', color: '#44ff44' },
+  { label: 'Автосалон', view: 'DEALER', emoji: '🏪', color: '#4488ff' },
+  { label: 'Запчасти', view: 'SHOP', emoji: '🔧', color: '#ffaa00' },
+  { label: 'Аукцион', view: 'AUCTION', emoji: '🔨', color: '#aa44ff' },
+  { label: 'Заезды', view: 'WORKLIST', emoji: '🏁', color: '#ff4488' },
+  { label: 'Игроки', view: 'PLAYERS', emoji: '👥', color: '#44ffaa' },
+  { label: 'Правила', view: 'RULES', emoji: '📖', color: '#8888ff' },
+];
+
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate, gamePhase, day }) => {
-  
-  // Helper to render the big buttons
-  const MenuButton = ({ 
-    label, 
-    icon: Icon, 
-    view, 
-    highlight = false,
-    subtitle = "" 
-  }: { 
-    label: string, 
-    icon: any, 
-    view: View, 
-    highlight?: boolean,
-    subtitle?: string
-  }) => (
-    <button
-      onClick={() => onNavigate(view)}
-      className={`relative p-6 rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-lg border-2
-        ${highlight 
-          ? 'bg-gradient-to-br from-indigo-900 to-blue-900 border-blue-400 text-white' 
-          : 'bg-gray-800 border-gray-700 hover:border-gray-500 text-gray-200'}
-      `}
-    >
-      <Icon size={32} className={highlight ? "text-blue-300" : "text-gray-400"} />
-      <div className="text-center">
-        <h3 className="text-xl font-bold uppercase tracking-wider">{label}</h3>
-        {subtitle && <p className="text-xs opacity-75 mt-1">{subtitle}</p>}
-      </div>
-    </button>
-  );
-
   return (
-    <div className="flex flex-col h-full max-w-4xl mx-auto p-4 animate-fade-in">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 italic uppercase">
-          Street King Manager
+    <div className="flex flex-col items-center min-h-full p-4">
+      {/* Title */}
+      <div className="text-center mb-8 mt-4">
+        <h1 className="text-2xl md:text-4xl retro-title font-bold tracking-wider leading-relaxed">
+          SUPERIGRUPER
         </h1>
-        <div className="mt-2 inline-flex items-center px-4 py-1 rounded-full bg-gray-900 border border-gray-700 text-sm font-mono text-blue-400">
-          <span className="mr-2">ДЕНЬ {day}</span>
-          <span className="text-gray-500">|</span>
-          <span className="ml-2 uppercase text-white">{gamePhase === 'PREPARATION' ? 'Покупка и Тюнинг' : 'День Гонки'}</span>
+        <div className="mt-4 inline-block bg-[#1a1a2e] border-2 border-[#333] px-4 py-2" style={{boxShadow:'3px 3px 0 #000'}}>
+          <span className="text-[10px] text-[#00ff00]">ДЕНЬ {day}</span>
+          <span className="text-[10px] text-[#555] mx-2">|</span>
+          <span className="text-[10px] text-[#ffff00]">
+            {gamePhase === 'PREPARATION' ? '⚙ ПОДГОТОВКА' : '🏁 ГОНКА'}
+          </span>
         </div>
-      </header>
-
-      {/* The Grid from the user image */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
-        
-        {/* Left Column */}
-        <div className="flex flex-col gap-4">
-          <MenuButton label="Гараж" icon={CarFront} view="GARAGE" />
-          <MenuButton label="Мультиплеер" icon={Globe} view="MULTIPLAYER" highlight={true} subtitle="Онлайн Гонки" />
-          <MenuButton label="Автосалон" icon={Store} view="DEALER" />
-          <MenuButton label="Магазин Запчастей" icon={ShoppingBag} view="SHOP" />
-        </div>
-
-        {/* Right Column */}
-        <div className="flex flex-col gap-4">
-          <MenuButton label="Аукцион" icon={Gavel} view="AUCTION" />
-          
-          {/* The "Worklist" / Main Action Button */}
-          <MenuButton 
-            label="Заезды (Боты)" 
-            icon={ClipboardList} 
-            view="WORKLIST" 
-            subtitle={gamePhase === 'PREPARATION' ? "Управление и Настройка" : "Центр Гонок"}
-          />
-
-          <MenuButton label="Игроки" icon={Users} view="PLAYERS" />
-          <MenuButton label="Правила" icon={BookOpen} view="RULES" />
-        </div>
-
       </div>
 
-      <footer className="mt-8 text-center text-gray-600 text-sm">
-        Время сервера: {new Date().toLocaleTimeString()}
-      </footer>
+      {/* Menu Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-3xl">
+        {MENU_ITEMS.map(item => (
+          <button
+            key={item.view}
+            onClick={() => onNavigate(item.view)}
+            className="retro-btn text-white text-center flex flex-col items-center gap-2 py-5 px-3"
+            style={{ backgroundColor: '#1a1a2e', border: `3px solid ${item.color}` }}
+          >
+            <span className="text-2xl" style={{filter:'drop-shadow(2px 2px 0 #000)'}}>{item.emoji}</span>
+            <span className="text-[8px] md:text-[10px] leading-tight" style={{color: item.color}}>{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-8 text-[8px] text-[#444] flex items-center gap-2">
+        <span className="blink">▶</span>
+        <span>ВЫБЕРИТЕ РАЗДЕЛ</span>
+      </div>
     </div>
   );
 };
