@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 
-# Car images (too many for git, served locally or via CDN)
-public/cars/
+# Source images (originals, not for git)
 cars_images/output_images/
+public/cars/

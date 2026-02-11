@@ -150,7 +150,7 @@ for (let li = 1; li < lines.length; li++) {
   
   cars.push({
     id: uid, name,
-    image: img ? `/cars/${encodeURIComponent(img)}` : `https://placehold.co/600x300/111/555?text=${encodeURIComponent(name.substring(0, 20))}`,
+    image: img ? `/cars_sm/${encodeURIComponent(img)}` : `https://placehold.co/600x300/111/555?text=${encodeURIComponent(name.substring(0, 20))}`,
     price,
     stats: { power: finalPairs[0].value, torque: finalPairs[1].value, topSpeed: finalPairs[2].value, acceleration: finalPairs[3].value, handling: finalPairs[4].value, offroad: finalPairs[5].value },
     coefficients: { power: finalPairs[0].coeff, torque: finalPairs[1].coeff, topSpeed: finalPairs[2].coeff, acceleration: finalPairs[3].coeff, handling: finalPairs[4].coeff, offroad: finalPairs[5].coeff },
