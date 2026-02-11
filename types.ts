@@ -15,10 +15,13 @@ export interface Car {
   image: string;
   price: number;
   stats: CarStats;
+  coefficients?: CarStats;  // Коэффициенты для процентных бустов от запчастей
   installedParts: Part[];
   color: string;
   tags?: string[];      // Метки: "Классика", "Спорт", "Внедорожник" и т.д.
   originalId?: string;  // Оригинальный ID из каталога (для проверки дубликатов)
+  epoch?: number;       // Эпоха (60, 70, 80...)
+  page?: number;        // Страница в каталоге (1-5)
 }
 
 export interface PartBoosts {

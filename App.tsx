@@ -117,6 +117,7 @@ const App = () => {
         {currentView === 'DEALER' && (
           <Dealer
             money={money}
+            gameYear={gameYear}
             ownedCarIds={new Set(myCars.map(c => c.originalId || c.id))}
             onBuyCar={handleBuyCar}
             onBack={() => navigate('DASHBOARD')}

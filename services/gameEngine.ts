@@ -2,8 +2,10 @@ import { Car, Track, RaceResult, CarStats, PartBoosts } from '../types';
 import { MOCK_OPPONENTS } from '../constants';
 
 // Считает итоговые статы машины с учётом всех установленных деталей
+// Коэффициенты из CSV влияют на эффективность процентных бустов
 export const getEffectiveStats = (car: Car): CarStats => {
   const base = { ...car.stats };
+  const coeff = car.coefficients || { power: 1, torque: 1, topSpeed: 1, acceleration: 1, handling: 1, offroad: 1 };
 
   // 1. Собираем суммарные абсолютные и процентные бусты
   let powerPctTotal = 0;
@@ -23,11 +25,11 @@ export const getEffectiveStats = (car: Car): CarStats => {
     if (b.accelerationPct) accelPctTotal += b.accelerationPct;
   }
 
-  // 2. Применяем процентные модификаторы к базе + абсолютные бусты
-  if (powerPctTotal) base.power = base.power * (1 + powerPctTotal / 100);
-  if (topSpeedPctTotal) base.topSpeed = base.topSpeed * (1 + topSpeedPctTotal / 100);
-  // accelerationPct: положительный % = улучшение = уменьшение времени разгона
-  if (accelPctTotal) base.acceleration = base.acceleration * (1 - accelPctTotal / 100);
+  // 2. Применяем процентные модификаторы с учётом коэффициентов
+  // Коэффициент > 1 = деталь даёт больше эффекта, < 1 = меньше
+  if (powerPctTotal) base.power = base.power * (1 + (powerPctTotal * coeff.power) / 100);
+  if (topSpeedPctTotal) base.topSpeed = base.topSpeed * (1 + (topSpeedPctTotal * coeff.topSpeed) / 100);
+  if (accelPctTotal) base.acceleration = base.acceleration * (1 - (accelPctTotal * coeff.acceleration) / 100);
 
   // Округляем
   base.power = Math.max(1, Math.round(base.power));

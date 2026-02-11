@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Car images (too many for git, served locally or via CDN)
+public/cars/
+cars_images/output_images/
