@@ -106,7 +106,7 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
 
                 {/* Правая часть: установленные детали */}
                 <div className="flex flex-col justify-start px-3 py-2 min-w-[140px] max-w-[180px] overflow-y-auto" style={{maxHeight:'168px'}}>
-                  <div className="text-[7px] text-[#555] mb-1">ДЕТАЛИ ({car.installedParts.length}):</div>
+                  <div className="text-[7px] text-[#555] mb-1">ДЕТАЛИ ({car.installedParts.length}/{({'A':16,'B':14,'C':12,'D':10,'E':8,'R':6,'S':4} as any)[car.carClass||'A']||16}):</div>
                   {car.installedParts.length > 0 ? (
                     <div className="flex flex-col gap-0.5">
                       {car.installedParts.map((part, pIdx) => (
