@@ -1,5 +1,6 @@
 import { Car, Part, Track } from './types';
 import carsDataRaw from './cars_data.json';
+import racesDataRaw from './races_data.json';
 
 export const INITIAL_MONEY = 15000;
 
@@ -180,3 +181,6 @@ export const EPOCHS = Array.from(yearsSet).sort((a: any, b: any) => a - b).map((
 export const getUnlockedBrands = (currentYear: number): Set<string> => {
   return new Set(SHOPS.filter(s => s.unlockYear <= currentYear).map(s => s.brand));
 };
+
+// Данные гонок
+export const RACES_DATA = racesDataRaw as any;

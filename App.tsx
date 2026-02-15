@@ -139,6 +139,7 @@ const App = () => {
           <RaceCenter 
             phase={gamePhase}
             cars={myCars}
+            gameYear={gameYear}
             onBack={() => navigate('DASHBOARD')}
             onRaceComplete={handleRaceComplete}
           />

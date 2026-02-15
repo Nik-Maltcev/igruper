@@ -1,0 +1,4662 @@
+{
+  "epochs": [
+    {
+      "year": 1960,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "хэтчбек"
+            },
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "купе"
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "Франция"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 авто С класса",
+          "races": [
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "Германия"
+            },
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1962,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "седан"
+            },
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": "США"
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "свободная гонка"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 авто B класса, 1 авто р1",
+          "races": [
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "1000"
+            },
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": "А-класс"
+            },
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": "седаны и хэтчбеки"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1964,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 1,
+                "offroad": 2
+              },
+              "requirement": "комфорт"
+            },
+            {
+              "name": "Лёд дрифт 2",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "р3"
+            },
+            {
+              "name": "Трасса 2",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Италия"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 авто А-класса",
+          "races": [
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Песок дрэг 400 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 2,
+                "acceleration": 6,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 3",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "внедорожник"
+            },
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "США и Франция"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1966,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": "р1"
+            },
+            {
+              "name": "Трасса 3",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "шины внед"
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": "шины уни"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "muscle car, 1 слики",
+          "races": [
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "201-300 лс"
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "Шины Универс."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1968,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Сельская дорога 4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "внедорожник"
+            },
+            {
+              "name": "Кольцо 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Германия"
+            },
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "до 121 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 коллекция, 2 р2",
+          "races": [
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 4",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": "120-200 лс"
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": "купе"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1970,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": "р4"
+            },
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": "widow maker"
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "Италия"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 гоночных ш",
+          "races": [
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "60-ые"
+            },
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "Германия"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1972,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": "70-ые"
+            },
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "р1"
+            },
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": "седан"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 muscle car",
+          "races": [
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "автоспорт"
+            },
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "Италия"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1974,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": "хэтчбек США"
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "Франция B-класса"
+            },
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "p5"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 авто менее 121 лс",
+          "races": [
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трасса 2",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "комфорт Гон шины"
+            },
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "внедорожники"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1976,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Грунтовка 3",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "Италия С класса"
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "купе р2"
+            },
+            {
+              "name": "Сельская дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "301-450 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 авто 70-ых",
+          "races": [
+            {
+              "name": "Песок дрэг 400 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 2,
+                "acceleration": 6,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "D -класс"
+            },
+            {
+              "name": "Сельская дорога 4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "Упр выше 105"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1978,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "А-класс"
+            },
+            {
+              "name": "Кольцо 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "коллекция"
+            },
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "121-200лс Уни шины"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 widow maker, 2 р3",
+          "races": [
+            {
+              "name": "Трасса 3",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Лёд дрифт 2",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 4",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "Фр автоспорт"
+            },
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": "Седаны"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1980,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "шины Внед"
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": "комфорт"
+            },
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": "201-300 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 авто 60-ых",
+          "races": [
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "hot hatch"
+            },
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": "комфорт"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1982,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": "внедорожник"
+            },
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": "р4"
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "нет требований"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 muscle cars",
+          "races": [
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 1,
+                "offroad": 2
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "80-ые"
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "С исчерпанным лимитом деталей"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1984,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Песок дрэг 400 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 2,
+                "acceleration": 6,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "С-класс США"
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "слики B-класса"
+            },
+            {
+              "name": "Трек 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": "р1"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 комфорт, 2 Франции",
+          "races": [
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трасса 2",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "widow maker"
+            },
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": "автоспорт"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1986,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 1,
+                "offroad": 2
+              },
+              "requirement": "hot hatch"
+            },
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": "коллекция Италия"
+            },
+            {
+              "name": "Грунтовка 3",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "60-е р2"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 D-класс, 2 шины гон",
+          "races": [
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "нем седан"
+            },
+            {
+              "name": "Трасса 3",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Франция на сликах"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1988,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Сельская дорога 4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "Porsche"
+            },
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": "Chevrolet"
+            },
+            {
+              "name": "Трасса",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Renault"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "BMW,Ford, Lamborghini",
+          "races": [
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Лёд дрифт 2",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "Ferrari"
+            },
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": "Прох выше 100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1990,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дорога 4",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "хэтчбек США р1"
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": "widow maker Герм"
+            },
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": "201-300 лс  80-ых"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "1 Е-класс, 2 Италии",
+          "races": [
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "90 -ые"
+            },
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "70-ые гг."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1992,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "muscle car 70-ых"
+            },
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": "hot hatch Франция"
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "120-200 лс США"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 авто A-класса",
+          "races": [
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": "р5"
+            },
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": "Внедорожники"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1994,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "Citroen"
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "купе 80-ых"
+            },
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "В-класс выше 250 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 авто менее 121 лс",
+          "races": [
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "Е-класс р3"
+            },
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": "США 60-ых,70-ых"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1996,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "90-ые B-класса"
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "седан комфорт 301-450лс"
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "hot hatch США 121-200 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 авто D-класса",
+          "races": [
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "R класс"
+            },
+            {
+              "name": "Песок дрэг 400 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 2,
+                "acceleration": 6,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "купе 80ых, 90-ых"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 1998,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Грунтовка 3",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "комфорт Франция"
+            },
+            {
+              "name": "Трек 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": "коллекция США"
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Сhevrolet 201-300 лc"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 автоспорта, 1 widow maker",
+          "races": [
+            {
+              "name": "Сельская дорога 4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 1,
+                "offroad": 2
+              },
+              "requirement": "651-900 лс р4"
+            },
+            {
+              "name": "Трасса 3",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "Скорость выше 300 км\\ч"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2000,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "седан шины Уни"
+            },
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "хэтчбек менее 121 лс"
+            },
+            {
+              "name": "Дорога 4",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "muscle car Ford"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "р1,р2, 2 Германии",
+          "races": [
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": "внедорожник 90-ых"
+            },
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": "hot hatch"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2002,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Трасса 2",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "porsche до 300 лс"
+            },
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 1,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "С класс Италия"
+            },
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": "седан 301-450 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "60-ые,70-ые, 80-ые",
+          "races": [
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": "Германия р3"
+            },
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": "widow maker"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2004,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "р4"
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "R класс"
+            },
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "renault 90-ых"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 коллекции",
+          "races": [
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "гон шины 451-650 лс седан"
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "00-ые гг."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2006,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": "внедорожник D-класса"
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "Фр.хэтчбек  A-класса"
+            },
+            {
+              "name": "Лёд дрифт 2",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "lamborghini 451-600 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "три авто р5",
+          "races": [
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": "купе E-класса коллекция"
+            },
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "80-ые гг."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2008,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "комфорт B-класса"
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "ferrari D-класса"
+            },
+            {
+              "name": "Грунтовка 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 4,
+                "offroad": 5
+              },
+              "requirement": "Фр 90-ых уни шины"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 Италии на сликах",
+          "races": [
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "widow maker Е-класса"
+            },
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "Германия на внед.ш."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2010,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": "р5 внед шины"
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "С-класс Италия"
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "р4 комфорт"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "R-класс, 2 внедорожника",
+          "races": [
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 2",
+              "weights": {
+                "power": 0,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 0,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": "автоспорт США 00-ых"
+            },
+            {
+              "name": "Песок дрэг 400 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 2,
+                "acceleration": 6,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "muscle car"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2012,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": "В-класс на гон шинах"
+            },
+            {
+              "name": "Трасса 2",
+              "weights": {
+                "power": 4,
+                "torque": 3,
+                "topSpeed": 3,
+                "acceleration": 4,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "hot hatch С-класса"
+            },
+            {
+              "name": "Грунтовка 3",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "открытый матч"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 комфорт Фр, Герм, США",
+          "races": [
+            {
+              "name": "Дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 1,
+                "offroad": 2
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "Фр коллекция"
+            },
+            {
+              "name": "Дрэг 1600 метров",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 8,
+                "acceleration": 4,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "хэтчбеки на сликах"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2014,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": "10-ые гг"
+            },
+            {
+              "name": "Сельская дорога 3",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": "седан США 451-600 лс"
+            },
+            {
+              "name": "Трасса 3",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": "лимит деталей R класса"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 авто А-класса р1",
+          "races": [
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Трек 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 4,
+                "handling": 6,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 3",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 4",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 6,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "мощнее 900лс"
+            },
+            {
+              "name": "Сельская дорога 4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 4,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "60-ые гг."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2016,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Мотокросс 4",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 6,
+                "offroad": 5
+              },
+              "requirement": "купе внед шины до 300 лс"
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "121-201 лс"
+            },
+            {
+              "name": "Трасса 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 1
+              },
+              "requirement": "до 121 лс"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 Италии 00-ых",
+          "races": [
+            {
+              "name": "Дорога 4",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрифт 4",
+              "weights": {
+                "power": 3,
+                "torque": 4,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Лёд дрифт 2",
+              "weights": {
+                "power": 3,
+                "torque": 5,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРЭГ",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 4",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 4
+              },
+              "requirement": "автоспорт D класса"
+            },
+            {
+              "name": "Песок дрэг 1600 м",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 2,
+                "handling": 0,
+                "offroad": 3
+              },
+              "requirement": "10-ые гг."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2018,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Дорога 1",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 1,
+                "handling": 1,
+                "offroad": 1
+              },
+              "requirement": "Герм уни шины 00-ых"
+            },
+            {
+              "name": "Трек 1",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "США hot hatch"
+            },
+            {
+              "name": "Трасса 1",
+              "weights": {
+                "power": 5,
+                "torque": 2,
+                "topSpeed": 3,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": "widow maker слики"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 внедорожника,1 комфорт",
+          "races": [
+            {
+              "name": "Дрифт 1",
+              "weights": {
+                "power": 1,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 400 метров",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "СЛАЛОМ",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 1",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 1,
+                "acceleration": 5,
+                "handling": 3,
+                "offroad": 2
+              },
+              "requirement": "S-класс"
+            },
+            {
+              "name": "Трасса 6",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "Италия на Унив. шинах"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2020,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Лёд дрифт 1",
+              "weights": {
+                "power": 2,
+                "torque": 6,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 3
+              },
+              "requirement": "20-ые"
+            },
+            {
+              "name": "Слалом",
+              "weights": {
+                "power": 0,
+                "torque": 0,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 7,
+                "offroad": 0
+              },
+              "requirement": "А-класс седан"
+            },
+            {
+              "name": "Кольцо 1",
+              "weights": {
+                "power": 4,
+                "torque": 2,
+                "topSpeed": 5,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 0
+              },
+              "requirement": "В-класс купе"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "2 S- класса, 1 Фр внедорожник",
+          "races": [
+            {
+              "name": "Трек 2",
+              "weights": {
+                "power": 1,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 2,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Грунтовка 2",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Дрэг 800 метров",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 6,
+                "acceleration": 6,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "МОТОКРОСС",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 1,
+                "offroad": 5
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Сельская дорога 2",
+              "weights": {
+                "power": 1,
+                "torque": 2,
+                "topSpeed": 0,
+                "acceleration": 4,
+                "handling": 5,
+                "offroad": 3
+              },
+              "requirement": "muscle car мощнее 900лс"
+            },
+            {
+              "name": "Песок дрэг 800 м",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 4,
+                "acceleration": 4,
+                "handling": 1,
+                "offroad": 4
+              },
+              "requirement": "коллекция"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2022,
+      "rounds": [
+        {
+          "round": 1,
+          "requirement": "",
+          "races": [
+            {
+              "name": "Трек 3",
+              "weights": {
+                "power": 3,
+                "torque": 2,
+                "topSpeed": 2,
+                "acceleration": 3,
+                "handling": 5,
+                "offroad": 0
+              },
+              "requirement": "widow maker Германия"
+            },
+            {
+              "name": "Мотокросс 1",
+              "weights": {
+                "power": 2,
+                "torque": 3,
+                "topSpeed": 1,
+                "acceleration": 2,
+                "handling": 3,
+                "offroad": 6
+              },
+              "requirement": "комфорт США"
+            },
+            {
+              "name": "Дрэг4",
+              "weights": {
+                "power": 2,
+                "torque": 2,
+                "topSpeed": 4,
+                "acceleration": 8,
+                "handling": 0,
+                "offroad": 0
+              },
+              "requirement": "коллекция Франция"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "requirement": "3 S -класса, 1 Италия, 1 20-ые",
+          "races": [
+            {
+              "name": "Дрифт 3",
+              "weights": {
+                "power": 2,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 3,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Кольцо 2",
+              "weights": {
+                "power": 4,
+                "torque": 1,
+                "topSpeed": 4,
+                "acceleration": 3,
+                "handling": 2,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Снег слалом",
+              "weights": {
+                "power": 0,
+                "torque": 1,
+                "topSpeed": 0,
+                "acceleration": 2,
+                "handling": 5,
+                "offroad": 4
+              },
+              "requirement": ""
+            }
+          ]
+        },
+        {
+          "round": 3,
+          "requirement": "",
+          "races": [
+            {
+              "name": "ДРИФТ",
+              "weights": {
+                "power": 1,
+                "torque": 3,
+                "topSpeed": 0,
+                "acceleration": 1,
+                "handling": 4,
+                "offroad": 0
+              },
+              "requirement": ""
+            },
+            {
+              "name": "Мотокросс 2",
+              "weights": {
+                "power": 1,
+                "torque": 4,
+                "topSpeed": 0,
+                "acceleration": 3,
+                "handling": 4,
+                "offroad": 7
+              },
+              "requirement": "hot hatch автоспорт/ коллекция"
+            },
+            {
+              "name": "Дорога 2",
+              "weights": {
+                "power": 2,
+                "torque": 1,
+                "topSpeed": 2,
+                "acceleration": 1,
+                "handling": 2,
+                "offroad": 1
+              },
+              "requirement": "внедорож. на гон.шинах"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "specials": [
+    {
+      "name": "квалификация",
+      "year": 1958,
+      "races": [
+        {
+          "name": "Слалом",
+          "weights": {
+            "power": 2,
+            "torque": 0,
+            "topSpeed": 0,
+            "acceleration": 4,
+            "handling": 6,
+            "offroad": 0
+          },
+          "requirement": "открытый матч"
+        },
+        {
+          "name": "Мотокросс",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 0,
+            "acceleration": 2,
+            "handling": 3,
+            "offroad": 5
+          },
+          "requirement": "открытый матч"
+        },
+        {
+          "name": "Дорога",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 1
+          },
+          "requirement": "открытый матч"
+        }
+      ]
+    },
+    {
+      "name": "Ралли Мексики",
+      "years": [
+        1964,
+        1996
+      ],
+      "races": [
+        {
+          "name": "Песок",
+          "weights": {
+            "power": 1,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
+            "handling": 3,
+            "offroad": 2
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Сибири",
+      "years": [
+        1972,
+        2004
+      ],
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 3,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 4
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Финляндии",
+      "years": [
+        1980,
+        2012
+      ],
+      "races": [
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 1,
+            "torque": 3,
+            "topSpeed": 0,
+            "acceleration": 2,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Франции",
+      "years": [
+        1988,
+        2020
+      ],
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 3
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 2
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [
+        1968,
+        1976,
+        1984,
+        1992,
+        2000,
+        2008,
+        2016
+      ],
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "полуФинал",
+      "requirement": "Открытый матч",
+      "races": [
+        {
+          "name": "Слалом",
+          "weights": {
+            "power": 0,
+            "torque": 0,
+            "topSpeed": 0,
+            "acceleration": 2,
+            "handling": 5,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Дрэг",
+          "weights": {
+            "power": 2,
+            "torque": 1,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Дрифт",
+          "weights": {
+            "power": 1,
+            "torque": 3,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 4,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Бездорожье",
+          "weights": {
+            "power": 1,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 2,
+            "handling": 1,
+            "offroad": 5
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Автобан",
+          "weights": {
+            "power": 3,
+            "torque": 1,
+            "topSpeed": 4,
+            "acceleration": 1,
+            "handling": 2,
+            "offroad": 1
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Финал",
+      "requirement": "1 hot hatch, 1widow maker, 1 автоспорт",
+      "races": [
+        {
+          "name": "1комфорт",
+          "weights": {
+            "power": 1,
+            "torque": 0,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "1muscle-car",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка А",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 0,
+            "handling": 0,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка Б",
+          "weights": {
+            "power": 0,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка В",
+          "weights": {
+            "power": 1,
+            "torque": 0,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка Г",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 0,
+            "handling": 0,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка Д",
+          "weights": {
+            "power": 0,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка Е",
+          "weights": {
+            "power": 1,
+            "torque": 0,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка Ж",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 2
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Гонка З",
+          "weights": {
+            "power": 1,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 1,
+            "handling": 1,
+            "offroad": 1
+          },
+          "requirement": ""
+        }
+      ]
+    }
+  ]
+}
