@@ -44,7 +44,7 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
             return (
               <div key={`${car.id}-${idx}`}
                 className="pixel-card p-0 flex items-stretch overflow-hidden"
-                style={{minHeight: '168px', borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '2px'}}>
+                style={{minHeight: '168px', borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '4px'}}>
 
                 {/* Левая часть: имя + теги + детали */}
                 <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
