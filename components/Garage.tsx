@@ -7,19 +7,20 @@ interface GarageProps {
   onBack: () => void;
 }
 
-const STAT_CONFIG: { key: keyof CarStats; label: string; unit: string; color: string; invert?: boolean }[] = [
-  { key: 'power', label: 'МОЩ', unit: 'лс', color: '#ff4444' },
-  { key: 'torque', label: 'МОМ', unit: 'Нм', color: '#ff8800' },
-  { key: 'topSpeed', label: 'СКР', unit: 'км/ч', color: '#4488ff' },
-  { key: 'acceleration', label: 'РЗГ', unit: 'сек', color: '#aa44ff', invert: true },
-  { key: 'handling', label: 'УПР', unit: '', color: '#44ff44' },
-  { key: 'offroad', label: 'ПРХ', unit: '', color: '#ffaa00' },
-];
+const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
+const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
+const STAT_UNITS = ['лс', 'Нм', '', 'с', '', ''];
+
+function coeffColor(v: number) {
+  if (v > 1) return '#44ff44';
+  if (v < 1) return '#ff4444';
+  return '#888';
+}
 
 const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 max-w-5xl mx-auto">
+      <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg retro-title">🏎️ МОЙ ГАРАЖ</h2>
         <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
           МЕНЮ
@@ -32,57 +33,77 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
           <p className="text-[8px] text-[#444]">КУПИТЕ АВТО В САЛОНЕ</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3 pb-20">
           {cars.map((car, idx) => {
             const effective = getEffectiveStats(car);
+            const co = car.coefficients || {} as Partial<CarStats>;
             return (
-              <div key={`${car.id}-${idx}`} className="pixel-card overflow-hidden">
-                <div className="relative h-32 bg-[#111]">
-                  <img src={car.image} alt={car.name} className="w-full h-full object-cover opacity-80" />
-                  {car.tags && car.tags.length > 0 && (
-                    <div className="absolute top-1 right-1 flex gap-1 flex-wrap justify-end">
-                      {car.tags.map(tag => (
-                        <span key={tag} className="bg-[#000]/80 px-1 py-0.5 text-[6px] text-[#aaa] border border-[#333]">{tag}</span>
-                      ))}
-                    </div>
-                  )}
+              <div key={`${car.id}-${idx}`}
+                className="pixel-card p-0 flex items-stretch overflow-hidden"
+                style={{minHeight: '168px'}}>
+
+                {/* Левая часть: имя + теги + детали */}
+                <div className="flex flex-col justify-center px-3 py-2 min-w-[120px] max-w-[140px] border-r border-[#222]">
+                  <div className="text-[10px] text-white leading-tight mb-2" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {car.tags?.slice(0, 3).map((tag: string) => (
+                      <span key={tag} className="text-[7px] text-[#ccc] bg-[#111] px-1.5 py-0.5 border border-[#333]">{tag}</span>
+                    ))}
+                  </div>
+                  {/* Установленные детали */}
+                  <div className="flex flex-wrap gap-1">
+                    {car.installedParts.length > 0 ? (
+                      car.installedParts.map((part, pIdx) => (
+                        <span key={pIdx} className="text-[6px] text-[#4488ff] bg-[#111] px-1 py-0.5 border border-[#333]">🔧 {part.name}</span>
+                      ))
+                    ) : (
+                      <span className="text-[7px] text-[#444]">СТОК</span>
+                    )}
+                  </div>
                 </div>
-                <div className="p-3">
-                  <h3 className="text-[10px] text-white mb-3" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</h3>
-                  <div className="space-y-1.5 mb-3">
-                    {STAT_CONFIG.map(({ key, label, unit, color, invert }) => {
-                      const base = car.stats[key];
-                      const total = effective[key];
-                      const boosted = total !== base;
-                      const pct = invert ? Math.min(100, (1 / total) * 400) : Math.min(100, total / 4);
-                      return (
-                        <div key={key} className="flex items-center gap-2">
-                          <div className="w-10 text-[7px] text-[#888]">{label}</div>
-                          <div className="flex-grow h-3 bg-[#111] border border-[#222] relative overflow-hidden">
-                            <div className="h-full absolute left-0 top-0" style={{width:`${pct}%`, backgroundColor: color, opacity: 0.7}} />
-                          </div>
-                          <div className="w-14 text-right text-[7px]" style={{color}}>
-                            {invert ? total.toFixed(1) : total}{unit && <span className="text-[#555] ml-0.5">{unit}</span>}
-                            {boosted && <span className="text-[#ffff00] ml-0.5">★</span>}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="border-t border-[#222] pt-2">
-                    <div className="text-[7px] text-[#555] mb-1">ДЕТАЛИ:</div>
-                    <div className="flex flex-wrap gap-1">
-                      {car.installedParts.length > 0 ? (
-                        car.installedParts.map((part, pIdx) => (
-                          <span key={pIdx} className="px-1.5 py-0.5 bg-[#111] border border-[#333] text-[7px] text-[#4488ff]">
-                            🔧 {part.name}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-[7px] text-[#333]">СТОК</span>
-                      )}
-                    </div>
-                  </div>
+
+                {/* Картинка */}
+                <div className="w-[336px] min-w-[336px] bg-[#111] border-r border-[#222] relative overflow-hidden">
+                  <img src={car.image} alt={car.name} className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = `https://placehold.co/400x200/111/555?text=${encodeURIComponent(car.name.substring(0, 12))}`; }} />
+                </div>
+
+                {/* Таблица характеристик + коэффициенты */}
+                <div className="flex-grow flex flex-col justify-center">
+                  <table className="w-full text-center" style={{borderCollapse:'collapse'}}>
+                    <thead>
+                      <tr>
+                        {STAT_HEADERS.map((h, hi) => (
+                          <th key={hi} className="text-[8px] text-[#ddd] px-2 py-1 font-normal border-b border-[#333]">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Эффективные значения (с бустами) */}
+                      <tr>
+                        {STAT_KEYS.map((k, ki) => {
+                          const base = car.stats[k];
+                          const eff = effective[k];
+                          const boosted = eff !== base;
+                          return (
+                            <td key={ki} className="text-[10px] px-2 py-1 border-b border-[#1a1a2e]" style={{color: boosted ? '#ffff00' : '#fff'}}>
+                              {k === 'acceleration' ? eff.toFixed(1) : eff}
+                              {STAT_UNITS[ki] && <span className="text-[7px] text-[#999] ml-0.5">{STAT_UNITS[ki]}</span>}
+                              {boosted && <span className="text-[#ffff00] ml-0.5">★</span>}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                      {/* Коэффициенты */}
+                      <tr>
+                        {STAT_KEYS.map((k, ki) => (
+                          <td key={ki} className="text-[9px] px-2 py-1" style={{color: coeffColor((co as any)[k] || 1)}}>
+                            {((co as any)[k] || 1).toFixed(1)}
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             );
