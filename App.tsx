@@ -30,6 +30,8 @@ const App = () => {
   const [gameYear, setGameYear] = useState<number>(1960);
   // Трекинг: какая машина в какой магазин ездила сегодня (carId -> brand)
   const [shopVisits, setShopVisits] = useState<Record<string, string>>({});
+  // Трекинг: сколько раз куплена каждая модель (originalId -> count)
+  const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
   
   // Navigation Handler
   const navigate = (view: View) => setCurrentView(view);
@@ -48,7 +50,8 @@ const App = () => {
   // Logic Handlers
   const handleBuyCar = (car: Car) => {
     setMoney(prev => prev - car.price);
-    setMyCars(prev => [...prev, { ...car, id: `my-${Date.now()}`, originalId: car.id }]); // unique ID, keep original
+    setMyCars(prev => [...prev, { ...car, id: `my-${Date.now()}`, originalId: car.id }]);
+    setPurchaseCounts(prev => ({ ...prev, [car.id]: (prev[car.id] || 0) + 1 }));
     alert(`Вы купили ${car.name}! Проверьте гараж.`);
   };
 
@@ -126,6 +129,7 @@ const App = () => {
             money={money}
             gameYear={gameYear}
             ownedCarIds={new Set(myCars.map(c => c.originalId || c.id))}
+            purchaseCounts={purchaseCounts}
             onBuyCar={handleBuyCar}
             onBack={() => navigate('DASHBOARD')}
           />
