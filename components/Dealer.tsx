@@ -93,11 +93,11 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
 
               {/* Левая часть: имя + теги */}
               <div className="flex flex-col justify-center px-3 py-2 min-w-[120px] max-w-[140px] border-r border-[#222]">
-                <div className="text-[10px] text-white leading-tight mb-2" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
-                <div className="flex flex-wrap gap-1">
-                  {car.tags?.slice(0, 3).map((tag: string) => (
-                    <span key={tag} className="text-[7px] text-[#ccc] bg-[#111] px-1.5 py-0.5 border border-[#333]">{tag}</span>
-                  ))}
+                <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
+                <div className="text-[7px] text-white leading-relaxed">
+                  {car.tags?.[0] && <div>{car.tags[0]}</div>}
+                  {car.tags?.[1] && <div>{car.tags[1]}</div>}
+                  {car.tags?.[2] && <div>{car.tags[2]}</div>}
                 </div>
               </div>
 
