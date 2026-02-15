@@ -17,6 +17,10 @@ function coeffColor(v: number) {
   return '#888';
 }
 
+const CLASS_COLORS: Record<string, string> = {
+  A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
+};
+
 const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
   return (
     <div className="p-3 max-w-5xl mx-auto">
@@ -40,7 +44,7 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
             return (
               <div key={`${car.id}-${idx}`}
                 className="pixel-card p-0 flex items-stretch overflow-hidden"
-                style={{minHeight: '168px'}}>
+                style={{minHeight: '168px', borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '2px'}}>
 
                 {/* Левая часть: имя + теги + детали */}
                 <div className="flex flex-col justify-center px-3 py-2 min-w-[120px] max-w-[140px] border-r border-[#222]">
