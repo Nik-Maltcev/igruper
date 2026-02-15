@@ -23,7 +23,7 @@ const CLASS_COLORS: Record<string, string> = {
 
 const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
   return (
-    <div className="p-3 max-w-5xl mx-auto">
+    <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg retro-title">🏎️ МОЙ ГАРАЖ</h2>
         <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
@@ -47,7 +47,7 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                 style={{minHeight: '168px', borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '2px'}}>
 
                 {/* Левая часть: имя + теги + детали */}
-                <div className="flex flex-col justify-center px-3 py-2 min-w-[120px] max-w-[140px] border-r border-[#222]">
+                <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
                   <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
                   <div className="text-[7px] text-white leading-relaxed mb-2">
                     {car.carClass && <div>класс: {car.carClass}</div>}
