@@ -4,7 +4,7 @@
 // Строка 2: буква дороги, коэффициенты
 import { readFileSync, readdirSync, writeFileSync } from 'fs';
 
-const csv = readFileSync('shops1.csv', 'utf-8');
+const csv = readFileSync('CARS_NEW.csv', 'utf-8');
 const imageFiles = readdirSync('public/cars_sm');
 
 function normName(s) { return s.replace(/[\s\t]+/g, ' ').trim(); }
@@ -26,7 +26,8 @@ function parseRuNum(s) {
 }
 
 function parseTags(tagStr) {
-  return tagStr.replace(/[\s\t]+/g, ' ').trim().split(/\s{2,}/).map(t => t.trim()).filter(Boolean);
+  // Разбиваем по 2+ пробелам/табам, НЕ сжимая сначала
+  return tagStr.trim().split(/\s{2,}/).map(t => t.trim()).filter(Boolean);
 }
 
 const lines = csv.split('\n');
@@ -121,17 +122,18 @@ while (i < lines.length) {
   const cHandling = parseRuNum(nextFields[6]) || 1;
   const cOffroad = parseRuNum(nextFields[7]) || 1;
   
-  // Парсим теги
+  // Парсим теги: "класс  B           купе               США                      60                               2                              muscle car"
+  // Разбиваем по 2+ пробелам -> ["класс", "B", "купе", "США", "60", "2", "muscle car"]
   const rawTags = parseTags(tagStr);
-  let epoch = 60, page = 1;
+  let epoch = 60, rarity = 1, carClass = '';
   const cleanTags = [];
+  let nextIsClass = false;
   for (const t of rawTags) {
-    for (const w of t.split(/\s+/)) {
-      if (/^\d{2}$/.test(w) && parseInt(w) >= 60) epoch = parseInt(w);
-      else if (/^\d{2}$/.test(w) && parseInt(w) >= 10 && parseInt(w) <= 30) epoch = parseInt(w);
-      else if (/^\d$/.test(w) && parseInt(w) >= 1 && parseInt(w) <= 5) page = parseInt(w);
-      else if (w !== 'класс' && w.length > 1) cleanTags.push(w);
-    }
+    if (t === 'класс') { nextIsClass = true; continue; }
+    if (nextIsClass) { carClass = t; nextIsClass = false; continue; }
+    if (/^\d{2}$/.test(t) && parseInt(t) >= 10) { epoch = parseInt(t); continue; }
+    if (/^\d$/.test(t) && parseInt(t) >= 1 && parseInt(t) <= 5) { rarity = parseInt(t); continue; }
+    cleanTags.push(t);
   }
   
   // Добавляем букву дороги в теги если есть
@@ -155,8 +157,9 @@ while (i < lines.length) {
     stats: { power, torque, topSpeed, acceleration, handling, offroad },
     coefficients: { power: cPower, torque: cTorque, topSpeed: cTopSpeed, acceleration: cAccel, handling: cHandling, offroad: cOffroad },
     tags: [...new Set(cleanTags)],
+    carClass,
+    rarity,
     epoch,
-    page,
     year: currentYear,
     dealer: currentDealer,
     quantity,

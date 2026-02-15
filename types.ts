@@ -26,6 +26,8 @@ export interface Car {
   dealer?: string;      // Салон: АЛЬФА, БЕТА, ГАММА, ДЕЛЬТА
   quantity?: number;    // Количество в наличии
   roadType?: string;    // Тип дороги: У, Г, В, С
+  carClass?: string;    // Класс: A, B, C, D, E, S
+  rarity?: number;      // Редкость: 1-5
 }
 
 export interface PartBoosts {

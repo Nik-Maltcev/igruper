@@ -46,9 +46,14 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                 <div className="flex flex-col justify-center px-3 py-2 min-w-[120px] max-w-[140px] border-r border-[#222]">
                   <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
                   <div className="text-[7px] text-white leading-relaxed mb-2">
-                    {car.tags?.[0] && <div>{car.tags[0]}</div>}
+                    {car.carClass && <div>класс: {car.carClass}</div>}
                     {car.tags?.[1] && <div>{car.tags[1]}</div>}
                     {car.tags?.[2] && <div>{car.tags[2]}</div>}
+                    {car.tags?.[0] && <div>{car.tags[0]}</div>}
+                    {car.rarity && <div>редкость: {car.rarity}</div>}
+                    {car.tags?.slice(3).map((tag: string, ti: number) => (
+                      <div key={ti} style={{color:'#ffaa00'}}>{tag}</div>
+                    ))}
                   </div>
                   {/* Установленные детали */}
                   <div className="flex flex-wrap gap-1">
