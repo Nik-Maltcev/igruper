@@ -82,7 +82,8 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
         {/* Ралли */}
         {availableRallies.length > 0 && (
           <div className="mb-4">
-            <div className="text-[9px] text-[#44ff44] mb-2">🌍 РАЛЛИ</div>
+            <div className="text-[9px] text-[#44ff44] mb-1">🌍 РАЛЛИ</div>
+            <div className="text-[7px] text-[#ff4444] mb-2">⚠ только авто с меткой «автоспорт» · машина не участвует в обычных гонках всю неделю</div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {availableRallies.map((r: any, ri: number) => (
                 <button key={ri} onClick={() => setSelectedYear(-ri - 100)}
@@ -99,7 +100,8 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
         {/* Гонка Чемпионов */}
         {championshipAvailable && (
           <div className="mb-4">
-            <div className="text-[9px] text-[#ff8800] mb-2">🏆 ГОНКА ЧЕМПИОНОВ</div>
+            <div className="text-[9px] text-[#ff8800] mb-1">🏆 ГОНКА ЧЕМПИОНОВ</div>
+            <div className="text-[7px] text-[#ff4444] mb-2">⚠ только авто с меткой «автоспорт» · машина не участвует в обычных гонках всю неделю</div>
             <button onClick={() => setSelectedYear(-200)}
               className="pixel-card p-3 text-center hover:border-[#ff8800] transition-colors cursor-pointer w-full"
               style={{borderColor: '#ff880066'}}>

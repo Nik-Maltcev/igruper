@@ -4534,32 +4534,8 @@
     },
     {
       "name": "Финал",
-      "requirement": "1 hot hatch, 1widow maker, 1 автоспорт",
+      "requirement": "1 hot hatch, 1widow maker, 1 автоспорт 1комфорт, 1 автоспорт 1muscle-car, 1 коллекция, 1 Франция, 1 Италия, 1 США, 1 Германия",
       "races": [
-        {
-          "name": "1комфорт",
-          "weights": {
-            "power": 1,
-            "torque": 0,
-            "topSpeed": 0,
-            "acceleration": 0,
-            "handling": 0,
-            "offroad": 0
-          },
-          "requirement": ""
-        },
-        {
-          "name": "1muscle-car",
-          "weights": {
-            "power": 1,
-            "torque": 1,
-            "topSpeed": 1,
-            "acceleration": 1,
-            "handling": 1,
-            "offroad": 0
-          },
-          "requirement": ""
-        },
         {
           "name": "Гонка А",
           "weights": {

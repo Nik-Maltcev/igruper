@@ -1,7 +1,18 @@
 // Парсер races.csv -> races_data.json
 import { readFileSync, writeFileSync } from 'fs';
 
-const csv = readFileSync('races.csv', 'utf-8');
+const csvRaw = readFileSync('races.csv', 'utf-8');
+
+// Склеиваем многострочные значения в кавычках
+let csv = '';
+let inQuote = false;
+for (let ci = 0; ci < csvRaw.length; ci++) {
+  const ch = csvRaw[ci];
+  if (ch === '"') { inQuote = !inQuote; csv += ch; continue; }
+  if (inQuote && (ch === '\n' || ch === '\r')) { csv += ' '; continue; }
+  csv += ch;
+}
+
 const lines = csv.split(/\r?\n/);
 
 function parseNum(s) {
