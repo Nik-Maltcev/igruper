@@ -58,16 +58,6 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                       <div key={ti} style={{color:'#ffaa00'}}>{tag}</div>
                     ))}
                   </div>
-                  {/* Установленные детали */}
-                  <div className="flex flex-wrap gap-1">
-                    {car.installedParts.length > 0 ? (
-                      car.installedParts.map((part, pIdx) => (
-                        <span key={pIdx} className="text-[6px] text-[#4488ff] bg-[#111] px-1 py-0.5 border border-[#333]">🔧 {part.name}</span>
-                      ))
-                    ) : (
-                      <span className="text-[7px] text-[#444]">СТОК</span>
-                    )}
-                  </div>
                 </div>
 
                 {/* Картинка */}
@@ -77,7 +67,7 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                 </div>
 
                 {/* Таблица характеристик + коэффициенты */}
-                <div className="flex-grow flex flex-col justify-center">
+                <div className="flex-grow flex flex-col justify-center border-r border-[#222]">
                   <table className="w-full text-center" style={{borderCollapse:'collapse'}}>
                     <thead>
                       <tr>
@@ -112,6 +102,20 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                {/* Правая часть: установленные детали */}
+                <div className="flex flex-col justify-start px-3 py-2 min-w-[140px] max-w-[180px] overflow-y-auto" style={{maxHeight:'168px'}}>
+                  <div className="text-[7px] text-[#555] mb-1">ДЕТАЛИ ({car.installedParts.length}):</div>
+                  {car.installedParts.length > 0 ? (
+                    <div className="flex flex-col gap-0.5">
+                      {car.installedParts.map((part, pIdx) => (
+                        <div key={pIdx} className="text-[7px] text-[#4488ff]">🔧 {part.name}</div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-[7px] text-[#444]">СТОК</div>
+                  )}
                 </div>
               </div>
             );
