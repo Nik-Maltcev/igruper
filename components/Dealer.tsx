@@ -89,7 +89,7 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
           return (
             <div key={`${car.id}-${idx}`}
               className={`pixel-card p-0 flex items-stretch overflow-hidden ${owned ? 'opacity-40' : ''}`}
-              style={{minHeight: '88px'}}>
+              style={{minHeight: '110px'}}>
 
               {/* Левая часть: имя + теги */}
               <div className="flex flex-col justify-center px-2 py-1 min-w-[100px] max-w-[120px] border-r border-[#222]">
@@ -102,9 +102,9 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
               </div>
 
               {/* Картинка */}
-              <div className="w-[100px] min-w-[100px] bg-[#111] border-r border-[#222] relative overflow-hidden">
+              <div className="w-[200px] min-w-[200px] bg-[#111] border-r border-[#222] relative overflow-hidden">
                 <img src={car.image} alt={car.name} className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://placehold.co/200x100/111/555?text=${encodeURIComponent(car.name.substring(0, 12))}`; }} />
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://placehold.co/400x200/111/555?text=${encodeURIComponent(car.name.substring(0, 12))}`; }} />
                 {/* Количество */}
                 <div className="absolute bottom-0 right-0 bg-[#000]/80 px-1 py-0 text-[6px] text-[#ffaa00]">×{car.quantity || 1}</div>
               </div>
