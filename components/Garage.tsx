@@ -5,6 +5,7 @@ import { getEffectiveStats } from '../services/gameEngine';
 interface GarageProps {
   cars: Car[];
   onBack: () => void;
+  onRemovePart: (carId: string, partIndex: number) => void;
 }
 
 const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
@@ -21,7 +22,7 @@ const CLASS_COLORS: Record<string, string> = {
   A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
 };
 
-const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
+const Garage: React.FC<GarageProps> = ({ cars, onBack, onRemovePart }) => {
   return (
     <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
@@ -110,7 +111,10 @@ const Garage: React.FC<GarageProps> = ({ cars, onBack }) => {
                   {car.installedParts.length > 0 ? (
                     <div className="flex flex-col gap-0.5">
                       {car.installedParts.map((part, pIdx) => (
-                        <div key={pIdx} className="text-[7px] text-[#4488ff]">🔧 {part.name}</div>
+                        <div key={pIdx} className="flex items-center gap-1">
+                          <span className="text-[7px] text-[#4488ff] flex-grow">🔧 {part.name}</span>
+                          <button onClick={() => onRemovePart(car.id, pIdx)} className="text-[7px] text-[#ff4444] hover:text-[#ff6666]" title="Снять">✕</button>
+                        </div>
                       ))}
                     </div>
                   ) : (

@@ -110,7 +110,14 @@ const App = () => {
         {currentView === 'GARAGE' && (
           <Garage 
             cars={myCars} 
-            onBack={() => navigate('DASHBOARD')} 
+            onBack={() => navigate('DASHBOARD')}
+            onRemovePart={(carId, partIndex) => {
+              setMyCars(prev => prev.map(car =>
+                car.id === carId
+                  ? { ...car, installedParts: car.installedParts.filter((_, i) => i !== partIndex) }
+                  : car
+              ));
+            }}
           />
         )}
 
