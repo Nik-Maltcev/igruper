@@ -17,7 +17,7 @@ const DEALERS = [
   { id: 'ДЕЛЬТА', label: 'ДЕЛЬТА', icon: '🔷', color: '#44ff44' },
 ];
 
-const STAT_HEADERS = ['МОЩ', 'КРУТ', 'СКОР', 'РАЗГ', 'УПР', 'ПРОХ'];
+const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
 const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
 const STAT_UNITS = ['лс', 'Нм', '', 'с', '', ''];
 
