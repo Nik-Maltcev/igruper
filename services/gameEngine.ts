@@ -8,17 +8,18 @@ export const getEffectiveStats = (car: Car): CarStats => {
   const coeff = car.coefficients || { power: 1, torque: 1, topSpeed: 1, acceleration: 1, handling: 1, offroad: 1 };
 
   // 1. Собираем суммарные абсолютные и процентные бусты
+  // Коэффициент применяется к абсолютным бустам: +10 лс при коэфф 1.1 = +11 лс
   let powerPctTotal = 0;
   let topSpeedPctTotal = 0;
   let accelPctTotal = 0;
 
   for (const part of car.installedParts) {
     const b = part.boosts;
-    if (b.power) base.power += b.power;
-    if (b.torque) base.torque += b.torque;
-    if (b.topSpeed) base.topSpeed += b.topSpeed;
-    if (b.handling) base.handling += b.handling;
-    if (b.offroad) base.offroad += b.offroad;
+    if (b.power) base.power += b.power * coeff.power;
+    if (b.torque) base.torque += b.torque * coeff.torque;
+    if (b.topSpeed) base.topSpeed += b.topSpeed * coeff.topSpeed;
+    if (b.handling) base.handling += b.handling * coeff.handling;
+    if (b.offroad) base.offroad += b.offroad * coeff.offroad;
     // Накапливаем проценты
     if (b.powerPct) powerPctTotal += b.powerPct;
     if (b.topSpeedPct) topSpeedPctTotal += b.topSpeedPct;
