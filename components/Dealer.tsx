@@ -82,7 +82,7 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
         <button onClick={() => setSelectedDealer(null)} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>← САЛОНЫ</button>
       </div>
 
-      <div className="flex flex-col gap-2 pb-20">
+      <div className="flex flex-col gap-3 pb-20">
         {dealerCars.map((car: any, idx: number) => {
           const owned = ownedCarIds.has(car.id);
           const co = car.coefficients || {};
