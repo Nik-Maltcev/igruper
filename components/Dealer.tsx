@@ -114,7 +114,7 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
                 <img src={car.image} alt={car.name} className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = `https://placehold.co/400x200/111/555?text=${encodeURIComponent(car.name.substring(0, 12))}`; }} />
                 {/* Количество */}
-                <div className="absolute bottom-0 right-0 bg-[#000]/80 px-2 py-0.5 text-[8px] text-[#ffaa00]">×{car.quantity || 1}</div>
+                <div className="absolute bottom-0 right-0 bg-[#000]/80 px-2 py-0.5 text-[8px] text-[#ffaa00]">наличие {car.quantity || 1}</div>
               </div>
 
               {/* Таблица характеристик + коэффициенты */}
