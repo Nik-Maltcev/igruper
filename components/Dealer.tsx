@@ -100,11 +100,10 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, onBuyCar,
                 <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
                 <div className="text-[7px] text-white leading-relaxed">
                   {car.carClass && <div>класс: {car.carClass}</div>}
-                  {car.tags?.[1] && <div>{car.tags[1]}</div>}
-                  {car.tags?.[2] && <div>{car.tags[2]}</div>}
                   {car.tags?.[0] && <div>{car.tags[0]}</div>}
+                  {car.tags?.[1] && <div>{car.tags[1]}</div>}
                   {car.rarity && <div>редкость: {car.rarity}</div>}
-                  {car.tags?.slice(3).map((tag: string, ti: number) => (
+                  {car.tags?.slice(2).map((tag: string, ti: number) => (
                     <div key={ti} style={{color:'#ffaa00'}}>{tag}</div>
                   ))}
                 </div>

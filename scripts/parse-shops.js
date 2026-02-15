@@ -136,9 +136,8 @@ while (i < lines.length) {
     cleanTags.push(t);
   }
   
-  // Добавляем букву дороги в теги если есть
-  const roadMap = { 'У': 'Улица', 'Г': 'Город', 'В': 'Внедорожье', 'С': 'Спорт' };
-  if (roadMap[roadLetter]) cleanTags.unshift(roadMap[roadLetter]);
+  // Добавляем НЕ букву дороги в теги — roadType хранится отдельно
+  // cleanTags уже содержит: кузов, страну, доп. теги (muscle car и т.д.)
   
   // Генерируем уникальный ID
   const baseId = name.toLowerCase().replace(/[^a-zа-яё0-9]/gi, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
