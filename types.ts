@@ -22,6 +22,10 @@ export interface Car {
   originalId?: string;  // Оригинальный ID из каталога (для проверки дубликатов)
   epoch?: number;       // Эпоха (60, 70, 80...)
   page?: number;        // Страница в каталоге (1-5)
+  year?: number;        // Год появления в салоне (1960, 1962, ...)
+  dealer?: string;      // Салон: АЛЬФА, БЕТА, ГАММА, ДЕЛЬТА
+  quantity?: number;    // Количество в наличии
+  roadType?: string;    // Тип дороги: У, Г, В, С
 }
 
 export interface PartBoosts {

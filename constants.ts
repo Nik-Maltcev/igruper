@@ -173,20 +173,9 @@ export const SHOPS: ShopInfo[] = [
   { brand: 'RalliArt', unlockYear: 2008 },
 ];
 
-export const EPOCHS = [
-  { year: 1960, label: '60-е' },
-  { year: 1966, label: '1966' },
-  { year: 1970, label: '1970' },
-  { year: 1974, label: '1974' },
-  { year: 1978, label: '1978' },
-  { year: 1982, label: '1982' },
-  { year: 1986, label: '1986' },
-  { year: 1992, label: '1992' },
-  { year: 1996, label: '1996' },
-  { year: 2000, label: '2000' },
-  { year: 2004, label: '2004' },
-  { year: 2008, label: '2008' },
-];
+// Генерируем эпохи из данных машин
+const yearsSet = new Set(carsDataRaw.map((c: any) => c.year).filter(Boolean));
+export const EPOCHS = Array.from(yearsSet).sort((a: any, b: any) => a - b).map((y: any) => ({ year: y, label: String(y) }));
 
 export const getUnlockedBrands = (currentYear: number): Set<string> => {
   return new Set(SHOPS.filter(s => s.unlockYear <= currentYear).map(s => s.brand));
