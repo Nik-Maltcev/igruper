@@ -1,148 +1,203 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
-import { Car, Room, RoomPlayer } from '../types';
-import { TRACKS } from '../constants';
-import { simulateRace } from '../services/gameEngine';
+import { Car, Room, RoomPlayer, RoomPhase } from '../types';
+import {
+  createRoom, joinRoom, fetchPlayers, startGame,
+  updateRoomPhase, updatePlayerGarage, sendSystemMessage,
+  getScheduleDay, WEEK_SCHEDULE,
+} from '../services/multiplayer';
+import Chat from './Chat';
 
 interface MultiplayerProps {
   myCars: Car[];
   onBack: () => void;
 }
 
+type Step = 'LOGIN' | 'LOBBY_SELECT' | 'ROOM' | 'GAME';
+
 const Multiplayer: React.FC<MultiplayerProps> = ({ myCars, onBack }) => {
-  const [username, setUsername] = useState('');
-  const [step, setStep] = useState<'LOGIN' | 'LOBBY_SELECT' | 'ROOM' | 'RACING' | 'RESULTS'>('LOGIN');
+  // Auth
+  const [username, setUsername] = useState(() => localStorage.getItem('mp_username') || '');
+  const [step, setStep] = useState<Step>('LOGIN');
   const [roomCodeInput, setRoomCodeInput] = useState('');
-  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
-  const [players, setPlayers] = useState<RoomPlayer[]>([]);
-  const [playerId, setPlayerId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const stepRef = useRef(step);
-  useEffect(() => { stepRef.current = step; }, [step]);
 
+  // Room state
+  const [room, setRoom] = useState<Room | null>(null);
+  const [players, setPlayers] = useState<RoomPlayer[]>([]);
+  const [playerId, setPlayerId] = useState(() => localStorage.getItem('mp_player_id') || '');
+
+  // Timer
+  const [timeLeft, setTimeLeft] = useState('');
+
+  // Supabase check
   if (!isSupabaseConfigured()) {
     return (
       <div className="p-4 max-w-2xl mx-auto text-center mt-8">
         <div className="pixel-card p-6 border-[#ff4444]">
           <div className="text-2xl mb-3">⚠</div>
           <h2 className="text-[10px] text-[#ff4444] mb-3">SUPABASE НЕ НАСТРОЕН</h2>
-          <p className="text-[7px] text-[#666] mb-4 leading-relaxed">
-            ДЛЯ МУЛЬТИПЛЕЕРА НУЖНА БД.<br/>
-            НАСТРОЙТЕ SUPABASE В services/supabase.ts
-          </p>
-          <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>НАЗАД</button>
+          <p className="text-[7px] text-[#666] mb-4">НАСТРОЙТЕ SUPABASE В services/supabase.ts</p>
+          <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
+            style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>НАЗАД</button>
         </div>
       </div>
     );
   }
 
+  // --- Realtime подписки ---
   useEffect(() => {
-    if (!currentRoom) return;
+    if (!room) return;
+
     const channel = supabase
-      .channel(`room:${currentRoom.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players', filter: `room_id=eq.${currentRoom.id}` }, () => {
-        fetchPlayers(currentRoom.id);
+      .channel(`mp-room:${room.id}`)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'room_players',
+        filter: `room_id=eq.${room.id}`,
+      }, () => {
+        fetchPlayers(room.id).then(setPlayers);
       })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${currentRoom.id}` }, (payload) => {
-        const newRoom = payload.new as Room;
-        setCurrentRoom(newRoom);
-        if (newRoom.status === 'RACING' && stepRef.current !== 'RACING') {
-          setStep('RACING');
-          startRaceAnimation();
-        } else if (newRoom.status === 'WAITING' && (stepRef.current === 'RESULTS' || stepRef.current === 'RACING')) {
-          setStep('ROOM');
-          setProgress(0);
-        }
+      .on('postgres_changes', {
+        event: 'UPDATE', schema: 'public', table: 'rooms',
+        filter: `id=eq.${room.id}`,
+      }, (payload) => {
+        setRoom(payload.new as Room);
       })
       .subscribe();
+
+    fetchPlayers(room.id).then(setPlayers);
+
     return () => { supabase.removeChannel(channel); };
-  }, [currentRoom?.id]);
+  }, [room?.id]);
 
-  const fetchPlayers = async (roomId: string) => {
-    const { data } = await supabase.from('room_players').select('*').eq('room_id', roomId);
-    if (data) setPlayers(data);
-  };
+  // --- Таймер до 22:00 ---
+  useEffect(() => {
+    if (!room || room.status !== 'PLAYING') return;
 
+    const interval = setInterval(() => {
+      const now = new Date();
+      const target = new Date();
+      target.setHours(22, 0, 0, 0);
+      if (now >= target) {
+        target.setDate(target.getDate() + 1);
+      }
+      const diff = target.getTime() - now.getTime();
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setTimeLeft(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [room?.status]);
+
+  // --- Автосмена фазы в 22:00 (только хост) ---
+  useEffect(() => {
+    if (!room || room.status !== 'PLAYING') return;
+    const me = players.find(p => p.id === playerId);
+    if (!me?.is_host) return;
+
+    const checkPhase = setInterval(async () => {
+      const now = new Date();
+      if (now.getHours() === 22 && now.getMinutes() === 0 && now.getSeconds() < 15) {
+        await advanceDay();
+      }
+    }, 10000);
+
+    return () => clearInterval(checkPhase);
+  }, [room, players, playerId]);
+
+  // --- Смена дня ---
+  const advanceDay = useCallback(async () => {
+    if (!room) return;
+    const nextDay = room.current_day + 1;
+    const schedule = getScheduleDay(nextDay);
+
+    let nextPhase: RoomPhase = 'TUNING';
+    let nextYear = room.current_year;
+
+    if (schedule.activity === 'RACE') {
+      nextPhase = 'RACE_SETUP';
+    } else if (schedule.activity === 'DEALER') {
+      nextPhase = 'DEALER';
+      // Воскресенье после Мировой Серии = смена года
+      if (nextDay > 3 && schedule.dayNum === 10) {
+        const yearIdx = EPOCHS_LIST.indexOf(nextYear);
+        if (yearIdx < EPOCHS_LIST.length - 1) {
+          nextYear = EPOCHS_LIST[yearIdx + 1];
+        }
+      }
+    }
+
+    await updateRoomPhase(room.id, nextPhase, {
+      current_day: nextDay,
+      current_year: nextYear,
+    } as any);
+
+    const label = schedule.label;
+    const actLabel = schedule.activity === 'RACE' ? `Гонки: ${schedule.raceType}` :
+      schedule.activity === 'DEALER' ? 'Автосалон' : 'Тюнинг';
+    await sendSystemMessage(room.id, `День ${nextDay}: ${label} — ${actLabel}. Эпоха ${nextYear}.`);
+  }, [room]);
+
+  // --- Handlers ---
   const handleLogin = () => {
-    setError(null);
     if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); return; }
-    if (myCars.length === 0) { setError('НЕТ МАШИН! КУПИТЕ В САЛОНЕ.'); return; }
+    localStorage.setItem('mp_username', username.trim());
+    setError(null);
     setStep('LOBBY_SELECT');
   };
 
-  const createRoom = async () => {
+  const handleCreate = async () => {
     setError(null);
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const myId = crypto.randomUUID();
-    const { data: roomData, error: roomError } = await supabase
-      .from('rooms').insert({ code, status: 'WAITING', host_id: myId, track_id: TRACKS[0].id }).select().single();
-    if (roomError) { setError(roomError.message); return; }
-    const { error: playerError } = await supabase
-      .from('room_players').insert({ id: myId, room_id: roomData.id, username, is_host: true, car_data: myCars[0] });
-    if (playerError) { setError(playerError.message); return; }
-    setPlayerId(myId); setCurrentRoom(roomData); fetchPlayers(roomData.id); setStep('ROOM');
+    const result = await createRoom(username);
+    if ('error' in result) { setError(result.error); return; }
+    setPlayerId(result.playerId);
+    localStorage.setItem('mp_player_id', result.playerId);
+    setRoom(result.room);
+    setStep('ROOM');
   };
 
-  const joinRoom = async () => {
+  const handleJoin = async () => {
+    if (!roomCodeInput.trim()) return;
     setError(null);
-    if (!roomCodeInput) return;
-    const { data: roomData, error: findError } = await supabase
-      .from('rooms').select('*').eq('code', roomCodeInput.toUpperCase()).single();
-    if (findError || !roomData) { setError('КОМНАТА НЕ НАЙДЕНА'); return; }
-    if (roomData.status !== 'WAITING') { setError('ГОНКА УЖЕ ИДЁТ'); return; }
-    const { count } = await supabase.from('room_players').select('*', { count: 'exact', head: true }).eq('room_id', roomData.id);
-    if (count !== null && count >= 8) { setError('КОМНАТА ПОЛНА (8/8)'); return; }
-    const myId = crypto.randomUUID();
-    const { error: joinError } = await supabase
-      .from('room_players').insert({ id: myId, room_id: roomData.id, username, is_host: false, car_data: myCars[0] });
-    if (joinError) { setError(joinError.message); return; }
-    setPlayerId(myId); setCurrentRoom(roomData); fetchPlayers(roomData.id); setStep('ROOM');
+    const result = await joinRoom(roomCodeInput.trim(), username);
+    if ('error' in result) { setError(result.error); return; }
+    setPlayerId(result.playerId);
+    localStorage.setItem('mp_player_id', result.playerId);
+    setRoom(result.room);
+    setStep('ROOM');
   };
 
-  const startRaceHost = async () => {
-    if (!currentRoom || players.length < 1) return;
-    const carsForSim = players.map(p => ({ ...p.car_data, id: p.id }));
-    const track = TRACKS.find(t => t.id === currentRoom.track_id) || TRACKS[0];
-    const results = simulateRace(carsForSim, track, 'SUNNY', false);
-    const updates = results.map(res =>
-      supabase.from('room_players').update({ finish_time: res.time, position: res.position }).eq('id', res.carId)
-    );
-    await Promise.all(updates);
-    await supabase.from('rooms').update({ status: 'RACING' }).eq('id', currentRoom.id);
+  const handleStartGame = async () => {
+    if (!room || players.length < 3) return;
+    await startGame(room.id);
   };
 
-  const resetLobbyHost = async () => {
-    if (!currentRoom) return;
-    await supabase.from('room_players').update({ finish_time: null, position: null }).eq('room_id', currentRoom.id);
-    await supabase.from('rooms').update({ status: 'WAITING' }).eq('id', currentRoom.id);
+  const copyCode = () => {
+    if (room?.code) {
+      navigator.clipboard.writeText(room.code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
-  const startRaceAnimation = () => {
-    setProgress(0);
-    let p = 0;
-    const interval = setInterval(() => {
-      p += 0.5;
-      setProgress(p);
-      if (p >= 100) { clearInterval(interval); setTimeout(() => setStep('RESULTS'), 1000); }
-    }, 50);
-  };
-
-  const leaveRoom = async () => {
+  const leaveRoom = () => {
     if (window.confirm('ПОКИНУТЬ КОМНАТУ?')) {
-      setStep('LOBBY_SELECT'); setCurrentRoom(null);
+      setStep('LOBBY_SELECT');
+      setRoom(null);
+      setPlayers([]);
     }
   };
 
-  const copyRoomCode = () => {
-    if (currentRoom?.code) {
-      navigator.clipboard.writeText(currentRoom.code);
-      setCopied(true); setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  // --- Текущий день расписания ---
+  const currentSchedule = room ? getScheduleDay(room.current_day) : null;
+  const me = players.find(p => p.id === playerId);
 
   // --- RENDER ---
+
+  // Экран логина
   if (step === 'LOGIN') {
     return (
       <div className="flex items-center justify-center h-full p-4">
@@ -151,12 +206,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ myCars, onBack }) => {
           {error && <div className="bg-[#330000] border border-[#ff4444] text-[#ff4444] text-[7px] p-2 mb-4">{error}</div>}
           <input type="text" placeholder="НИКНЕЙМ"
             className="w-full bg-[#111] border-2 border-[#333] p-2 text-[9px] text-white text-center mb-4 outline-none focus:border-[#5555ff]"
-            style={{fontFamily:'Press Start 2P'}}
+            style={{ fontFamily: 'Press Start 2P' }}
             value={username} onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
-          <button onClick={handleLogin} disabled={!username}
+          <button onClick={handleLogin} disabled={!username.trim()}
             className="retro-btn text-[8px] py-2 px-6 w-full"
-            style={{backgroundColor:'#000066', border:'2px solid #5555ff', color:'#5555ff'}}>
+            style={{ backgroundColor: '#000066', border: '2px solid #5555ff', color: '#5555ff' }}>
             ВОЙТИ
           </button>
           <button onClick={onBack} className="text-[7px] text-[#444] mt-4 block mx-auto hover:text-[#888]">НАЗАД</button>
@@ -165,6 +220,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ myCars, onBack }) => {
     );
   }
 
+  // Выбор: создать / войти
   if (step === 'LOBBY_SELECT') {
     return (
       <div className="flex flex-col items-center justify-center h-full p-4 gap-4">
@@ -173,81 +229,87 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ myCars, onBack }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
           <div className="pixel-card p-5 text-center flex flex-col items-center gap-3">
             <div className="text-2xl">👥</div>
-            <h3 className="text-[9px] text-white">СОЗДАТЬ</h3>
-            <p className="text-[6px] text-[#555]">СТАНЬТЕ ХОСТОМ</p>
-            <button onClick={createRoom} className="retro-btn text-[8px] py-2 px-4 w-full mt-auto"
-              style={{backgroundColor:'#000066', border:'2px solid #5555ff', color:'#5555ff'}}>СОЗДАТЬ</button>
+            <h3 className="text-[9px] text-white">СОЗДАТЬ КОМНАТУ</h3>
+            <p className="text-[6px] text-[#555]">3-8 ИГРОКОВ</p>
+            <button onClick={handleCreate} className="retro-btn text-[8px] py-2 px-4 w-full mt-auto"
+              style={{ backgroundColor: '#000066', border: '2px solid #5555ff', color: '#5555ff' }}>СОЗДАТЬ</button>
           </div>
           <div className="pixel-card p-5 text-center flex flex-col items-center gap-3">
             <div className="text-2xl">🚪</div>
-            <h3 className="text-[9px] text-white">ВОЙТИ</h3>
-            <input type="text" placeholder="КОД"
+            <h3 className="text-[9px] text-white">ВОЙТИ ПО КОДУ</h3>
+            <input type="text" placeholder="XXXX"
               className="w-full bg-[#111] border-2 border-[#333] p-2 text-[9px] text-white text-center uppercase outline-none focus:border-[#44ff44]"
-              style={{fontFamily:'Press Start 2P'}}
-              value={roomCodeInput} onChange={(e) => setRoomCodeInput(e.target.value)} />
-            <button onClick={joinRoom} className="retro-btn text-[8px] py-2 px-4 w-full mt-auto"
-              style={{backgroundColor:'#003300', border:'2px solid #44ff44', color:'#44ff44'}}>ВОЙТИ</button>
+              style={{ fontFamily: 'Press Start 2P' }} maxLength={4}
+              value={roomCodeInput} onChange={(e) => setRoomCodeInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleJoin()} />
+            <button onClick={handleJoin} className="retro-btn text-[8px] py-2 px-4 w-full mt-auto"
+              style={{ backgroundColor: '#003300', border: '2px solid #44ff44', color: '#44ff44' }}>ВОЙТИ</button>
           </div>
         </div>
-        <button onClick={() => setStep('LOGIN')} className="text-[7px] text-[#444] hover:text-[#888]">НАЗАД</button>
+        <button onClick={() => setStep('LOGIN')} className="text-[7px] text-[#444] hover:text-[#888]">← НАЗАД</button>
       </div>
     );
   }
 
-  if (step === 'ROOM') {
-    const isHost = players.find(p => p.id === playerId)?.is_host;
+  // Лобби комнаты (ожидание игроков)
+  if (step === 'ROOM' && room && room.status === 'WAITING') {
     return (
       <div className="p-4 max-w-4xl mx-auto">
         <div className="pixel-card p-4 mb-6">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-[10px] retro-title mb-2">ОБЩЕЕ ЛОББИ</h2>
+              <h2 className="text-[10px] retro-title mb-2">ЛОББИ</h2>
               <div className="flex items-center gap-2 bg-[#111] border border-[#333] px-3 py-1.5 inline-flex">
                 <span className="text-[7px] text-[#555]">КОД:</span>
-                <span className="text-[12px] text-[#4488ff]" style={{letterSpacing:'3px'}}>{currentRoom?.code}</span>
-                <button onClick={copyRoomCode} className="text-[7px] text-[#555] hover:text-[#aaa] ml-1">
+                <span className="text-[12px] text-[#4488ff]" style={{ letterSpacing: '3px' }}>{room.code}</span>
+                <button onClick={copyCode} className="text-[7px] text-[#555] hover:text-[#aaa] ml-1">
                   {copied ? '✓' : '📋'}
                 </button>
               </div>
-              <p className="text-[6px] text-[#444] mt-1">ОТПРАВЬТЕ КОД ДРУГУ</p>
+              <p className="text-[6px] text-[#444] mt-1">ОТПРАВЬТЕ КОД ДРУЗЬЯМ</p>
             </div>
             <div className="text-right flex items-center gap-3">
               <div>
-                <div className="text-[12px] text-white">{players.length}/8</div>
+                <div className="text-[12px] text-white">{players.length}/{room.max_players}</div>
                 <div className="text-[6px] text-[#555]">ИГРОКОВ</div>
               </div>
               <button onClick={leaveRoom} className="retro-btn text-[7px] py-1 px-2"
-                style={{backgroundColor:'#330000', border:'2px solid #ff4444', color:'#ff4444'}}>ВЫЙТИ</button>
+                style={{ backgroundColor: '#330000', border: '2px solid #ff4444', color: '#ff4444' }}>ВЫЙТИ</button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+        {/* Список игроков */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {players.map(player => (
-            <div key={player.id} className={`pixel-card p-3 flex items-center gap-3 ${player.id === playerId ? 'border-[#5555ff]' : ''}`}>
-              <div className="w-8 h-8 bg-[#111] border border-[#333] flex items-center justify-center text-sm">🏎</div>
-              <div>
-                <div className="text-[8px] text-white flex items-center gap-1">
-                  {player.username}
-                  {player.is_host && <span className="text-[6px] bg-[#ffff00] text-black px-1">HOST</span>}
-                </div>
-                <div className="text-[6px] text-[#555]">{player.car_data.name}</div>
+            <div key={player.id} className={`pixel-card p-3 text-center ${player.id === playerId ? 'border-[#5555ff]' : ''}`}>
+              <div className="text-lg mb-1">🏎</div>
+              <div className="text-[8px] text-white">
+                {player.username}
+                {player.is_host && <span className="text-[6px] bg-[#ffff00] text-black px-1 ml-1">HOST</span>}
               </div>
+              <div className="text-[6px] text-[#555] mt-1">💰 ${player.money.toLocaleString()}</div>
+              <div className="text-[6px] text-[#444]">{(player.garage as any[]).length} машин</div>
             </div>
           ))}
-          {Array.from({ length: 8 - players.length }).map((_, i) => (
-            <div key={i} className="border border-dashed border-[#222] p-3 flex items-center justify-center text-[7px] text-[#333]">
+          {Array.from({ length: room.max_players - players.length }).map((_, i) => (
+            <div key={`empty-${i}`} className="border border-dashed border-[#222] p-3 flex items-center justify-center text-[7px] text-[#333]">
               ПУСТО
             </div>
           ))}
         </div>
 
+        {/* Кнопка старта */}
         <div className="text-center">
-          {isHost ? (
-            <button onClick={startRaceHost} disabled={players.length < 2}
+          {me?.is_host ? (
+            <button onClick={handleStartGame} disabled={players.length < 3}
               className="retro-btn text-[9px] py-3 px-8"
-              style={{backgroundColor: players.length >= 2 ? '#330000' : '#1a1a1a', border:`3px solid ${players.length >= 2 ? '#ff4444' : '#333'}`, color: players.length >= 2 ? '#ff4444' : '#555'}}>
-              {players.length < 2 ? 'ЖДЁМ ИГРОКОВ...' : '▶ НАЧАТЬ ГОНКУ'}
+              style={{
+                backgroundColor: players.length >= 3 ? '#003300' : '#1a1a1a',
+                border: `3px solid ${players.length >= 3 ? '#00ff00' : '#333'}`,
+                color: players.length >= 3 ? '#00ff00' : '#555',
+              }}>
+              {players.length < 3 ? `ЖДЁМ ИГРОКОВ (${players.length}/3)...` : '▶ НАЧАТЬ ИГРУ'}
             </button>
           ) : (
             <div className="pixel-card p-4 inline-block">
@@ -255,68 +317,164 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ myCars, onBack }) => {
             </div>
           )}
         </div>
+
+        {/* Чат */}
+        <Chat roomId={room.id} playerId={playerId} username={username} />
       </div>
     );
   }
 
-  if (step === 'RACING') {
+  // Игра идёт
+  if ((step === 'ROOM' || step === 'GAME') && room && room.status === 'PLAYING') {
     return (
-      <div className="flex flex-col items-center justify-center py-12 p-4 space-y-6">
-        <h2 className="text-sm retro-title blink">ОНЛАЙН ЗАЕЗД</h2>
-        <div className="w-full max-w-3xl pixel-card p-4 space-y-3">
-          {players.map(p => (
-            <div key={p.id}>
-              <div className="flex justify-between text-[7px] text-[#555] mb-1">
-                <span>{p.username}</span><span>{p.car_data.name}</span>
+      <div className="p-3 max-w-6xl mx-auto">
+        {/* Верхняя панель */}
+        <div className="pixel-card p-3 mb-3">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <div>
+                <span className="text-[7px] text-[#555]">ЭПОХА</span>
+                <div className="text-[11px] text-[#00aaff]">{room.current_year}</div>
               </div>
-              <div className="w-full h-5 bg-[#111] border border-[#222] relative overflow-hidden">
-                <div className={`absolute top-0 left-0 h-full transition-all ${p.id === playerId ? 'bg-[#000066] border-r-2 border-[#5555ff]' : 'bg-[#222] border-r-2 border-[#555]'}`}
-                  style={{width:`${Math.min(100, progress * (0.9 + Math.random() * 0.2))}%`}} />
+              <div>
+                <span className="text-[7px] text-[#555]">ДЕНЬ</span>
+                <div className="text-[11px] text-white">{currentSchedule?.label || '—'}</div>
+              </div>
+              <div>
+                <span className="text-[7px] text-[#555]">ФАЗА</span>
+                <div className="text-[11px]" style={{
+                  color: room.phase === 'TUNING' ? '#44ff44' :
+                    room.phase === 'RACE_SETUP' ? '#ffaa00' :
+                      room.phase === 'RACING' ? '#ff4444' :
+                        room.phase === 'DEALER' ? '#4488ff' : '#fff'
+                }}>
+                  {room.phase === 'TUNING' ? '🔧 ТЮНИНГ' :
+                    room.phase === 'RACE_SETUP' ? '🏁 РАССТАНОВКА' :
+                      room.phase === 'RACING' ? '🏎 ГОНКА' :
+                        room.phase === 'RESULTS' ? '🏆 РЕЗУЛЬТАТЫ' :
+                          room.phase === 'DEALER' ? '🏪 АВТОСАЛОН' : room.phase}
+                </div>
+              </div>
+              <div>
+                <span className="text-[7px] text-[#555]">ДО 22:00</span>
+                <div className="text-[11px] text-[#ffff00]">{timeLeft}</div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (step === 'RESULTS') {
-    const sortedPlayers = [...players].sort((a, b) => (a.position || 99) - (b.position || 99));
-    const isHost = players.find(p => p.id === playerId)?.is_host;
-    return (
-      <div className="flex flex-col items-center py-8 p-4">
-        <div className="text-3xl mb-3">🏆</div>
-        <h2 className="text-sm retro-title mb-6">РЕЗУЛЬТАТЫ</h2>
-        <div className="w-full max-w-2xl pixel-card overflow-hidden">
-          <div className="grid grid-cols-4 bg-[#111] p-2 text-[7px] text-[#555] uppercase border-b border-[#222]">
-            <span>ПОЗ</span><span>ГОНЩИК</span><span>АВТО</span><span className="text-right">ВРЕМЯ</span>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <span className="text-[7px] text-[#555]">{username}</span>
+                <div className="text-[10px] text-[#00ff00]">💰 ${me?.money?.toLocaleString() || 0}</div>
+                <div className="text-[7px] text-[#ffaa00]">⭐ {me?.points || 0} очков</div>
+              </div>
+              <button onClick={leaveRoom} className="retro-btn text-[7px] py-1 px-2"
+                style={{ backgroundColor: '#330000', border: '2px solid #ff4444', color: '#ff4444' }}>ВЫЙТИ</button>
+            </div>
           </div>
-          {sortedPlayers.map(p => (
-            <div key={p.id}
-              className={`grid grid-cols-4 p-2 text-[8px] border-b border-[#111] ${p.id === playerId ? 'text-white bg-[#000066]/20' : 'text-[#666]'}`}>
-              <span>{p.position === 1 ? '🥇' : p.position === 2 ? '🥈' : p.position === 3 ? '🥉' : `#${p.position || '-'}`}</span>
-              <span>{p.username}</span>
-              <span className="text-[#555]">{p.car_data.name}</span>
-              <span className="text-right text-[#00ff00]">{p.finish_time?.toFixed(3) || 'DNF'}s</span>
+        </div>
+
+        {/* Расписание недели */}
+        <div className="pixel-card p-3 mb-3">
+          <div className="text-[7px] text-[#555] mb-2">РАСПИСАНИЕ НЕДЕЛИ:</div>
+          <div className="flex gap-1 overflow-x-auto">
+            {WEEK_SCHEDULE.slice(room.current_day <= 3 ? 0 : 3).map((day, i) => {
+              const isToday = day.dayNum === (currentSchedule?.dayNum || 0);
+              return (
+                <div key={i} className="px-2 py-1 text-center min-w-[80px]"
+                  style={{
+                    backgroundColor: isToday ? '#1a1a4e' : '#111',
+                    border: `1px solid ${isToday ? '#5555ff' : '#222'}`,
+                  }}>
+                  <div className="text-[7px]" style={{ color: isToday ? '#5555ff' : '#555' }}>{day.label}</div>
+                  <div className="text-[6px]" style={{
+                    color: day.activity === 'RACE' ? '#ff4444' :
+                      day.activity === 'DEALER' ? '#4488ff' : '#44ff44'
+                  }}>
+                    {day.activity === 'RACE' ? `🏁 ${day.raceType}` :
+                      day.activity === 'DEALER' ? '🏪 САЛОН' : '🔧 ТЮНИНГ'}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Таблица игроков */}
+        <div className="pixel-card p-3 mb-3">
+          <div className="text-[7px] text-[#555] mb-2">РЕЙТИНГ ИГРОКОВ:</div>
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+            {[...players].sort((a, b) => b.points - a.points).map((p, i) => (
+              <div key={p.id} className={`text-center p-2 ${p.id === playerId ? 'bg-[#1a1a4e] border border-[#5555ff]' : 'bg-[#111] border border-[#222]'}`}>
+                <div className="text-[8px]" style={{ color: i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#888' }}>
+                  #{i + 1}
+                </div>
+                <div className="text-[7px] text-white truncate">{p.username}</div>
+                <div className="text-[7px] text-[#ffaa00]">⭐{p.points}</div>
+                <div className="text-[6px] text-[#00ff00]">${p.money.toLocaleString()}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Контент фазы */}
+        <div className="pixel-card p-4 text-center">
+          {room.phase === 'TUNING' && (
+            <div>
+              <div className="text-lg mb-2">🔧</div>
+              <div className="text-[10px] text-[#44ff44] mb-2">ФАЗА ТЮНИНГА</div>
+              <div className="text-[7px] text-[#555]">
+                Покупайте детали и тюнингуйте машины до 22:00.
+                <br />Используйте вкладки ГАРАЖ и МАГАЗИН в главном меню.
+              </div>
             </div>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-col items-center gap-3">
-          {isHost ? (
-            <button onClick={resetLobbyHost} className="retro-btn text-[8px] py-2 px-6"
-              style={{backgroundColor:'#000066', border:'2px solid #5555ff', color:'#5555ff'}}>
-              СЛЕДУЮЩАЯ ГОНКА ▶
-            </button>
-          ) : (
-            <div className="text-[7px] text-[#4488ff] blink">⏳ ОЖИДАНИЕ ХОСТА...</div>
           )}
-          <button onClick={leaveRoom} className="text-[6px] text-[#444] hover:text-[#ff4444]">ПОКИНУТЬ КОМНАТУ</button>
+          {room.phase === 'RACE_SETUP' && (
+            <div>
+              <div className="text-lg mb-2">🏁</div>
+              <div className="text-[10px] text-[#ffaa00] mb-2">РАССТАНОВКА МАШИН</div>
+              <div className="text-[7px] text-[#555]">
+                Расставьте машины на трассы до 22:00.
+                <br />Тип гонки: {currentSchedule?.raceType || '—'}
+              </div>
+            </div>
+          )}
+          {room.phase === 'RACING' && (
+            <div>
+              <div className="text-lg mb-2">🏎</div>
+              <div className="text-[10px] text-[#ff4444] mb-2 blink">ГОНКА ИДЁТ</div>
+              <div className="text-[7px] text-[#555]">Подсчёт результатов...</div>
+            </div>
+          )}
+          {room.phase === 'RESULTS' && (
+            <div>
+              <div className="text-lg mb-2">🏆</div>
+              <div className="text-[10px] text-[#ffd700] mb-2">РЕЗУЛЬТАТЫ</div>
+              <div className="text-[7px] text-[#555]">Результаты гонок дня</div>
+            </div>
+          )}
+          {room.phase === 'DEALER' && (
+            <div>
+              <div className="text-lg mb-2">🏪</div>
+              <div className="text-[10px] text-[#4488ff] mb-2">АВТОСАЛОН ОТКРЫТ</div>
+              <div className="text-[7px] text-[#555]">
+                Покупайте машины эпохи {room.current_year} до 22:00.
+                <br />Используйте вкладку АВТОСАЛОН в главном меню.
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Чат */}
+        <Chat roomId={room.id} playerId={playerId} username={username} />
       </div>
     );
   }
 
   return null;
 };
+
+// Список эпох для смены года
+const EPOCHS_LIST = [1960, 1962, 1964, 1966, 1968, 1970, 1972, 1974, 1976, 1978,
+  1980, 1982, 1984, 1986, 1988, 1990, 1992, 1994, 1996, 1998,
+  2000, 2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024];
 
 export default Multiplayer;

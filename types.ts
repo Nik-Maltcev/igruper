@@ -90,23 +90,54 @@ export interface PlayerState {
 
 // --- Multiplayer Types ---
 
+export type RoomStatus = 'WAITING' | 'PLAYING' | 'FINISHED';
+export type RoomPhase = 'LOBBY' | 'TUNING' | 'RACE_SETUP' | 'RACING' | 'RESULTS' | 'DEALER';
+
+export type WeekDay = 'FRIDAY' | 'SATURDAY' | 'SUNDAY' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY';
+
 export interface Room {
-    id: string;
-    code: string;
-    status: 'WAITING' | 'RACING' | 'FINISHED';
-    host_id: string;
-    track_id: string;
-    created_at: string;
+  id: string;
+  code: string;
+  status: RoomStatus;
+  host_id: string;
+  current_day: number;       // Игровой день (0=лобби, 1=пятница старт...)
+  current_year: number;      // Текущий игровой год (1960, 1962...)
+  phase: RoomPhase;
+  day_started_at: string | null;
+  week_started_at: string | null;
+  created_at: string;
+  max_players: number;
 }
 
 export interface RoomPlayer {
-    id: string;
-    room_id: string;
-    username: string;
-    is_host: boolean;
-    car_data: Car; // Сериализованная машина
-    finish_time: number | null; // null пока не проехал
-    position: number | null;
+  id: string;
+  room_id: string;
+  username: string;
+  is_host: boolean;
+  money: number;
+  garage: Car[];             // Гараж игрока (JSONB)
+  points: number;
+  is_ready: boolean;
+  joined_at: string;
+}
+
+export interface RaceEntry {
+  id: string;
+  room_id: string;
+  player_id: string;
+  race_id: string;
+  car_id: string;
+  day: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  room_id: string;
+  player_id: string | null;
+  username: string;
+  message: string;
+  type: 'user' | 'system';
+  created_at: string;
 }
 
 export type GamePhase = 'PREPARATION' | 'RACE_DAY' | 'RACING' | 'RESULTS';
