@@ -32,6 +32,8 @@ const App = () => {
   const [shopVisits, setShopVisits] = useState<Record<string, string>>({});
   // Трекинг: сколько раз куплена каждая модель (originalId -> count)
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
+  // Склад трофейных деталей
+  const [storage, setStorage] = useState<Part[]>([]);
   
   // Navigation Handler
   const navigate = (view: View) => setCurrentView(view);
@@ -113,12 +115,34 @@ const App = () => {
         {currentView === 'GARAGE' && (
           <Garage 
             cars={myCars} 
+            storage={storage}
             onBack={() => navigate('DASHBOARD')}
             onRemovePart={(carId, partIndex) => {
               setMyCars(prev => prev.map(car =>
                 car.id === carId
                   ? { ...car, installedParts: car.installedParts.filter((_, i) => i !== partIndex) }
                   : car
+              ));
+            }}
+            onRemovePartToStorage={(carId, partIndex) => {
+              const car = myCars.find(c => c.id === carId);
+              if (!car) return;
+              const part = car.installedParts[partIndex];
+              setStorage(prev => [...prev, part]);
+              setMyCars(prev => prev.map(c =>
+                c.id === carId
+                  ? { ...c, installedParts: c.installedParts.filter((_, i) => i !== partIndex) }
+                  : c
+              ));
+            }}
+            onInstallFromStorage={(carId, storageIndex) => {
+              const part = storage[storageIndex];
+              if (!part) return;
+              setStorage(prev => prev.filter((_, i) => i !== storageIndex));
+              setMyCars(prev => prev.map(c =>
+                c.id === carId
+                  ? { ...c, installedParts: [...c.installedParts, part] }
+                  : c
               ));
             }}
           />
