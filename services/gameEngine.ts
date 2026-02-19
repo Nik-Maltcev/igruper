@@ -1,5 +1,6 @@
 import { Car, Track, RaceResult, CarStats, PartBoosts } from '../types';
 import { MOCK_OPPONENTS } from '../constants';
+import { RewardEntry } from '../constants';
 
 // Считает итоговые статы машины с учётом всех установленных деталей
 // Коэффициенты из CSV влияют на эффективность процентных бустов
@@ -49,7 +50,8 @@ export const simulateRace = (
   userCars: Car[],
   track: Track,
   weather: 'SUNNY' | 'RAIN' | 'STORM',
-  includeBots: boolean = true
+  includeBots: boolean = true,
+  rewardTable?: RewardEntry[],
 ): RaceResult[] => {
   const allRacers = includeBots ? [...userCars, ...MOCK_OPPONENTS] : [...userCars];
 
@@ -100,11 +102,22 @@ export const simulateRace = (
     const position = index + 1;
     let earnings = 0;
     let points = 0;
-    if (position === 1) { earnings = 5000; points = 25; }
-    else if (position === 2) { earnings = 2500; points = 18; }
-    else if (position === 3) { earnings = 1000; points = 15; }
-    else if (position <= 5) { earnings = 250; points = 10; }
-    else { earnings = 50; points = 0; }
+    
+    if (rewardTable) {
+      // Используем таблицу наград из nagrady.csv
+      const reward = rewardTable.find(rw => rw.place === position);
+      if (reward) {
+        earnings = reward.money;
+        points = reward.points;
+      }
+    } else {
+      // Fallback — старая система
+      if (position === 1) { earnings = 5000; points = 25; }
+      else if (position === 2) { earnings = 2500; points = 18; }
+      else if (position === 3) { earnings = 1000; points = 15; }
+      else if (position <= 5) { earnings = 250; points = 10; }
+      else { earnings = 50; points = 0; }
+    }
     return { ...r, position, earnings, points };
   });
 };

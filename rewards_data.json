@@ -1,0 +1,1280 @@
+{
+  "3": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 2200,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 1000,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 7000,
+        "points": 10,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 4500,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 2000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 7000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 5000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 3,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 7500,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 5000,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 20,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 12500,
+        "points": 12,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 1000
+  },
+  "4": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 2700,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 1600,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1000,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 8000,
+        "points": 11,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 6600,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 4000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 4000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 5000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 5000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 3,
+        "money": 4000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 4,
+        "money": 4000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 7800,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 6300,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 20,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 13000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 11100,
+        "points": 8,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 1000
+  },
+  "5": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 2700,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2000,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1300,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 800,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 8000,
+        "points": 12,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 6500,
+        "points": 10,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 5000,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 3800,
+        "points": 4,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 3000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 5000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 4500,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 3,
+        "money": 3000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 4,
+        "money": 0,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 5,
+        "money": 2500,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 12000,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 9500,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 8000,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 7000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 23,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 13000,
+        "points": 18,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 12500,
+        "points": 13,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 11500,
+        "points": 9,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 0
+  },
+  "6": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 2700,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2000,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1500,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 1000,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 700,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 8000,
+        "points": 12,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 6500,
+        "points": 10,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 5200,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 4100,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 3300,
+        "points": 3,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 6000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 4000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 2500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 1000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 5000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 4500,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 3,
+        "money": 3000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 4,
+        "money": 1500,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 5,
+        "money": 0,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 6,
+        "money": 1500,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 13500,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 11000,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 10000,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 8500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 7000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 25,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 13000,
+        "points": 20,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 12500,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 12000,
+        "points": 11,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 11500,
+        "points": 8,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 0
+  },
+  "7": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 3000,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2300,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1800,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 1300,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 900,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 700,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 8000,
+        "points": 13,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 6500,
+        "points": 11,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 5200,
+        "points": 8,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 4500,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 3800,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 3000,
+        "points": 3,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 7000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 3500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 2200,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 1000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 5000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 5000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 3,
+        "money": 3000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 4,
+        "money": 1500,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 5,
+        "money": 0,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 6,
+        "money": 3000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 1500,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 13500,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 11000,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 10000,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 9000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 8000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 6500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 5000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 25,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 13500,
+        "points": 21,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 12500,
+        "points": 17,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 12000,
+        "points": 13,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 11500,
+        "points": 10,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 11000,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 0
+  },
+  "8": {
+    "city": [
+      {
+        "place": 1,
+        "money": 3500,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 3200,
+        "points": 6,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2700,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 2100,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 1600,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 1200,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 1000,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 600,
+        "points": 1,
+        "prizes": 0
+      }
+    ],
+    "national": [
+      {
+        "place": 1,
+        "money": 10000,
+        "points": 15,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 8200,
+        "points": 13,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 7000,
+        "points": 11,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 5500,
+        "points": 8,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 4700,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 4300,
+        "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 3800,
+        "points": 4,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 3000,
+        "points": 3,
+        "prizes": 0
+      }
+    ],
+    "worldSaturday": [
+      {
+        "place": 1,
+        "money": 11000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 7000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 5500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 4000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 3000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 2000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 1000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 0,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldBonus": [
+      {
+        "place": 1,
+        "money": 7000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 2,
+        "money": 3000,
+        "points": 0,
+        "prizes": 2
+      },
+      {
+        "place": 3,
+        "money": 5000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 4,
+        "money": 3000,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 5,
+        "money": 0,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 6,
+        "money": 0,
+        "points": 0,
+        "prizes": 1
+      },
+      {
+        "place": 7,
+        "money": 2500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 1500,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "worldMain": [
+      {
+        "place": 1,
+        "money": 13500,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 12000,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 10000,
+        "points": 1,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 9000,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 7700,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 6500,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 5200,
+        "points": 0,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 4000,
+        "points": 0,
+        "prizes": 0
+      }
+    ],
+    "tournament": [
+      {
+        "place": 1,
+        "money": 15000,
+        "points": 25,
+        "prizes": 0
+      },
+      {
+        "place": 2,
+        "money": 13800,
+        "points": 22,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 13000,
+        "points": 18,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 12500,
+        "points": 14,
+        "prizes": 0
+      },
+      {
+        "place": 5,
+        "money": 12000,
+        "points": 11,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 11500,
+        "points": 9,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 10800,
+        "points": 7,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 10000,
+        "points": 5,
+        "prizes": 0
+      }
+    ],
+    "worldSaturdayEntryFee": 0
+  }
+}

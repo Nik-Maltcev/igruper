@@ -2,6 +2,7 @@ import { Car, Part, Track } from './types';
 import carsDataRaw from './cars_data.json';
 import racesDataRaw from './races_data.json';
 import shopsDataRaw from './shops_data.json';
+import rewardsDataRaw from './rewards_data.json';
 
 export const INITIAL_MONEY = 15000;
 
@@ -65,3 +66,29 @@ export const getUnlockedBrands = (currentYear: number): Set<string> => {
 
 // Данные гонок
 export const RACES_DATA = racesDataRaw as any;
+
+// Данные наград по количеству игроков
+export interface RewardEntry {
+  place: number;
+  money: number;
+  points: number;
+  prizes: number;
+}
+
+export interface RewardsForPlayerCount {
+  city: RewardEntry[];
+  national: RewardEntry[];
+  worldSaturday: RewardEntry[];
+  worldBonus: RewardEntry[];
+  worldMain: RewardEntry[];
+  tournament: RewardEntry[];
+  worldSaturdayEntryFee?: number;
+}
+
+export const REWARDS_DATA: Record<string, RewardsForPlayerCount> = rewardsDataRaw as any;
+
+// Получить награды для конкретного количества игроков
+export function getRewards(playerCount: number): RewardsForPlayerCount {
+  const clamped = Math.max(3, Math.min(8, playerCount));
+  return REWARDS_DATA[String(clamped)] || REWARDS_DATA['3'];
+}
