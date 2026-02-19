@@ -38,6 +38,7 @@ export interface PartBoosts {
   offroad?: number;         // +проходимость (абсолют)
   // Процентные модификаторы
   powerPct?: number;        // % к мощности
+  torquePct?: number;       // % к крутящему моменту
   topSpeedPct?: number;     // % к скорости
   accelerationPct?: number; // % к разгону (положительное = улучшение, т.е. уменьшение времени)
 }

@@ -10,6 +10,7 @@ export const getEffectiveStats = (car: Car): CarStats => {
   // 1. Собираем суммарные абсолютные и процентные бусты
   // Коэффициент применяется к абсолютным бустам: +10 лс при коэфф 1.1 = +11 лс
   let powerPctTotal = 0;
+  let torquePctTotal = 0;
   let topSpeedPctTotal = 0;
   let accelPctTotal = 0;
 
@@ -22,6 +23,7 @@ export const getEffectiveStats = (car: Car): CarStats => {
     if (b.offroad) base.offroad += b.offroad * coeff.offroad;
     // Накапливаем проценты
     if (b.powerPct) powerPctTotal += b.powerPct;
+    if (b.torquePct) torquePctTotal += b.torquePct;
     if (b.topSpeedPct) topSpeedPctTotal += b.topSpeedPct;
     if (b.accelerationPct) accelPctTotal += b.accelerationPct;
   }
@@ -29,6 +31,7 @@ export const getEffectiveStats = (car: Car): CarStats => {
   // 2. Применяем процентные модификаторы с учётом коэффициентов
   // Коэффициент > 1 = деталь даёт больше эффекта, < 1 = меньше
   if (powerPctTotal) base.power = base.power * (1 + (powerPctTotal * coeff.power) / 100);
+  if (torquePctTotal) base.torque = base.torque * (1 + (torquePctTotal * coeff.torque) / 100);
   if (topSpeedPctTotal) base.topSpeed = base.topSpeed * (1 + (topSpeedPctTotal * coeff.topSpeed) / 100);
   if (accelPctTotal) base.acceleration = base.acceleration * (1 - (accelPctTotal * coeff.acceleration) / 100);
 

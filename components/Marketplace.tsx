@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SHOPS, SHOP_PARTS, getUnlockedBrands } from '../constants';
+import { SHOPS } from '../constants';
 import { Car, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 
@@ -52,19 +52,19 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
     return { blocked: false };
   };
 
-  const boostText = (part: Part) => {
-    if (part.description) return part.description;
+  const boostBadges = (part: Part) => {
     const b = part.boosts;
-    const items: string[] = [];
-    if (b.power) items.push(`${b.power > 0 ? '+' : ''}${b.power} лс`);
-    if ((b as any).powerPct) items.push(`${(b as any).powerPct}% лс`);
-    if (b.torque) items.push(`${b.torque > 0 ? '+' : ''}${b.torque} Нм`);
-    if (b.topSpeed) items.push(`${b.topSpeed > 0 ? '+' : ''}${b.topSpeed} км/ч`);
-    if ((b as any).topSpeedPct) items.push(`${(b as any).topSpeedPct}% скор`);
-    if ((b as any).accelerationPct) items.push(`+${(b as any).accelerationPct}% разг`);
-    if (b.handling) items.push(`${b.handling > 0 ? '+' : ''}${b.handling} У`);
-    if (b.offroad) items.push(`${b.offroad > 0 ? '+' : ''}${b.offroad} П`);
-    return items.join(', ');
+    const items: { text: string; positive: boolean }[] = [];
+    if (b.power) items.push({ text: `${b.power > 0 ? '+' : ''}${b.power} лс`, positive: b.power > 0 });
+    if (b.powerPct) items.push({ text: `${b.powerPct}% лс`, positive: b.powerPct > 0 });
+    if (b.torque) items.push({ text: `${b.torque > 0 ? '+' : ''}${b.torque} Нм`, positive: b.torque > 0 });
+    if (b.torquePct) items.push({ text: `${b.torquePct}% Нм`, positive: b.torquePct > 0 });
+    if (b.topSpeed) items.push({ text: `${b.topSpeed > 0 ? '+' : ''}${b.topSpeed} км/ч`, positive: b.topSpeed > 0 });
+    if (b.topSpeedPct) items.push({ text: `${b.topSpeedPct}% скор`, positive: b.topSpeedPct > 0 });
+    if (b.accelerationPct) items.push({ text: `+${b.accelerationPct}% разг`, positive: true });
+    if (b.handling) items.push({ text: `${b.handling > 0 ? '+' : ''}${b.handling} У`, positive: b.handling > 0 });
+    if (b.offroad) items.push({ text: `${b.offroad > 0 ? '+' : ''}${b.offroad} П`, positive: b.offroad > 0 });
+    return items;
   };
 
   // ШАГ 1: Выбор машины
@@ -219,16 +219,28 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
               className={`pixel-card p-0 flex items-stretch overflow-hidden ${owned ? 'opacity-40' : blocked ? 'opacity-50' : ''}`}
               style={{ borderWidth: '2px', borderColor: owned ? '#44ff44' : blocked ? '#ff4444' : '#333' }}>
 
-              {/* Название + описание */}
+              {/* Название + описание + характеристики */}
               <div className="flex-grow px-3 py-2 border-r border-[#222]">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[10px] text-white">{part.name}</span>
-                  {part.slot && <span className="text-[6px] px-1 py-0 bg-[#222] text-[#666] border border-[#333]">{part.slot}</span>}
+                  {part.slot && <span className="text-[7px] px-1.5 py-0.5 bg-[#1a1a2e] text-[#888] border border-[#333]">{part.slot}</span>}
                 </div>
                 {part.description && (
-                  <div className="text-[7px] text-[#666] mb-1 leading-relaxed">{part.description}</div>
+                  <div className="text-[8px] text-[#777] mb-1.5 leading-relaxed">{part.description}</div>
                 )}
-                <div className="text-[8px] text-[#4488ff]">{boostText(part)}</div>
+                {/* Бейджи характеристик */}
+                <div className="flex flex-wrap gap-1">
+                  {boostBadges(part).map((badge, bi) => (
+                    <span key={bi} className="text-[9px] px-1.5 py-0.5 font-bold"
+                      style={{
+                        backgroundColor: badge.positive ? '#002200' : '#220000',
+                        border: `1px solid ${badge.positive ? '#00ff00' : '#ff4444'}`,
+                        color: badge.positive ? '#00ff00' : '#ff4444',
+                      }}>
+                      {badge.text}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* Цена + кнопка */}
