@@ -209,7 +209,6 @@ const App = () => {
           <Dealer
             money={money}
             gameYear={gameYear}
-            ownedCarIds={new Set(cars.map(c => c.originalId || c.id))}
             purchaseCounts={purchaseCounts}
             onBuyCar={handleBuyCar}
             onBack={() => navigate('MULTIPLAYER')}

@@ -5,7 +5,6 @@ import { Car } from '../types';
 interface DealerProps {
   money: number;
   gameYear: number;
-  ownedCarIds: Set<string>;
   purchaseCounts: Record<string, number>;
   onBuyCar: (car: Car) => void;
   onBack: () => void;
@@ -32,7 +31,7 @@ const CLASS_COLORS: Record<string, string> = {
   A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
 };
 
-const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, purchaseCounts, onBuyCar, onBack }) => {
+const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyCar, onBack }) => {
   const [selectedDealer, setSelectedDealer] = useState<string | null>(null);
 
   const availableCars = useMemo(() => {
@@ -89,13 +88,12 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, purchaseC
 
       <div className="flex flex-col gap-3 pb-20">
         {dealerCars.map((car: any, idx: number) => {
-          const owned = ownedCarIds.has(car.id);
           const co = car.coefficients || {};
           const remaining = (car.quantity || 1) - (purchaseCounts[car.id] || 0);
           const soldOut = remaining <= 0;
           return (
             <div key={`${car.id}-${idx}`}
-              className={`pixel-card p-0 flex items-stretch overflow-hidden ${owned || soldOut ? 'opacity-40' : ''}`}
+              className={`pixel-card p-0 flex items-stretch overflow-hidden ${soldOut ? 'opacity-40' : ''}`}
               style={{minHeight: '168px', borderColor: CLASS_COLORS[car.carClass] || '#333', borderWidth: '4px'}}>
 
               {/* Левая часть: имя + теги */}
@@ -157,14 +155,14 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, ownedCarIds, purchaseC
               <div className="flex flex-col justify-center items-center px-3 py-2 min-w-[96px]">
                 <div className="text-[11px] text-[#00ff00] mb-2">${car.price.toLocaleString()}</div>
                 <button onClick={() => onBuyCar(car)}
-                  disabled={money < car.price || owned || soldOut}
+                  disabled={money < car.price || soldOut}
                   className="retro-btn text-[8px] py-1 px-3"
                   style={{
-                    backgroundColor: owned || soldOut ? '#1a1a1a' : money >= car.price ? '#003300' : '#1a1a1a',
-                    border: `2px solid ${owned ? '#44ff44' : soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#333'}`,
-                    color: owned ? '#44ff44' : soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#555',
+                    backgroundColor: soldOut ? '#1a1a1a' : money >= car.price ? '#003300' : '#1a1a1a',
+                    border: `2px solid ${soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#333'}`,
+                    color: soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#555',
                   }}>
-                  {owned ? '✓' : soldOut ? 'НЕТ' : money >= car.price ? 'КУПИТЬ' : '—'}
+                  {soldOut ? 'НЕТ' : money >= car.price ? 'КУПИТЬ' : '—'}
                 </button>
               </div>
             </div>
