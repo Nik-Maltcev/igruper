@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { View, GamePhase, Car, Part, RaceResult } from './types';
-import { INITIAL_MONEY, SHOP_PARTS, EPOCHS } from './constants';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Room, RoomPlayer, Car, Part, RaceResult } from './types';
+import { EPOCHS } from './constants';
+import { supabase } from './services/supabase';
+import {
+  fetchPlayer, fetchPurchaseCounts,
+  buyPart, buyCar, removePart, removePartToStorage, installFromStorage,
+} from './services/multiplayer';
 
-import Dashboard from './components/Dashboard';
 import Garage from './components/Garage';
 import Dealer from './components/Dealer';
 import Marketplace from './components/Marketplace';
@@ -10,141 +14,177 @@ import RaceCenter from './components/RaceCenter';
 import Multiplayer from './components/Multiplayer';
 import Rules from './components/Rules';
 
-// Mock components for less critical views to keep file count low within constraints
-const PlaceholderView = ({ title, onBack }: { title: string, onBack: () => void }) => (
-  <div className="p-8 text-center py-16">
-    <div className="text-2xl mb-4">🚧</div>
-    <h2 className="text-[10px] retro-title mb-4">{title}</h2>
-    <p className="text-[8px] text-[#555] mb-6">В РАЗРАБОТКЕ</p>
-    <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>НАЗАД</button>
-  </div>
-);
-
 const App = () => {
-  // Global Game State
-  const [currentView, setCurrentView] = useState<View>('DASHBOARD');
-  const [gamePhase, setGamePhase] = useState<GamePhase>('PREPARATION');
-  const [day, setDay] = useState<number>(1);
-  const [money, setMoney] = useState<number>(INITIAL_MONEY);
-  const [myCars, setMyCars] = useState<Car[]>([]);
-  const [gameYear, setGameYear] = useState<number>(1960);
-  // Трекинг: какая машина в какой магазин ездила сегодня (carId -> brand)
-  const [shopVisits, setShopVisits] = useState<Record<string, string>>({});
-  // Трекинг: сколько раз куплена каждая модель (originalId -> count)
+  // Мультиплеер — основной режим
+  const [room, setRoom] = useState<Room | null>(null);
+  const [playerId, setPlayerId] = useState<string>(() => localStorage.getItem('mp_player_id') || '');
+  const [player, setPlayer] = useState<RoomPlayer | null>(null);
+  const [currentView, setCurrentView] = useState<View>('MULTIPLAYER');
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
-  // Склад трофейных деталей
-  const [storage, setStorage] = useState<Part[]>([]);
-  
-  // Navigation Handler
+
+  // Загрузка данных игрока при наличии playerId
+  const refreshPlayer = useCallback(async () => {
+    if (!playerId) return;
+    const p = await fetchPlayer(playerId);
+    if (p) setPlayer(p);
+  }, [playerId]);
+
+  // Загрузка комнаты при наличии room
+  const refreshRoom = useCallback(async () => {
+    if (!room) return;
+    const { data } = await supabase.from('rooms').select('*').eq('id', room.id).single();
+    if (data) setRoom(data as Room);
+  }, [room?.id]);
+
+  // Realtime подписка на данные игрока
+  useEffect(() => {
+    if (!playerId) return;
+    refreshPlayer();
+    const channel = supabase
+      .channel(`player:${playerId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE', schema: 'public', table: 'room_players',
+        filter: `id=eq.${playerId}`,
+      }, () => { refreshPlayer(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [playerId]);
+
+  // Realtime подписка на комнату
+  useEffect(() => {
+    if (!room) return;
+    const channel = supabase
+      .channel(`room:${room.id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE', schema: 'public', table: 'rooms',
+        filter: `id=eq.${room.id}`,
+      }, () => { refreshRoom(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [room?.id]);
+
+  // Загрузка purchase counts при входе в комнату
+  useEffect(() => {
+    if (!room) return;
+    fetchPurchaseCounts(room.id).then(setPurchaseCounts);
+    const channel = supabase
+      .channel(`purchases:${room.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'purchase_log',
+        filter: `room_id=eq.${room.id}`,
+      }, () => { fetchPurchaseCounts(room.id).then(setPurchaseCounts); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [room?.id]);
+
+  // Обработчики
+  const handleRoomJoined = (r: Room, pid: string) => {
+    setRoom(r);
+    setPlayerId(pid);
+    localStorage.setItem('mp_player_id', pid);
+    localStorage.setItem('mp_room_id', r.id);
+  };
+
+  const handleRoomLeft = () => {
+    setRoom(null);
+    setPlayer(null);
+    setPlayerId('');
+    localStorage.removeItem('mp_player_id');
+    localStorage.removeItem('mp_room_id');
+    setCurrentView('MULTIPLAYER');
+  };
+
   const navigate = (view: View) => setCurrentView(view);
 
-  // Debug/Admin function to force phase change
-  const togglePhase = () => {
-    if (gamePhase === 'PREPARATION') {
-      setGamePhase('RACE_DAY');
-    } else {
-      setGamePhase('PREPARATION');
-      setDay(d => d + 1);
-      setShopVisits({}); // Сброс визитов в магазины при новом дне
-    }
+  const handleBuyCar = async (car: Car) => {
+    if (!player || !room) return;
+    const result = await buyCar(player, car, room.id);
+    if (result.error) { alert(result.error); return; }
+    await refreshPlayer();
+    alert(`Вы купили ${car.name}!`);
   };
 
-  // Logic Handlers
-  const handleBuyCar = (car: Car) => {
-    setMoney(prev => prev - car.price);
-    setMyCars(prev => [...prev, { ...car, id: `my-${Date.now()}`, originalId: car.id }]);
-    setPurchaseCounts(prev => ({ ...prev, [car.id]: (prev[car.id] || 0) + 1 }));
-    alert(`Вы купили ${car.name}! Проверьте гараж.`);
+  const handleBuyPart = async (carId: string, part: Part) => {
+    if (!player) return;
+    const result = await buyPart(player, carId, part);
+    if (result.error) { alert(result.error); return; }
+    await refreshPlayer();
   };
 
-  const handleBuyPart = (carId: string, part: Part) => {
-    setMoney(prev => prev - part.price);
-    setMyCars(prev => prev.map(car => 
-      car.id === carId
-        ? { ...car, installedParts: [...car.installedParts, part] }
-        : car
-    ));
-    // Записываем визит: эта машина теперь привязана к этому магазину на сегодня
-    if (part.brand) {
-      setShopVisits(prev => ({ ...prev, [carId]: part.brand! }));
-    }
+  const handleRemovePart = async (carId: string, partIndex: number) => {
+    if (!player) return;
+    await removePart(player, carId, partIndex);
+    await refreshPlayer();
   };
 
-  const handleRaceComplete = (results: RaceResult[]) => {
-    // Add winnings
+  const handleRemovePartToStorage = async (carId: string, partIndex: number) => {
+    if (!player) return;
+    await removePartToStorage(player, carId, partIndex);
+    await refreshPlayer();
+  };
+
+  const handleInstallFromStorage = async (carId: string, storageIndex: number) => {
+    if (!player) return;
+    await installFromStorage(player, carId, storageIndex);
+    await refreshPlayer();
+  };
+
+  const handleRaceComplete = async (results: RaceResult[]) => {
+    // TODO: записать результаты в Supabase
     const totalEarnings = results.filter(r => !r.carId.startsWith('bot')).reduce((sum, r) => sum + r.earnings, 0);
-    setMoney(prev => prev + totalEarnings);
+    if (player && totalEarnings > 0) {
+      await supabase.from('room_players').update({ money: player.money + totalEarnings }).eq('id', playerId);
+      await refreshPlayer();
+    }
   };
+
+  const gameYear = room?.current_year || 1960;
+  const cars = player?.garage || [];
+  const storage = player?.storage || [];
+  const money = player?.money || 0;
+  const shopVisits = player?.shop_visits || {};
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
-      {/* Debug Bar — retro style */}
-      <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{boxShadow:'0 2px 0 #000'}}>
-        <div className="flex items-center gap-3">
-          <span className="text-[#555]">[ DEBUG ]</span>
-          <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
-          <select
-            value={gameYear}
-            onChange={(e) => setGameYear(Number(e.target.value))}
-            className="bg-[#111] text-[#0f0] border-2 border-[#333] px-2 py-0.5 text-[8px]"
-            style={{fontFamily:"'Press Start 2P', monospace"}}
-          >
-            {EPOCHS.map(e => (
-              <option key={e.year} value={e.year}>{e.label} ({e.year})</option>
-            ))}
-          </select>
+      {/* Верхняя панель — только в игре */}
+      {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
+        <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{boxShadow:'0 2px 0 #000'}}>
+          <div className="flex items-center gap-3">
+            <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
+            <span className="text-[#00ff00]">💰 ${money.toLocaleString()}</span>
+            <span className="text-[#ffaa00]">🏆 {player?.points || 0} очков</span>
+            <span className="text-[#888]">🚗 {cars.length} авто</span>
+            <span className="text-[#888]">📦 {storage.length} на складе</span>
+          </div>
+          <button onClick={() => navigate('MULTIPLAYER')}
+            className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
+            style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
+            ← КОМНАТА
+          </button>
         </div>
-        <button 
-          onClick={togglePhase}
-          className="retro-btn text-[#ffff00] text-[8px] py-1 px-3"
-          style={{backgroundColor:'#1a1a2e', border:'2px solid #ffff00', boxShadow:'2px 2px 0 #000'}}
-        >
-          {gamePhase === 'PREPARATION' ? '▶ 22:00 ГОНКА' : '▶ СЛЕД. ДЕНЬ'}
-        </button>
-      </div>
+      )}
 
       <main className="flex-grow relative overflow-hidden">
-        {currentView === 'DASHBOARD' && (
-          <Dashboard 
-            onNavigate={navigate} 
-            gamePhase={gamePhase} 
-            day={day} 
+        {currentView === 'MULTIPLAYER' && (
+          <Multiplayer
+            room={room}
+            player={player}
+            playerId={playerId}
+            onRoomJoined={handleRoomJoined}
+            onRoomLeft={handleRoomLeft}
+            onNavigate={navigate}
+            onBack={() => {}}
           />
         )}
 
         {currentView === 'GARAGE' && (
-          <Garage 
-            cars={myCars} 
+          <Garage
+            cars={cars}
             storage={storage}
-            onBack={() => navigate('DASHBOARD')}
-            onRemovePart={(carId, partIndex) => {
-              setMyCars(prev => prev.map(car =>
-                car.id === carId
-                  ? { ...car, installedParts: car.installedParts.filter((_, i) => i !== partIndex) }
-                  : car
-              ));
-            }}
-            onRemovePartToStorage={(carId, partIndex) => {
-              const car = myCars.find(c => c.id === carId);
-              if (!car) return;
-              const part = car.installedParts[partIndex];
-              setStorage(prev => [...prev, part]);
-              setMyCars(prev => prev.map(c =>
-                c.id === carId
-                  ? { ...c, installedParts: c.installedParts.filter((_, i) => i !== partIndex) }
-                  : c
-              ));
-            }}
-            onInstallFromStorage={(carId, storageIndex) => {
-              const part = storage[storageIndex];
-              if (!part) return;
-              setStorage(prev => prev.filter((_, i) => i !== storageIndex));
-              setMyCars(prev => prev.map(c =>
-                c.id === carId
-                  ? { ...c, installedParts: [...c.installedParts, part] }
-                  : c
-              ));
-            }}
+            onBack={() => navigate('MULTIPLAYER')}
+            onRemovePart={handleRemovePart}
+            onRemovePartToStorage={handleRemovePartToStorage}
+            onInstallFromStorage={handleInstallFromStorage}
           />
         )}
 
@@ -152,48 +192,36 @@ const App = () => {
           <Dealer
             money={money}
             gameYear={gameYear}
-            ownedCarIds={new Set(myCars.map(c => c.originalId || c.id))}
+            ownedCarIds={new Set(cars.map(c => c.originalId || c.id))}
             purchaseCounts={purchaseCounts}
             onBuyCar={handleBuyCar}
-            onBack={() => navigate('DASHBOARD')}
+            onBack={() => navigate('MULTIPLAYER')}
           />
         )}
 
         {currentView === 'SHOP' && (
-          <Marketplace 
+          <Marketplace
             money={money}
             gameYear={gameYear}
-            cars={myCars}
+            cars={cars}
             shopVisits={shopVisits}
             onBuyPart={handleBuyPart}
-            onBack={() => navigate('DASHBOARD')}
+            onBack={() => navigate('MULTIPLAYER')}
           />
         )}
 
         {currentView === 'WORKLIST' && (
-          <RaceCenter 
-            phase={gamePhase}
-            cars={myCars}
+          <RaceCenter
+            phase={room?.phase === 'RACING' ? 'RACE_DAY' : 'PREPARATION'}
+            cars={cars}
             gameYear={gameYear}
-            onBack={() => navigate('DASHBOARD')}
+            onBack={() => navigate('MULTIPLAYER')}
             onRaceComplete={handleRaceComplete}
           />
         )}
 
-        {currentView === 'MULTIPLAYER' && (
-          <Multiplayer 
-            myCars={myCars}
-            onBack={() => navigate('DASHBOARD')}
-          />
-        )}
-
-        {/* Placeholders for other image buttons */}
-        {(currentView === 'AUCTION' || currentView === 'PLAYERS') && (
-          <PlaceholderView title={currentView} onBack={() => navigate('DASHBOARD')} />
-        )}
-
         {currentView === 'RULES' && (
-          <Rules onBack={() => navigate('DASHBOARD')} />
+          <Rules onBack={() => navigate('MULTIPLAYER')} />
         )}
       </main>
     </div>

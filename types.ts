@@ -117,8 +117,10 @@ export interface RoomPlayer {
   is_host: boolean;
   money: number;
   garage: Car[];             // Гараж игрока (JSONB)
+  storage: Part[];           // Склад трофейных деталей (JSONB)
   points: number;
   is_ready: boolean;
+  shop_visits: Record<string, string>; // carId -> brand (визиты в магазины за день)
   joined_at: string;
 }
 

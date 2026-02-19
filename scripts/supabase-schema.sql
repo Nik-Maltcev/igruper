@@ -24,8 +24,10 @@ create table if not exists room_players (
   is_host boolean default false,
   money integer not null default 15000,
   garage jsonb not null default '[]'::jsonb,
+  storage jsonb not null default '[]'::jsonb,
   points integer not null default 0,
   is_ready boolean default false,
+  shop_visits jsonb not null default '{}'::jsonb,
   joined_at timestamptz default now()
 );
 
@@ -98,3 +100,7 @@ create policy "race_entries_all" on race_entries for all using (true) with check
 create policy "race_results_all" on race_results for all using (true) with check (true);
 create policy "chat_messages_all" on chat_messages for all using (true) with check (true);
 create policy "purchase_log_all" on purchase_log for all using (true) with check (true);
+
+-- Миграция: добавить storage и shop_visits если таблица уже существует
+-- ALTER TABLE room_players ADD COLUMN IF NOT EXISTS storage jsonb NOT NULL DEFAULT '[]'::jsonb;
+-- ALTER TABLE room_players ADD COLUMN IF NOT EXISTS shop_visits jsonb NOT NULL DEFAULT '{}'::jsonb;

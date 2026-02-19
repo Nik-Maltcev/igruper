@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, RaceEntry } from '../types';
+import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry } from '../types';
 import { AVAILABLE_CARS } from '../constants';
 
 // --- Генерация кода комнаты ---
@@ -58,6 +58,8 @@ export async function createRoom(username: string): Promise<{ room: Room; player
       is_host: true,
       money: 15000,
       garage: starterCars,
+      storage: [],
+      shop_visits: {},
     });
 
   if (playerErr) return { error: playerErr.message };
@@ -107,6 +109,8 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
       is_host: false,
       money: 15000,
       garage: starterCars,
+      storage: [],
+      shop_visits: {},
     });
 
   if (joinErr) return { error: joinErr.message };
@@ -132,6 +136,119 @@ export async function updatePlayerGarage(playerId: string, garage: Car[], money:
     .from('room_players')
     .update({ garage, money })
     .eq('id', playerId);
+}
+
+// --- Обновление полного состояния игрока ---
+export async function updatePlayerState(playerId: string, updates: {
+  garage?: Car[];
+  storage?: Part[];
+  money?: number;
+  shop_visits?: Record<string, string>;
+  points?: number;
+}) {
+  await supabase
+    .from('room_players')
+    .update(updates)
+    .eq('id', playerId);
+}
+
+// --- Покупка детали (магазин → машина) ---
+export async function buyPart(player: RoomPlayer, carId: string, part: Part): Promise<{ error?: string }> {
+  if (player.money < part.price) return { error: 'Недостаточно денег' };
+  const garage = [...player.garage];
+  const carIdx = garage.findIndex(c => c.id === carId);
+  if (carIdx === -1) return { error: 'Машина не найдена' };
+
+  const car = { ...garage[carIdx], installedParts: [...garage[carIdx].installedParts, part] };
+  garage[carIdx] = car;
+
+  const shopVisits = { ...player.shop_visits };
+  if (part.brand) shopVisits[carId] = part.brand;
+
+  await updatePlayerState(player.id, {
+    garage,
+    money: player.money - part.price,
+    shop_visits: shopVisits,
+  });
+  return {};
+}
+
+// --- Покупка машины (автосалон) ---
+export async function buyCar(player: RoomPlayer, car: Car, roomId: string): Promise<{ error?: string }> {
+  if (player.money < car.price) return { error: 'Недостаточно денег' };
+
+  const newCar: Car = { ...car, id: `my-${Date.now()}`, originalId: car.id, installedParts: [] };
+  const garage = [...player.garage, newCar];
+
+  await updatePlayerState(player.id, {
+    garage,
+    money: player.money - car.price,
+  });
+
+  await logCarPurchase(roomId, player.id, car.id);
+  return {};
+}
+
+// --- Снять деталь с машины (удалить) ---
+export async function removePart(player: RoomPlayer, carId: string, partIndex: number): Promise<void> {
+  const garage = [...player.garage];
+  const carIdx = garage.findIndex(c => c.id === carId);
+  if (carIdx === -1) return;
+
+  const car = { ...garage[carIdx] };
+  car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex);
+  garage[carIdx] = car;
+
+  await updatePlayerState(player.id, { garage });
+}
+
+// --- Снять деталь с машины → на склад ---
+export async function removePartToStorage(player: RoomPlayer, carId: string, partIndex: number): Promise<void> {
+  const garage = [...player.garage];
+  const carIdx = garage.findIndex(c => c.id === carId);
+  if (carIdx === -1) return;
+
+  const car = { ...garage[carIdx] };
+  const part = car.installedParts[partIndex];
+  car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex);
+  garage[carIdx] = car;
+
+  const storage = [...(player.storage || []), part];
+
+  await updatePlayerState(player.id, { garage, storage });
+}
+
+// --- Установить деталь со склада на машину ---
+export async function installFromStorage(player: RoomPlayer, carId: string, storageIndex: number): Promise<void> {
+  const storage = [...(player.storage || [])];
+  const part = storage[storageIndex];
+  if (!part) return;
+
+  storage.splice(storageIndex, 1);
+
+  const garage = [...player.garage];
+  const carIdx = garage.findIndex(c => c.id === carId);
+  if (carIdx === -1) return;
+
+  const car = { ...garage[carIdx], installedParts: [...garage[carIdx].installedParts, part] };
+  garage[carIdx] = car;
+
+  await updatePlayerState(player.id, { garage, storage });
+}
+
+// --- Сброс визитов в магазины (при смене дня) ---
+export async function resetShopVisits(playerId: string): Promise<void> {
+  await updatePlayerState(playerId, { shop_visits: {} });
+}
+
+// --- Получить данные текущего игрока ---
+export async function fetchPlayer(playerId: string): Promise<RoomPlayer | null> {
+  const { data } = await supabase
+    .from('room_players')
+    .select('*')
+    .eq('id', playerId)
+    .single();
+  return data as RoomPlayer | null;
 }
 
 // --- Смена фазы ---
