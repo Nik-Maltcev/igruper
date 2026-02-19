@@ -1,0 +1,1934 @@
+{
+  "shops": [
+    {
+      "brand": "У Ильсурика",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "у_ильсурика_интеркулер_1_1",
+          "name": "Интеркулер 1",
+          "description": "Охлаждает двигатель. Необходим для установки турбины и компрессора",
+          "boosts": {
+            "power": 1,
+            "torque": 1,
+            "accelerationPct": 1
+          },
+          "price": 800,
+          "brand": "У Ильсурика",
+          "tier": 1,
+          "icon": "Filter",
+          "slot": "intercooler"
+        },
+        {
+          "id": "у_ильсурика_шатуны_1_2",
+          "name": "Шатуны 1",
+          "description": "Обеспечивают равномерное распределение нагрузки, небольшой прирост мощности",
+          "boosts": {
+            "power": 9,
+            "torque": 6,
+            "topSpeed": 2
+          },
+          "price": 1000,
+          "brand": "У Ильсурика",
+          "tier": 1,
+          "icon": "Zap"
+        },
+        {
+          "id": "у_ильсурика_коленвал_1_3",
+          "name": "Коленвал 1",
+          "description": "Улучшенная версия детали ускоряет автомобиль",
+          "boosts": {
+            "power": 3,
+            "accelerationPct": 2,
+            "topSpeedPct": 2
+          },
+          "price": 1300,
+          "brand": "У Ильсурика",
+          "tier": 1,
+          "icon": "Zap"
+        },
+        {
+          "id": "у_ильсурика_шины_универсальные_1_4",
+          "name": "Шины Универсальные 1",
+          "description": "Подходят для всех типов трасс, не боятся дождя, но рекорда на таких не поставить",
+          "boosts": {
+            "handling": 3,
+            "offroad": 3,
+            "accelerationPct": 2
+          },
+          "price": 1600,
+          "brand": "У Ильсурика",
+          "tier": 1,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "у_ильсурика_шины_гоночные_1_5",
+          "name": "Шины Гоночные 1",
+          "description": "Эти шины боятся дождя, но дают ощутимое преимущество в динамике",
+          "boosts": {
+            "handling": 6,
+            "offroad": -1,
+            "accelerationPct": 3,
+            "topSpeedPct": 2
+          },
+          "price": 2000,
+          "brand": "У Ильсурика",
+          "tier": 1,
+          "icon": "Circle",
+          "slot": "tires"
+        }
+      ]
+    },
+    {
+      "brand": "Trash Shopito",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "trash_shopito_впускная_система_1_6",
+          "name": "Впускная система 1",
+          "description": "Осуществляет подачу воздуха к цилиндрам",
+          "boosts": {
+            "power": 16,
+            "torque": 19,
+            "topSpeed": 1,
+            "accelerationPct": 2
+          },
+          "price": 1900,
+          "brand": "Trash Shopito",
+          "tier": 1,
+          "icon": "Filter"
+        },
+        {
+          "id": "trash_shopito_система_выпуска_1_7",
+          "name": "Система выпуска 1",
+          "description": "Ускорение автомобиля за счёт снижения энергозатрат на выхлоп отработанных газов",
+          "boosts": {
+            "powerPct": 2,
+            "power": 6,
+            "accelerationPct": 1
+          },
+          "price": 900,
+          "brand": "Trash Shopito",
+          "tier": 1,
+          "icon": "Filter"
+        },
+        {
+          "id": "trash_shopito_дифференциал_сб_1_8",
+          "name": "Дифференциал СБ 1",
+          "description": "Дифференциал СамоБлокирующийся -  Помогает при вывешивании колёс. Можно установить только один тип: либо этот, либо Дифференциал повышенного трения",
+          "boosts": {
+            "offroad": 4,
+            "accelerationPct": 2
+          },
+          "price": 1200,
+          "brand": "Trash Shopito",
+          "tier": 1,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "trash_shopito_коробка_передач_1_9",
+          "name": "Коробка передач 1",
+          "description": "Ощутимо повышает скоростные характеристики",
+          "boosts": {
+            "accelerationPct": 4,
+            "topSpeedPct": 6
+          },
+          "price": 3000,
+          "brand": "Trash Shopito",
+          "tier": 1,
+          "icon": "Zap",
+          "slot": "gearbox"
+        },
+        {
+          "id": "trash_shopito_поршни_1_10",
+          "name": "Поршни 1",
+          "description": "Улучшенные поршни позволяют повысить нагрузки на двигатель",
+          "boosts": {
+            "power": 12,
+            "torque": 3,
+            "topSpeed": 1
+          },
+          "price": 1200,
+          "brand": "Trash Shopito",
+          "tier": 1,
+          "icon": "Zap"
+        }
+      ]
+    },
+    {
+      "brand": "Колянур",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "колянур_фильтры_1_11",
+          "name": "Фильтры 1",
+          "description": "Фильтры низкого сопротьивления способствуют эфективному использованию топлива",
+          "boosts": {
+            "power": 7,
+            "topSpeed": 1
+          },
+          "price": 500,
+          "brand": "Колянур",
+          "tier": 1,
+          "icon": "Filter"
+        },
+        {
+          "id": "колянур_распредвал_верховой_1_12",
+          "name": "Распредвал Верховой 1",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на скорость и мощность",
+          "boosts": {
+            "power": 17,
+            "topSpeedPct": 3
+          },
+          "price": 1700,
+          "brand": "Колянур",
+          "tier": 1,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "колянур_увеличение_клиренса_1_13",
+          "name": "Увеличение Клиренса 1",
+          "description": "Внедорожная подготовка увеличивает проходимость, но слегка снижает управляемость",
+          "boosts": {
+            "handling": -1,
+            "offroad": 6
+          },
+          "price": 1200,
+          "brand": "Колянур",
+          "tier": 1,
+          "icon": "Spring"
+        },
+        {
+          "id": "колянур_амортизаторы_1_14",
+          "name": "Амортизаторы 1",
+          "description": "Жёсткие амортизаторы с коротким ходом улучшают управляемость автомобиля, но слегка снижают проходимость",
+          "boosts": {
+            "handling": 6,
+            "offroad": -1
+          },
+          "price": 1600,
+          "brand": "Колянур",
+          "tier": 1,
+          "icon": "Spring",
+          "slot": "shocks"
+        },
+        {
+          "id": "колянур_лебёдка_1_15",
+          "name": "Лебёдка 1",
+          "description": "Помогает выбраться на бездорожье",
+          "boosts": {
+            "offroad": 6
+          },
+          "price": 1000,
+          "brand": "Колянур",
+          "tier": 1,
+          "icon": "Disc"
+        }
+      ]
+    },
+    {
+      "brand": "Девяточка",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "девяточка_тормоза_1_16",
+          "name": "Тормоза 1",
+          "description": "Спортивные тормоза позволяют позже тормозить перед поворотами, сокращая время прохождения трассы",
+          "boosts": {
+            "handling": 5
+          },
+          "price": 1200,
+          "brand": "Девяточка",
+          "tier": 1,
+          "icon": "Disc",
+          "slot": "brakes"
+        },
+        {
+          "id": "девяточка_маховик_1_17",
+          "name": "Маховик 1",
+          "description": "Облегчённая деталь немного ускоряет автомобиль",
+          "boosts": {
+            "accelerationPct": 2,
+            "topSpeedPct": 1
+          },
+          "price": 500,
+          "brand": "Девяточка",
+          "tier": 1,
+          "icon": "Circle"
+        },
+        {
+          "id": "девяточка_шаровые_опоры_1_18",
+          "name": "Шаровые опоры 1",
+          "description": "Слегка улучшают управляемость",
+          "boosts": {
+            "handling": 2
+          },
+          "price": 300,
+          "brand": "Девяточка",
+          "tier": 1,
+          "icon": "Disc"
+        },
+        {
+          "id": "девяточка_турбина_1_19",
+          "name": "Турбина 1",
+          "description": "Турбонаддув придаёт ощутимую мощность автомобилю. Не устанавливается без интеркулера",
+          "boosts": {
+            "power": 40,
+            "torque": 20,
+            "accelerationPct": 3,
+            "topSpeedPct": 4
+          },
+          "price": 3000,
+          "brand": "Девяточка",
+          "tier": 1,
+          "icon": "Flame",
+          "slot": "turbo",
+          "requires": "intercooler"
+        },
+        {
+          "id": "девяточка_расточка_двигателя_1_20",
+          "name": "Расточка двигателя 1",
+          "description": "Увеличение объёма мотора. НЕ СНИМАЕТСЯ в сервисе. Производится 1 раз. Благодаря процентному приросту характеристик рекомендуется  растачивать автомобиль в завершении тюнинга",
+          "boosts": {
+            "powerPct": 8,
+            "power": 15,
+            "torquePct": 8,
+            "torque": 15,
+            "topSpeed": 3,
+            "accelerationPct": 3
+          },
+          "price": 3600,
+          "brand": "Девяточка",
+          "tier": 1,
+          "icon": "Zap",
+          "slot": "bore"
+        }
+      ]
+    },
+    {
+      "brand": "Таврия",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "таврия_слики1_21",
+          "name": "Слики1",
+          "description": "Шины для сухих гоночных трасс, не едут в случае дождя на трассах Песок. Болото.",
+          "boosts": {},
+          "price": 0,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "таврия_но_зато_дают_максимальные_показатели_9_у_22",
+          "name": "но зато дают максимальные показатели,9 У",
+          "description": "3% к скорости",
+          "boosts": {
+            "accelerationPct": 3
+          },
+          "price": 0,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Zap"
+        },
+        {
+          "id": "таврия_шины_внедорожные1_23",
+          "name": "Шины Внедорожные1",
+          "description": "Повышают проходимость, но слегка портят управляемость.",
+          "boosts": {
+            "handling": 2,
+            "offroad": 9,
+            "accelerationPct": 1,
+            "topSpeedPct": 1
+          },
+          "price": 2000,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "таврия_топливная_система_1_24",
+          "name": "Топливная Система 1",
+          "description": "Замена форсунок и бензонасоса высокого давления дает прирост мощности",
+          "boosts": {
+            "power": 14,
+            "torque": 15,
+            "topSpeed": 2
+          },
+          "price": 1300,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Filter"
+        },
+        {
+          "id": "таврия_дифференциал_пт_1_25",
+          "name": "Дифференциал ПТ 1",
+          "description": "Дифференциал Повышенного Трения распределяет крутящий момент от двигателя. Можно установить только один тип: либо этот, либо Дифференциал СБ",
+          "boosts": {
+            "handling": 2,
+            "offroad": 1,
+            "accelerationPct": 2,
+            "topSpeedPct": 1
+          },
+          "price": 1500,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "таврия_пружины_1_26",
+          "name": "Пружины 1",
+          "description": "Замена на спортивные делает подвеску жёсткой, придавая управляемость",
+          "boosts": {
+            "handling": 4
+          },
+          "price": 800,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Spring",
+          "slot": "springs"
+        },
+        {
+          "id": "таврия_облегченные_детали_кузова_1_27",
+          "name": "Облегченные детали кузова 1",
+          "description": "Замена сиденьев, капота на более лёгкие, удаление деталей комфорта делает машину более маневренной",
+          "boosts": {
+            "topSpeed": 2,
+            "handling": 3,
+            "accelerationPct": 1
+          },
+          "price": 800,
+          "brand": "Таврия",
+          "tier": 1,
+          "icon": "Disc"
+        }
+      ]
+    },
+    {
+      "brand": "Батыр",
+      "unlockYear": 1960,
+      "parts": [
+        {
+          "id": "батыр_компрессор_1_28",
+          "name": "Компрессор 1",
+          "description": "Механический нагнетатель. Не устанавливается без интеркулера.",
+          "boosts": {
+            "power": 35,
+            "torque": 30,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 2500,
+          "brand": "Батыр",
+          "tier": 1,
+          "icon": "Flame",
+          "slot": "compressor",
+          "requires": "intercooler"
+        },
+        {
+          "id": "батыр_распредвал_низовой_1_29",
+          "name": "Распредвал Низовой 1",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на разгон и крутящий момент",
+          "boosts": {
+            "torque": 17,
+            "accelerationPct": 3
+          },
+          "price": 1700,
+          "brand": "Батыр",
+          "tier": 1,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "батыр_распредвал_универсальный_1_30",
+          "name": "Распредвал Универсальный 1",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный улучшает понемногу и скорость и разгон",
+          "boosts": {
+            "power": 9,
+            "torque": 8,
+            "accelerationPct": 1,
+            "topSpeedPct": 2
+          },
+          "price": 1700,
+          "brand": "Батыр",
+          "tier": 1,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "батыр_шрус_1_31",
+          "name": "ШРУС 1",
+          "description": "Шарнир равных угловых скоростей. Замена слегка улучшает качества подвески",
+          "boosts": {
+            "handling": 3,
+            "offroad": 2
+          },
+          "price": 1200,
+          "brand": "Батыр",
+          "tier": 1,
+          "icon": "Disc"
+        },
+        {
+          "id": "батыр_шноркель_1_32",
+          "name": "Шноркель 1",
+          "description": "Позволяет не объезжать водные преграды, повышая проходимость",
+          "boosts": {
+            "offroad": 3
+          },
+          "price": 700,
+          "brand": "Батыр",
+          "tier": 1,
+          "icon": "Filter"
+        }
+      ]
+    },
+    {
+      "brand": "ABC",
+      "unlockYear": 1966,
+      "parts": [
+        {
+          "id": "abc_тормоза_2_33",
+          "name": "Тормоза 2",
+          "description": "Спортивные тормоза позволяют позже тормозить перед поворотами, сокращая время прохождения трассы",
+          "boosts": {
+            "handling": 8
+          },
+          "price": 2000,
+          "brand": "ABC",
+          "tier": 2,
+          "icon": "Disc",
+          "slot": "brakes"
+        },
+        {
+          "id": "abc_фильтры_2_34",
+          "name": "Фильтры 2",
+          "description": "Фильтры низкого сопротьивления способствуют эфективному использованию топлива",
+          "boosts": {
+            "power": 14,
+            "topSpeed": 1,
+            "accelerationPct": 1
+          },
+          "price": 1300,
+          "brand": "ABC",
+          "tier": 2,
+          "icon": "Filter"
+        },
+        {
+          "id": "abc_коленвал_2_35",
+          "name": "Коленвал 2",
+          "description": "Улучшенная версия детали ускоряет автомобиль",
+          "boosts": {
+            "power": 8,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 2400,
+          "brand": "ABC",
+          "tier": 2,
+          "icon": "Zap"
+        },
+        {
+          "id": "abc_лебёдка_2_36",
+          "name": "Лебёдка 2",
+          "description": "Помогает выбраться на бездорожье",
+          "boosts": {
+            "offroad": 10
+          },
+          "price": 2000,
+          "brand": "ABC",
+          "tier": 2,
+          "icon": "Disc"
+        },
+        {
+          "id": "abc_коробка_передач_2_37",
+          "name": "Коробка передач 2",
+          "description": "Ощутимо повышает скоростные характеристики",
+          "boosts": {
+            "accelerationPct": 7,
+            "topSpeedPct": 9
+          },
+          "price": 5000,
+          "brand": "ABC",
+          "tier": 2,
+          "icon": "Zap",
+          "slot": "gearbox"
+        }
+      ]
+    },
+    {
+      "brand": "Breyton",
+      "unlockYear": 1970,
+      "parts": [
+        {
+          "id": "breyton_шатуны_2_38",
+          "name": "Шатуны 2",
+          "description": "Обеспечивают равномерное распределение нагрузки, небольшой прирост мощности",
+          "boosts": {
+            "power": 13,
+            "torque": 10,
+            "topSpeed": 2
+          },
+          "price": 1800,
+          "brand": "Breyton",
+          "tier": 2,
+          "icon": "Zap"
+        },
+        {
+          "id": "breyton_маховик_2_39",
+          "name": "Маховик 2",
+          "description": "Облегчённая деталь немного ускоряет автомобиль",
+          "boosts": {
+            "accelerationPct": 4,
+            "topSpeedPct": 3
+          },
+          "price": 1100,
+          "brand": "Breyton",
+          "tier": 2,
+          "icon": "Circle"
+        },
+        {
+          "id": "breyton_распредвал_низовой_2_40",
+          "name": "Распредвал Низовой 2",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на разгон и крутящий момент",
+          "boosts": {
+            "torque": 40,
+            "accelerationPct": 4
+          },
+          "price": 3000,
+          "brand": "Breyton",
+          "tier": 2,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "breyton_топливная_система_2_41",
+          "name": "Топливная Система 2",
+          "description": "Замена форсунок и бензонасоса высокого давления дает прирост мощности",
+          "boosts": {
+            "power": 20,
+            "torque": 23,
+            "topSpeed": 3
+          },
+          "price": 2500,
+          "brand": "Breyton",
+          "tier": 2,
+          "icon": "Filter"
+        },
+        {
+          "id": "breyton_шноркель_2_42",
+          "name": "Шноркель 2",
+          "description": "Позволяет не объезжать водные преграды, повышая проходимость",
+          "boosts": {
+            "offroad": 6
+          },
+          "price": 1200,
+          "brand": "Breyton",
+          "tier": 2,
+          "icon": "Filter"
+        }
+      ]
+    },
+    {
+      "brand": "ДымДымыч",
+      "unlockYear": 1974,
+      "parts": [
+        {
+          "id": "дымдымыч_шины_универсальные_2_43",
+          "name": "Шины Универсальные 2",
+          "description": "Подходят для всех типов трасс, не боятся дождя, но рекорда на таких не поставить",
+          "boosts": {
+            "handling": 5,
+            "offroad": 5,
+            "accelerationPct": 2,
+            "topSpeedPct": 3
+          },
+          "price": 2700,
+          "brand": "ДымДымыч",
+          "tier": 2,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "дымдымыч_шины_внедорожные_2_44",
+          "name": "Шины Внедорожные 2",
+          "description": "Повышают проходимость, но слегка портят управляемость.",
+          "boosts": {
+            "handling": -3,
+            "offroad": 13,
+            "accelerationPct": 2,
+            "topSpeedPct": 2
+          },
+          "price": 3100,
+          "brand": "ДымДымыч",
+          "tier": 2,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "дымдымыч_дифференциал_пт_2_45",
+          "name": "Дифференциал ПТ 2",
+          "description": "Дифференциал Повышенного Трения распределяет крутящий момент от двигателя. Можно установить только один тип: либо этот, либо Дифференциал СБ",
+          "boosts": {
+            "handling": 5,
+            "offroad": 3,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 2500,
+          "brand": "ДымДымыч",
+          "tier": 2,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "дымдымыч_дифференциал_сб_2_46",
+          "name": "Дифференциал СБ 2",
+          "description": "Дифференциал СамоБлокирующийся -  Помогает при вывешивании колёс. Можно установить только один тип: либо этот, либо Дифференциал повышенного трения",
+          "boosts": {
+            "handling": 2,
+            "offroad": 6,
+            "accelerationPct": 2,
+            "topSpeedPct": 2
+          },
+          "price": 2200,
+          "brand": "ДымДымыч",
+          "tier": 2,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "дымдымыч_впускная_система_2_47",
+          "name": "Впускная система 2",
+          "description": "Осуществляет подачу воздуха к цилиндрам",
+          "boosts": {
+            "power": 21,
+            "torque": 27,
+            "topSpeed": 2,
+            "accelerationPct": 2
+          },
+          "price": 2800,
+          "brand": "ДымДымыч",
+          "tier": 2,
+          "icon": "Filter"
+        }
+      ]
+    },
+    {
+      "brand": "Sumimoto",
+      "unlockYear": 1978,
+      "parts": [
+        {
+          "id": "sumimoto_система_выпуска_2_48",
+          "name": "Система выпуска 2",
+          "description": "Ускорение автомобиля за счёт снижения энергозатрат на выхлоп отработанных газов",
+          "boosts": {
+            "powerPct": 3,
+            "power": 12,
+            "accelerationPct": 2
+          },
+          "price": 2000,
+          "brand": "Sumimoto",
+          "tier": 2,
+          "icon": "Filter"
+        },
+        {
+          "id": "sumimoto_распредвал_верховой_2_49",
+          "name": "Распредвал Верховой 2",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на скорость и мощность",
+          "boosts": {
+            "power": 40,
+            "topSpeedPct": 4
+          },
+          "price": 3000,
+          "brand": "Sumimoto",
+          "tier": 2,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "sumimoto_турбина_2_50",
+          "name": "Турбина 2",
+          "description": "Турбонаддув придаёт ощутимую мощность автомобилю. Не устанавливается без интеркулера",
+          "boosts": {
+            "power": 55,
+            "torque": 30,
+            "accelerationPct": 5,
+            "topSpeedPct": 5
+          },
+          "price": 5000,
+          "brand": "Sumimoto",
+          "tier": 2,
+          "icon": "Flame",
+          "slot": "turbo",
+          "requires": "intercooler"
+        },
+        {
+          "id": "sumimoto_шрус_2_51",
+          "name": "ШРУС 2",
+          "description": "Шарнир равных угловых скоростей. Замена слегка улучшает качества подвески",
+          "boosts": {
+            "handling": 6,
+            "offroad": 3
+          },
+          "price": 2100,
+          "brand": "Sumimoto",
+          "tier": 2,
+          "icon": "Disc"
+        },
+        {
+          "id": "sumimoto_облегченные_детали_кузова_2_52",
+          "name": "Облегченные детали кузова 2",
+          "description": "Замена сиденьев, капота на более лёгкие, удаление деталей комфорта делает машину более маневренной",
+          "boosts": {
+            "topSpeed": 3,
+            "handling": 5,
+            "accelerationPct": 2
+          },
+          "price": 2300,
+          "brand": "Sumimoto",
+          "tier": 2,
+          "icon": "Disc"
+        }
+      ]
+    },
+    {
+      "brand": "Волга+",
+      "unlockYear": 1982,
+      "parts": [
+        {
+          "id": "волга__компрессор_2_53",
+          "name": "Компрессор 2",
+          "description": "Механический нагнетатель. Не устанавливается без интеркулера.",
+          "boosts": {
+            "power": 48,
+            "torque": 49,
+            "accelerationPct": 4,
+            "topSpeedPct": 4
+          },
+          "price": 4500,
+          "brand": "Волга+",
+          "tier": 2,
+          "icon": "Flame",
+          "slot": "compressor",
+          "requires": "intercooler"
+        },
+        {
+          "id": "волга__амортизаторы_2_54",
+          "name": "Амортизаторы 2",
+          "description": "Жёсткие амортизаторы с коротким ходом улучшают управляемость автомобиля, но слегка снижают проходимость",
+          "boosts": {
+            "handling": 10,
+            "offroad": -3
+          },
+          "price": 2800,
+          "brand": "Волга+",
+          "tier": 2,
+          "icon": "Spring",
+          "slot": "shocks"
+        },
+        {
+          "id": "волга__распредвал_универсальный_2_55",
+          "name": "Распредвал Универсальный 2",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный улучшает понемногу и скорость и разгон",
+          "boosts": {
+            "power": 20,
+            "torque": 20,
+            "accelerationPct": 2,
+            "topSpeedPct": 2
+          },
+          "price": 3000,
+          "brand": "Волга+",
+          "tier": 2,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "волга__поршни_2_56",
+          "name": "Поршни 2",
+          "description": "Улучшенные поршни позволяют повысить нагрузки на двигатель",
+          "boosts": {
+            "power": 22,
+            "torque": 9,
+            "topSpeed": 3
+          },
+          "price": 2200,
+          "brand": "Волга+",
+          "tier": 2,
+          "icon": "Zap"
+        },
+        {
+          "id": "волга__увеличение_клиренса_2_57",
+          "name": "Увеличение клиренса 2",
+          "description": "Внедорожная подготовка увеличивает проходимость, но слегка снижает управляемость",
+          "boosts": {
+            "handling": -2,
+            "offroad": 10
+          },
+          "price": 2300,
+          "brand": "Волга+",
+          "tier": 2,
+          "icon": "Spring"
+        }
+      ]
+    },
+    {
+      "brand": "TopСar",
+      "unlockYear": 1986,
+      "parts": [
+        {
+          "id": "topсar_расточка_двигателя_2_58",
+          "name": "Расточка двигателя 2",
+          "description": "Увеличение объёма мотора. НЕ СНИМАЕТСЯ в сервисе. Производится 1 раз. Благодаря процентному приросту характеристик рекомендуется  растачивать автомобиль в завершении тюнинга",
+          "boosts": {
+            "powerPct": 10,
+            "power": 30,
+            "torquePct": 10,
+            "torque": 30,
+            "topSpeed": 4,
+            "accelerationPct": 4
+          },
+          "price": 6000,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Zap",
+          "slot": "bore"
+        },
+        {
+          "id": "topсar_слики_2_59",
+          "name": "Слики 2",
+          "description": "Шины для сухих гоночных трасс, не едут в случае дождя на трассах Песок. Болото.",
+          "boosts": {},
+          "price": 0,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "topсar_но_зато_дают_максимальные_показатели_13_у_60",
+          "name": "но зато дают максимальные показатели,13 У",
+          "description": "5% к скорости. 4% к разгону.  ,3100",
+          "boosts": {},
+          "price": 0,
+          "brand": "TopСar",
+          "tier": 1,
+          "icon": "Zap"
+        },
+        {
+          "id": "topсar_шины_гоночные_2_61",
+          "name": "Шины Гоночные 2",
+          "description": "Эти шины боятся дождя, но дают ощутимое преимущество в динамике",
+          "boosts": {
+            "handling": 9,
+            "offroad": -2,
+            "accelerationPct": 3,
+            "topSpeedPct": 4
+          },
+          "price": 3100,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "topсar_пружины_2_62",
+          "name": "Пружины 2",
+          "description": "Замена на спортивные делает подвеску жёсткой, придавая управляемость",
+          "boosts": {
+            "handling": 7
+          },
+          "price": 1500,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Spring",
+          "slot": "springs"
+        },
+        {
+          "id": "topсar_шаровые_опоры_2_63",
+          "name": "Шаровые опоры 2",
+          "description": "Слегка улучшают управляемость",
+          "boosts": {
+            "handling": 4
+          },
+          "price": 600,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Disc"
+        },
+        {
+          "id": "topсar_интеркулер_2_64",
+          "name": "Интеркулер 2",
+          "description": "Охлаждает двигатель. Необходим для установки турбины и компрессора",
+          "boosts": {
+            "power": 4,
+            "torque": 4,
+            "accelerationPct": 1
+          },
+          "price": 1300,
+          "brand": "TopСar",
+          "tier": 2,
+          "icon": "Filter",
+          "slot": "intercooler"
+        }
+      ]
+    },
+    {
+      "brand": "Mugen",
+      "unlockYear": 1992,
+      "parts": [
+        {
+          "id": "mugen_компрессор_3_65",
+          "name": "Компрессор 3",
+          "description": "Механический нагнетатель. Не устанавливается без интеркулера.",
+          "boosts": {
+            "power": 64,
+            "torque": 65,
+            "accelerationPct": 5,
+            "topSpeedPct": 6
+          },
+          "price": 8800,
+          "brand": "Mugen",
+          "tier": 3,
+          "icon": "Flame",
+          "slot": "compressor",
+          "requires": "intercooler"
+        },
+        {
+          "id": "mugen_шрус_3_66",
+          "name": "ШРУС 3",
+          "description": "Шарнир равных угловых скоростей. Замена слегка улучшает качества подвески",
+          "boosts": {
+            "handling": 9,
+            "offroad": 5
+          },
+          "price": 3300,
+          "brand": "Mugen",
+          "tier": 3,
+          "icon": "Disc"
+        },
+        {
+          "id": "mugen_распредвал_верховой_3_67",
+          "name": "Распредвал Верховой 3",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на скорость и мощность",
+          "boosts": {
+            "power": 63,
+            "topSpeedPct": 6
+          },
+          "price": 5000,
+          "brand": "Mugen",
+          "tier": 3,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "mugen_распредвал_низовой_3_68",
+          "name": "Распредвал Низовой 3",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный работает на разгон и крутящий момент",
+          "boosts": {
+            "torque": 63,
+            "accelerationPct": 6
+          },
+          "price": 5000,
+          "brand": "Mugen",
+          "tier": 3,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "mugen_фильтры_3_69",
+          "name": "Фильтры 3",
+          "description": "Фильтры низкого сопротьивления способствуют эфективному использованию топлива",
+          "boosts": {
+            "power": 23,
+            "topSpeed": 3,
+            "accelerationPct": 2
+          },
+          "price": 2100,
+          "brand": "Mugen",
+          "tier": 3,
+          "icon": "Filter"
+        }
+      ]
+    },
+    {
+      "brand": "Hennesy",
+      "unlockYear": 1996,
+      "parts": [
+        {
+          "id": "hennesy_турбина_3_70",
+          "name": "Турбина 3",
+          "description": "Турбонаддув придаёт ощутимую мощность автомобилю. Не устанавливается без интеркулера",
+          "boosts": {
+            "power": 75,
+            "torque": 43,
+            "accelerationPct": 7,
+            "topSpeedPct": 7
+          },
+          "price": 9500,
+          "brand": "Hennesy",
+          "tier": 3,
+          "icon": "Flame",
+          "slot": "turbo",
+          "requires": "intercooler"
+        },
+        {
+          "id": "hennesy_маховик_3_71",
+          "name": "Маховик 3",
+          "description": "Облегчённая деталь немного ускоряет автомобиль",
+          "boosts": {
+            "accelerationPct": 5,
+            "topSpeedPct": 6
+          },
+          "price": 2100,
+          "brand": "Hennesy",
+          "tier": 3,
+          "icon": "Circle"
+        },
+        {
+          "id": "hennesy_тормоза_3_72",
+          "name": "Тормоза 3",
+          "description": "Спортивные тормоза позволяют позже тормозить перед поворотами, сокращая время прохождения трассы",
+          "boosts": {
+            "handling": 8
+          },
+          "price": 2000,
+          "brand": "Hennesy",
+          "tier": 3,
+          "icon": "Disc",
+          "slot": "brakes"
+        },
+        {
+          "id": "hennesy_коленвал_3_73",
+          "name": "Коленвал 3",
+          "description": "Улучшенная версия детали ускоряет автомобиль",
+          "boosts": {
+            "power": 16,
+            "accelerationPct": 4,
+            "topSpeedPct": 5
+          },
+          "price": 4000,
+          "brand": "Hennesy",
+          "tier": 3,
+          "icon": "Zap"
+        },
+        {
+          "id": "hennesy_шноркель_3_74",
+          "name": "Шноркель 3",
+          "description": "Позволяет не объезжать водные преграды, повышая проходимость",
+          "boosts": {
+            "offroad": 9
+          },
+          "price": 2000,
+          "brand": "Hennesy",
+          "tier": 3,
+          "icon": "Filter"
+        }
+      ]
+    },
+    {
+      "brand": "AMG",
+      "unlockYear": 2000,
+      "parts": [
+        {
+          "id": "amg_коробка_передач_3_75",
+          "name": "Коробка передач 3",
+          "description": "Ощутимо повышает скоростные характеристики",
+          "boosts": {
+            "accelerationPct": 10,
+            "topSpeedPct": 13
+          },
+          "price": 8000,
+          "brand": "AMG",
+          "tier": 3,
+          "icon": "Zap",
+          "slot": "gearbox"
+        },
+        {
+          "id": "amg_лебёдка_3_76",
+          "name": "Лебёдка 3",
+          "description": "Помогает выбраться на бездорожье",
+          "boosts": {
+            "offroad": 13
+          },
+          "price": 3400,
+          "brand": "AMG",
+          "tier": 3,
+          "icon": "Disc"
+        },
+        {
+          "id": "amg_топливная_система_3_77",
+          "name": "Топливная Система 3",
+          "description": "Замена форсунок и бензонасоса высокого давления дает прирост мощности",
+          "boosts": {
+            "power": 28,
+            "torque": 31,
+            "accelerationPct": 1,
+            "topSpeedPct": 3
+          },
+          "price": 3500,
+          "brand": "AMG",
+          "tier": 3,
+          "icon": "Filter"
+        },
+        {
+          "id": "amg_дифференциал_пт_3_78",
+          "name": "Дифференциал ПТ 3",
+          "description": "Дифференциал Повышенного Трения распределяет крутящий момент от двигателя. Можно установить только один тип: либо этот, либо Дифференциал СБ",
+          "boosts": {
+            "handling": 7,
+            "offroad": 4,
+            "accelerationPct": 4,
+            "topSpeedPct": 4
+          },
+          "price": 4300,
+          "brand": "AMG",
+          "tier": 3,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "amg_пружины_3_79",
+          "name": "Пружины 3",
+          "description": "Замена на спортивные делает подвеску жёсткой, придавая управляемость",
+          "boosts": {
+            "handling": 10
+          },
+          "price": 3000,
+          "brand": "AMG",
+          "tier": 3,
+          "icon": "Spring",
+          "slot": "springs"
+        }
+      ]
+    },
+    {
+      "brand": "Dunlop",
+      "unlockYear": 2004,
+      "parts": [
+        {
+          "id": "dunlop_амортизаторы_3_80",
+          "name": "Амортизаторы 3",
+          "description": "Жёсткие амортизаторы с коротким ходом улучшают управляемость автомобиля, но слегка снижают проходимость",
+          "boosts": {
+            "handling": 15,
+            "offroad": -5
+          },
+          "price": 4100,
+          "brand": "Dunlop",
+          "tier": 3,
+          "icon": "Spring",
+          "slot": "shocks"
+        },
+        {
+          "id": "dunlop_шины_внедорожные_3_81",
+          "name": "Шины Внедорожные 3",
+          "description": "Повышают проходимость, но слегка портят управляемость.",
+          "boosts": {
+            "handling": -5,
+            "offroad": 17,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 5800,
+          "brand": "Dunlop",
+          "tier": 3,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "dunlop_шины_универсальные_3_82",
+          "name": "Шины Универсальные 3",
+          "description": "Подходят для всех типов трасс, не боятся дождя, но рекорда на таких не поставить",
+          "boosts": {
+            "handling": 7,
+            "offroad": 7,
+            "accelerationPct": 3,
+            "topSpeedPct": 5
+          },
+          "price": 4900,
+          "brand": "Dunlop",
+          "tier": 3,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "dunlop_система_выпуска_3_83",
+          "name": "Система выпуска 3",
+          "description": "Ускорение автомобиля за счёт снижения энергозатрат на выхлоп отработанных газов",
+          "boosts": {
+            "powerPct": 4,
+            "power": 18,
+            "topSpeed": 1,
+            "accelerationPct": 4
+          },
+          "price": 4000,
+          "brand": "Dunlop",
+          "tier": 3,
+          "icon": "Filter"
+        },
+        {
+          "id": "dunlop_поршни_3_84",
+          "name": "Поршни 3",
+          "description": "Улучшенные поршни позволяют повысить нагрузки на двигатель",
+          "boosts": {
+            "power": 30,
+            "torque": 17,
+            "topSpeed": 5,
+            "accelerationPct": 2
+          },
+          "price": 4000,
+          "brand": "Dunlop",
+          "tier": 3,
+          "icon": "Zap"
+        }
+      ]
+    },
+    {
+      "brand": "Brabus",
+      "unlockYear": 2008,
+      "parts": [
+        {
+          "id": "brabus_расточка_3_85",
+          "name": "Расточка 3",
+          "description": "Увеличение объёма мотора. НЕ СНИМАЕТСЯ в сервисе. Производится 1 раз. Благодаря процентному приросту характеристик рекомендуется  растачивать автомобиль в завершении тюнинга",
+          "boosts": {
+            "powerPct": 10,
+            "power": 43,
+            "torquePct": 10,
+            "torque": 43,
+            "topSpeed": 6,
+            "accelerationPct": 6
+          },
+          "price": 11000,
+          "brand": "Brabus",
+          "tier": 3,
+          "icon": "Zap",
+          "slot": "bore"
+        },
+        {
+          "id": "brabus_интеркулер_3_86",
+          "name": "Интеркулер 3",
+          "description": "Охлаждает двигатель. Необходим для установки турбины и компрессора",
+          "boosts": {
+            "power": 6,
+            "torque": 5,
+            "accelerationPct": 2
+          },
+          "price": 2000,
+          "brand": "Brabus",
+          "tier": 3,
+          "icon": "Filter",
+          "slot": "intercooler"
+        },
+        {
+          "id": "brabus_распредвал_универсальный_3_87",
+          "name": "Распредвал Универсальный 3",
+          "description": "Определяет скорость подъема и открытия клапанов. Можно выбрать только один распредвал. Данный улучшает понемногу и скорость и разгон",
+          "boosts": {
+            "power": 31,
+            "torque": 32,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 5000,
+          "brand": "Brabus",
+          "tier": 3,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "brabus_шатуны_3_88",
+          "name": "Шатуны 3",
+          "description": "Обеспечивают равномерное распределение нагрузки, небольшой прирост мощности",
+          "boosts": {
+            "power": 18,
+            "torque": 13,
+            "topSpeed": 3
+          },
+          "price": 2500,
+          "brand": "Brabus",
+          "tier": 3,
+          "icon": "Zap"
+        },
+        {
+          "id": "brabus_шаровые_опоры_3_89",
+          "name": "Шаровые опоры 3",
+          "description": "Слегка улучшают управляемость",
+          "boosts": {
+            "handling": 6
+          },
+          "price": 1200,
+          "brand": "Brabus",
+          "tier": 3,
+          "icon": "Disc"
+        }
+      ]
+    },
+    {
+      "brand": "Ralliart",
+      "unlockYear": 2012,
+      "parts": [
+        {
+          "id": "ralliart_шины_гоночные_3_90",
+          "name": "Шины Гоночные 3",
+          "description": "Эти шины боятся дождя, но дают ощутимое преимущество в динамике",
+          "boosts": {
+            "handling": 13,
+            "offroad": -4,
+            "accelerationPct": 4,
+            "topSpeedPct": 6
+          },
+          "price": 5800,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "ralliart_слики_3_91",
+          "name": "Слики 3",
+          "description": "Шины для сухих гоночных трасс, не едут в случае дождя на трассах Песок. Болото.",
+          "boosts": {},
+          "price": 0,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "ralliart_но_зато_дают_максимальные_показатели_20_у_92",
+          "name": "но зато дают максимальные показатели,20 У",
+          "description": "7% к скорости. 5% к разгону.  ,5800",
+          "boosts": {},
+          "price": 0,
+          "brand": "Ralliart",
+          "tier": 1,
+          "icon": "Zap"
+        },
+        {
+          "id": "ralliart_дифференциал_сб_3_93",
+          "name": "Дифференциал СБ 3",
+          "description": "Дифференциал СамоБлокирующийся -  Помогает при вывешивании колёс. Можно установить только один тип: либо этот, либо Дифференциал повышенного трения",
+          "boosts": {
+            "handling": 3,
+            "offroad": 9,
+            "accelerationPct": 3,
+            "topSpeedPct": 3
+          },
+          "price": 3900,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "ralliart_впускная_система_3_94",
+          "name": "Впускная система 3",
+          "description": "Осуществляет подачу воздуха к цилиндрам",
+          "boosts": {
+            "power": 27,
+            "torque": 35,
+            "topSpeed": 3,
+            "accelerationPct": 4
+          },
+          "price": 4000,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Filter"
+        },
+        {
+          "id": "ralliart_увеличение_клиренса_3_95",
+          "name": "Увеличение Клиренса 3",
+          "description": "Внедорожная подготовка увеличивает проходимость, но слегка снижает управляемость",
+          "boosts": {
+            "handling": -3,
+            "offroad": 14
+          },
+          "price": 4000,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Spring"
+        },
+        {
+          "id": "ralliart_облегченные_детали_3_96",
+          "name": "Облегченные детали 3",
+          "description": "Замена сиденьев, капота на более лёгкие, удаление деталей комфорта делает машину более маневренной",
+          "boosts": {
+            "handling": 7,
+            "accelerationPct": 3,
+            "topSpeedPct": 4
+          },
+          "price": 4100,
+          "brand": "Ralliart",
+          "tier": 3,
+          "icon": "Disc"
+        }
+      ]
+    },
+    {
+      "brand": "Бонусные детали",
+      "unlockYear": 9999,
+      "parts": [
+        {
+          "id": "бонусные_детали_интеркулер_4_97",
+          "name": "Интеркулер 4",
+          "description": "",
+          "boosts": {
+            "power": 8,
+            "torque": 7,
+            "accelerationPct": 2
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter",
+          "slot": "intercooler"
+        },
+        {
+          "id": "бонусные_детали_маховик_4_98",
+          "name": "Маховик 4",
+          "description": "",
+          "boosts": {
+            "accelerationPct": 6,
+            "topSpeedPct": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Circle"
+        },
+        {
+          "id": "бонусные_детали_шатуны_4_99",
+          "name": "Шатуны 4",
+          "description": "",
+          "boosts": {
+            "power": 21,
+            "torque": 15,
+            "topSpeed": 4
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap"
+        },
+        {
+          "id": "бонусные_детали_шаровые_опоры_4_100",
+          "name": "Шаровые опоры 4",
+          "description": "",
+          "boosts": {
+            "handling": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc"
+        },
+        {
+          "id": "бонусные_детали_коленвал_4_101",
+          "name": "Коленвал 4",
+          "description": "",
+          "boosts": {
+            "power": 20,
+            "accelerationPct": 5,
+            "topSpeedPct": 5
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap"
+        },
+        {
+          "id": "бонусные_детали_пружины_4_102",
+          "name": "Пружины 4",
+          "description": "",
+          "boosts": {
+            "handling": 12
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Spring",
+          "slot": "springs"
+        },
+        {
+          "id": "бонусные_детали_шины_универсальные_4_103",
+          "name": "Шины Универсальные 4",
+          "description": "",
+          "boosts": {
+            "handling": 8,
+            "offroad": 8,
+            "accelerationPct": 4,
+            "topSpeedPct": 5
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "бонусные_детали_шины_внедорожные_4_104",
+          "name": "Шины Внедорожные 4",
+          "description": "",
+          "boosts": {
+            "handling": -6,
+            "offroad": 20,
+            "accelerationPct": 4,
+            "topSpeedPct": 3
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "бонусные_детали_шины_гоночные_4_105",
+          "name": "Шины Гоночные 4",
+          "description": "",
+          "boosts": {
+            "handling": 15,
+            "offroad": -5,
+            "accelerationPct": 4,
+            "topSpeedPct": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "бонусные_детали_слики_4_106",
+          "name": "Слики 4",
+          "description": "",
+          "boosts": {
+            "handling": 23,
+            "offroad": -12,
+            "accelerationPct": 6,
+            "topSpeedPct": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Circle",
+          "slot": "tires"
+        },
+        {
+          "id": "бонусные_детали_впускная_система_4_107",
+          "name": "Впускная система 4",
+          "description": "",
+          "boosts": {
+            "power": 32,
+            "torque": 38,
+            "topSpeed": 5,
+            "accelerationPct": 4
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter"
+        },
+        {
+          "id": "бонусные_детали_топливная_система_4_108",
+          "name": "Топливная система 4",
+          "description": "",
+          "boosts": {
+            "power": 34,
+            "torque": 35,
+            "accelerationPct": 2,
+            "topSpeedPct": 3
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter"
+        },
+        {
+          "id": "бонусные_детали_система_выпуска_4_109",
+          "name": "Система выпуска 4",
+          "description": "",
+          "boosts": {
+            "powerPct": 5,
+            "power": 20,
+            "topSpeed": 4,
+            "accelerationPct": 4
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter"
+        },
+        {
+          "id": "бонусные_детали_дифференциал_пт_4_110",
+          "name": "Дифференциал ПТ 4",
+          "description": "",
+          "boosts": {
+            "handling": 9,
+            "offroad": 5,
+            "accelerationPct": 4,
+            "topSpeedPct": 5
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "бонусные_детали_дифференциал_сб_4_111",
+          "name": "Дифференциал СБ 4",
+          "description": "",
+          "boosts": {
+            "handling": 4,
+            "offroad": 11,
+            "accelerationPct": 4,
+            "topSpeedPct": 3
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc",
+          "slot": "differential"
+        },
+        {
+          "id": "бонусные_детали_турбина_4_112",
+          "name": "Турбина 4",
+          "description": "",
+          "boosts": {
+            "power": 81,
+            "torque": 47,
+            "accelerationPct": 7,
+            "topSpeedPct": 8
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Flame",
+          "slot": "turbo",
+          "requires": "intercooler"
+        },
+        {
+          "id": "бонусные_детали_коробка_передач_4_113",
+          "name": "Коробка передач 4",
+          "description": "",
+          "boosts": {
+            "accelerationPct": 11,
+            "topSpeedPct": 14
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap",
+          "slot": "gearbox"
+        },
+        {
+          "id": "бонусные_детали_облегченные_детали__4_114",
+          "name": "Облегченные детали  4",
+          "description": "",
+          "boosts": {
+            "handling": 9,
+            "accelerationPct": 4,
+            "topSpeedPct": 4
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc"
+        },
+        {
+          "id": "бонусные_детали_поршни_4_115",
+          "name": "Поршни 4",
+          "description": "",
+          "boosts": {
+            "power": 35,
+            "torque": 20,
+            "topSpeed": 5,
+            "accelerationPct": 3
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap"
+        },
+        {
+          "id": "бонусные_детали_компрессор_4_116",
+          "name": "Компрессор 4",
+          "description": "",
+          "boosts": {
+            "power": 70,
+            "torque": 68,
+            "accelerationPct": 6,
+            "topSpeedPct": 6
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Flame",
+          "slot": "compressor",
+          "requires": "intercooler"
+        },
+        {
+          "id": "бонусные_детали_фильтры_4_117",
+          "name": "Фильтры 4",
+          "description": "",
+          "boosts": {
+            "power": 26,
+            "torque": 3,
+            "topSpeed": 4,
+            "accelerationPct": 2
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter"
+        },
+        {
+          "id": "бонусные_детали_распредвал_низовой_4_118",
+          "name": "Распредвал низовой 4",
+          "description": "",
+          "boosts": {
+            "torque": 70,
+            "accelerationPct": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "бонусные_детали_распредвал_верховой_4_119",
+          "name": "Распредвал верховой 4",
+          "description": "",
+          "boosts": {
+            "power": 70,
+            "topSpeedPct": 7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "бонусные_детали_распредвал_универсальный_4_120",
+          "name": "Распредвал универсальный 4",
+          "description": "",
+          "boosts": {
+            "power": 35,
+            "torque": 35,
+            "accelerationPct": 3,
+            "topSpeedPct": 4
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap",
+          "slot": "camshaft"
+        },
+        {
+          "id": "бонусные_детали_увеличение_клиренса_4_121",
+          "name": "Увеличение клиренса 4",
+          "description": "",
+          "boosts": {
+            "handling": -4,
+            "offroad": 17
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Spring"
+        },
+        {
+          "id": "бонусные_детали_расточка_двигателя_4_122",
+          "name": "Расточка двигателя 4",
+          "description": "",
+          "boosts": {
+            "powerPct": 10,
+            "power": 50,
+            "torquePct": 10,
+            "torque": 50,
+            "topSpeed": 7,
+            "accelerationPct": 6
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Zap",
+          "slot": "bore"
+        },
+        {
+          "id": "бонусные_детали_амортизаторы_4_123",
+          "name": "Амортизаторы 4",
+          "description": "",
+          "boosts": {
+            "handling": 18,
+            "offroad": -7
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Spring",
+          "slot": "shocks"
+        },
+        {
+          "id": "бонусные_детали_шрус_4_124",
+          "name": "ШРУС 4",
+          "description": "",
+          "boosts": {
+            "handling": 10,
+            "offroad": 6
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc"
+        },
+        {
+          "id": "бонусные_детали_лебёдка_4_125",
+          "name": "Лебёдка 4",
+          "description": "",
+          "boosts": {
+            "offroad": 14
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc"
+        },
+        {
+          "id": "бонусные_детали_шноркель_4_126",
+          "name": "Шноркель 4",
+          "description": "",
+          "boosts": {
+            "offroad": 10
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Filter"
+        },
+        {
+          "id": "бонусные_детали_тормоза_4_127",
+          "name": "Тормоза 4",
+          "description": "",
+          "boosts": {
+            "handling": 13
+          },
+          "price": 0,
+          "brand": "Бонусные детали",
+          "tier": 4,
+          "icon": "Disc",
+          "slot": "brakes"
+        }
+      ]
+    }
+  ]
+}
