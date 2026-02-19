@@ -9,14 +9,18 @@ interface MarketplaceProps {
   cars: Car[];
   shopVisits: Record<string, string>;
   onBuyPart: (carId: string, part: Part) => void;
+  onRemovePart: (carId: string, partIndex: number) => void;
   onBack: () => void;
 }
 
 const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
 
-const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVisits, onBuyPart, onBack }) => {
+const JAMSHUT_BRAND = 'Джамшут';
+
+const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVisits, onBuyPart, onRemovePart, onBack }) => {
   const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
   const [selectedShopIdx, setSelectedShopIdx] = useState<number | null>(null);
+  const [showJamshut, setShowJamshut] = useState(false);
 
   const unlockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear <= gameYear), [gameYear]);
   const lockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear > gameYear).sort((a, b) => a.unlockYear - b.unlockYear), [gameYear]);
@@ -186,7 +190,100 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
               </div>
             </div>
           )}
+
+          {/* Джамшут — мастерская по снятию деталей */}
+          {(() => {
+            const jamshutLocked = visitedBrand !== undefined && visitedBrand !== JAMSHUT_BRAND;
+            const hasParts = selectedCar && selectedCar.installedParts.length > 0;
+            return (
+              <button onClick={() => !jamshutLocked && hasParts && setShowJamshut(true)}
+                disabled={jamshutLocked || !hasParts}
+                className={`pixel-card p-0 flex items-stretch overflow-hidden transition-colors ${jamshutLocked ? 'opacity-30' : !hasParts ? 'opacity-50' : 'hover:border-[#ff8800]'}`}
+                style={{ borderWidth: '3px', borderColor: jamshutLocked ? '#222' : visitedBrand === JAMSHUT_BRAND ? '#ff8800' : '#553300' }}>
+                <div className="flex flex-col justify-center px-4 py-3 min-w-[160px] border-r border-[#222]">
+                  <div className="text-[11px] text-[#ff8800]" style={{ textShadow: '1px 1px 0 #000' }}>🔨 Джамшут</div>
+                  <div className="text-[7px] text-[#888] mt-1">Снятие деталей</div>
+                  {visitedBrand === JAMSHUT_BRAND && <div className="text-[7px] text-[#ff8800] mt-1">← СЕГОДНЯ ТУТ</div>}
+                </div>
+                <div className="flex-grow px-3 py-2 flex items-center">
+                  <span className="text-[8px] text-[#888]">Джамшут снимет деталь бесплатно, но заберёт её себе</span>
+                </div>
+                <div className="flex flex-col justify-center items-center px-4 min-w-[80px]">
+                  {!jamshutLocked && hasParts && <div className="text-[8px] text-[#555]">▶</div>}
+                </div>
+              </button>
+            );
+          })()}
         </div>
+      </div>
+    );
+  }
+
+  // ШАГ 2.5: Джамшут — снятие деталей
+  if (showJamshut && selectedCar) {
+    return (
+      <div className="p-3 max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-3">
+          <div>
+            <h2 className="text-lg retro-title" style={{color:'#ff8800'}}>🔨 ДЖАМШУТ</h2>
+            <div className="text-[10px] mt-1">
+              <span className="text-white">{selectedCar.name}</span>
+              <span className="text-[#555] ml-3">{selectedCar.installedParts.length}/{getPartLimit()} дет.</span>
+            </div>
+            <div className="text-[8px] text-[#888] mt-1">Джамшут снимет деталь бесплатно, но заберёт её себе навсегда</div>
+          </div>
+          <button onClick={() => setShowJamshut(false)} className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
+            style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← МАГАЗИНЫ</button>
+        </div>
+
+        {selectedCar.installedParts.length === 0 ? (
+          <div className="pixel-card p-8 text-center">
+            <div className="text-[10px] text-[#666]">НЕТ ДЕТАЛЕЙ</div>
+            <div className="text-[8px] text-[#444] mt-1">МАШИНА В СТОКЕ</div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2 pb-20">
+            {selectedCar.installedParts.map((part, pIdx) => {
+              const badges = boostBadges(part);
+              return (
+                <div key={pIdx} className="pixel-card p-0 flex items-stretch overflow-hidden"
+                  style={{ borderWidth: '2px', borderColor: '#553300' }}>
+                  <div className="flex-grow px-3 py-2 border-r border-[#222]">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] text-white">{part.name}</span>
+                      {part.slot && <span className="text-[7px] px-1.5 py-0.5 bg-[#1a1a2e] text-[#888] border border-[#333]">{part.slot}</span>}
+                    </div>
+                    {/* Бейджи — показываем что потеряете */}
+                    <div className="flex flex-wrap gap-1">
+                      {badges.map((badge, bi) => (
+                        <span key={bi} className="text-[9px] px-1.5 py-0.5 font-bold"
+                          style={{
+                            backgroundColor: '#220000',
+                            border: '1px solid #ff4444',
+                            color: '#ff4444',
+                          }}>
+                          {badge.text.replace('+', '−')}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center px-3 py-2 min-w-[140px]">
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Джамшут снимет "${part.name}" и заберёт себе. Продолжить?`)) {
+                          onRemovePart(selectedCarId!, pIdx);
+                        }
+                      }}
+                      className="retro-btn text-[8px] py-1 px-3"
+                      style={{ backgroundColor: '#330000', border: '2px solid #ff8800', color: '#ff8800' }}>
+                      🔨 СНЯТЬ
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }

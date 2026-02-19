@@ -139,6 +139,22 @@ const App = () => {
     }
   };
 
+  // Джамшут: снять деталь безвозвратно + записать визит
+  const handleJamshutRemove = async (carId: string, partIndex: number) => {
+    if (!player) return;
+    // Удаляем деталь из гаража
+    const garage = [...player.garage];
+    const carIdx = garage.findIndex(c => c.id === carId);
+    if (carIdx === -1) return;
+    const car = { ...garage[carIdx] };
+    car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex);
+    garage[carIdx] = car;
+    // Записываем визит к Джамшуту
+    const shopVisits = { ...player.shop_visits, [carId]: 'Джамшут' };
+    await supabase.from('room_players').update({ garage, shop_visits: shopVisits }).eq('id', playerId);
+    await refreshPlayer();
+  };
+
   const gameYear = room?.current_year || 1960;
   const cars = player?.garage || [];
   const storage = player?.storage || [];
@@ -207,6 +223,7 @@ const App = () => {
             cars={cars}
             shopVisits={shopVisits}
             onBuyPart={handleBuyPart}
+            onRemovePart={handleJamshutRemove}
             onBack={() => navigate('MULTIPLAYER')}
           />
         )}
