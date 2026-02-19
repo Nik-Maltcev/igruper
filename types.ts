@@ -144,4 +144,4 @@ export interface ChatMessage {
 }
 
 export type GamePhase = 'PREPARATION' | 'RACE_DAY' | 'RACING' | 'RESULTS';
-export type View = 'DASHBOARD' | 'GARAGE' | 'DEALER' | 'SHOP' | 'AUCTION' | 'WORKLIST' | 'PLAYERS' | 'RULES' | 'HISTORY' | 'MULTIPLAYER';
+export type View = 'DASHBOARD' | 'GARAGE' | 'DEALER' | 'SHOP' | 'AUCTION' | 'WORKLIST' | 'PLAYERS' | 'RULES' | 'HISTORY' | 'MULTIPLAYER' | 'SCHEDULE';

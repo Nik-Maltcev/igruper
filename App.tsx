@@ -13,6 +13,7 @@ import Marketplace from './components/Marketplace';
 import RaceCenter from './components/RaceCenter';
 import Multiplayer from './components/Multiplayer';
 import Rules from './components/Rules';
+import RaceSchedule from './components/RaceSchedule';
 
 const App = () => {
   // Мультиплеер — основной режим
@@ -222,6 +223,13 @@ const App = () => {
 
         {currentView === 'RULES' && (
           <Rules onBack={() => navigate('MULTIPLAYER')} />
+        )}
+
+        {currentView === 'SCHEDULE' && (
+          <RaceSchedule
+            gameYear={gameYear}
+            onBack={() => navigate('MULTIPLAYER')}
+          />
         )}
       </main>
     </div>
