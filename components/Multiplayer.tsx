@@ -185,3 +185,110 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
   const currentSchedule = room ? getScheduleDay(room.current_day) : null;
   const me = player;
+  return (
+    <div className="p-3 max-w-4xl mx-auto text-[8px]">
+      <div className="pixel-card p-4 mb-3">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-[10px] text-[#00aaff]">МУЛЬТИПЛЕЕР</h2>
+          {room && <span className="text-[#888]">КОД: <b className="text-[#fff]">{room.code}</b></span>}
+        </div>
+
+        {step === 'LOGIN' && (
+          <div className="space-y-2">
+            <p className="text-[#aaa]">Введите ник для сетевой игры</p>
+            <input
+              className="w-full bg-[#0f0f1f] border border-[#333] p-2 text-[#fff]"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Никнейм"
+              maxLength={20}
+            />
+            <div className="flex gap-2">
+              <button className="retro-btn" onClick={handleLogin}>ПРОДОЛЖИТЬ</button>
+              <button className="retro-btn text-[#aaa]" onClick={onBack}>НАЗАД</button>
+            </div>
+          </div>
+        )}
+
+        {step === 'LOBBY_SELECT' && (
+          <div className="space-y-2">
+            <p className="text-[#aaa]">Привет, <span className="text-[#fff]">{username}</span></p>
+            <div className="flex gap-2">
+              <button className="retro-btn" onClick={handleCreate}>СОЗДАТЬ КОМНАТУ</button>
+            </div>
+            <div className="flex gap-2">
+              <input
+                className="flex-1 bg-[#0f0f1f] border border-[#333] p-2 text-[#fff] uppercase"
+                value={roomCodeInput}
+                onChange={(e) => setRoomCodeInput(e.target.value.toUpperCase())}
+                placeholder="КОД КОМНАТЫ"
+                maxLength={6}
+              />
+              <button className="retro-btn" onClick={handleJoin}>ВОЙТИ</button>
+            </div>
+          </div>
+        )}
+
+        {(step === 'ROOM' || step === 'GAME') && room && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-[#aaa]">Комната: <b className="text-[#fff]">{room.code}</b></div>
+                <div className="text-[#666]">Игроков: {players.length}/{room.max_players}</div>
+              </div>
+              <button className="retro-btn" onClick={copyCode}>{copied ? 'СКОПИРОВАНО' : 'КОПИРОВАТЬ КОД'}</button>
+            </div>
+
+            <div className="pixel-card p-2 bg-[#0f0f1f]">
+              <div className="text-[#aaa] mb-1">Игроки:</div>
+              {players.map((p) => (
+                <div key={p.id} className="flex justify-between text-[#ddd]">
+                  <span>{p.username} {p.is_host ? '👑' : ''}</span>
+                  <span className="text-[#888]">💰 {p.money.toLocaleString()} | 🏆 {p.points}</span>
+                </div>
+              ))}
+            </div>
+
+            {room.status === 'WAITING' && (
+              <div className="flex gap-2">
+                {me?.is_host && (
+                  <button className="retro-btn" onClick={handleStartGame} disabled={players.length < 3}>
+                    СТАРТ ({players.length}/3+)
+                  </button>
+                )}
+                <button className="retro-btn text-[#ff8888]" onClick={leaveRoom}>ВЫЙТИ</button>
+              </div>
+            )}
+
+            {room.status === 'PLAYING' && (
+              <>
+                <div className="pixel-card p-2 bg-[#101026]">
+                  <div>День: <b>{room.current_day}</b> / {WEEK_SCHEDULE.length}</div>
+                  <div>Эпоха: <b>{room.current_year}</b></div>
+                  <div>Фаза: <b>{room.phase}</b></div>
+                  {currentSchedule && <div>Сегодня: <b>{currentSchedule.label}</b> ({currentSchedule.activity})</div>}
+                  <div>До 22:00: <b>{timeLeft || '—'}</b></div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  <button className="retro-btn" onClick={() => onNavigate('GARAGE')}>ГАРАЖ</button>
+                  <button className="retro-btn" onClick={() => onNavigate('SHOP')}>МАГАЗИН</button>
+                  <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
+                  <button className="retro-btn" onClick={() => onNavigate('WORKLIST')}>ГОНОЧНЫЙ ЦЕНТР</button>
+                  <button className="retro-btn" onClick={() => onNavigate('SCHEDULE')}>РАСПИСАНИЕ</button>
+                  <button className="retro-btn" onClick={() => onNavigate('RULES')}>ПРАВИЛА</button>
+                </div>
+              </>
+            )}
+
+            <Chat room={room} player={player} />
+          </div>
+        )}
+
+        {error && <div className="mt-2 text-[#ff6666]">{error}</div>}
+      </div>
+    </div>
+  );
+};
+
+export default Multiplayer;
