@@ -273,15 +273,27 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <button className="retro-btn" onClick={() => onNavigate('GARAGE')}>ГАРАЖ</button>
                   <button className="retro-btn" onClick={() => onNavigate('SHOP')}>МАГАЗИН</button>
-                  <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
+                  {/* Task 13: скрываем АВТОСАЛОН во время квалификации (дни 1-3) и когда фаза DEALER */}
+                  {(room.current_day > 3 && room.phase === 'DEALER') && (
+                    <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
+                  )}
                   <button className="retro-btn" onClick={() => onNavigate('WORKLIST')}>ГОНОЧНЫЙ ЦЕНТР</button>
-                  <button className="retro-btn" onClick={() => onNavigate('SCHEDULE')}>РАСПИСАНИЕ</button>
+                  {/* Task 13: скрываем РАСПИСАНИЕ во время квалификации (дни 1-3) */}
+                  {room.current_day > 3 && (
+                    <button className="retro-btn" onClick={() => onNavigate('SCHEDULE')}>РАСПИСАНИЕ</button>
+                  )}
                   <button className="retro-btn" onClick={() => onNavigate('RULES')}>ПРАВИЛА</button>
+                  {/* Task 16: кнопка перемотки дня только для хоста */}
+                  {me?.is_host && (
+                    <button className="retro-btn text-[#ffaa00]" style={{ border: '2px solid #ffaa00' }} onClick={advanceDay}>
+                      ⏩ СЛЕДУЮЩИЙ ДЕНЬ
+                    </button>
+                  )}
                 </div>
               </>
             )}
 
-            <Chat room={room} player={player} />
+            <Chat roomId={room.id} playerId={playerId} username={me?.username || ''} />
           </div>
         )}
 

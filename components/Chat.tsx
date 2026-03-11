@@ -41,9 +41,21 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
-    await sendChatMessage(roomId, playerId, username, input.trim());
+    const text = input.trim();
+    if (!text) return;
     setInput('');
+    // Оптимистичное добавление сообщения (сразу видно отправителю)
+    const optimistic: ChatMessage = {
+      id: `opt-${Date.now()}`,
+      room_id: roomId,
+      player_id: playerId,
+      username,
+      message: text,
+      type: 'user',
+      created_at: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, optimistic]);
+    await sendChatMessage(roomId, playerId, username, text);
   };
 
   if (collapsed) {

@@ -8,39 +8,40 @@ export const getEffectiveStats = (car: Car): CarStats => {
   const base = { ...car.stats };
   const coeff = car.coefficients || { power: 1, torque: 1, topSpeed: 1, acceleration: 1, handling: 1, offroad: 1 };
 
-  // 1. Собираем суммарные абсолютные и процентные бусты
-  // Коэффициент применяется к абсолютным бустам: +10 лс при коэфф 1.1 = +11 лс
-  let powerPctTotal = 0;
-  let torquePctTotal = 0;
-  let topSpeedPctTotal = 0;
-  let accelPctTotal = 0;
-
+  // 1. Применяем абсолютные и процентные бусты последовательно для каждой детали
   for (const part of car.installedParts) {
     const b = part.boosts;
+    // Абсолютные бусты (с учётом коэффициента машины)
     if (b.power) base.power += b.power * coeff.power;
     if (b.torque) base.torque += b.torque * coeff.torque;
     if (b.topSpeed) base.topSpeed += b.topSpeed * coeff.topSpeed;
     if (b.handling) base.handling += b.handling * coeff.handling;
     if (b.offroad) base.offroad += b.offroad * coeff.offroad;
-    // Накапливаем проценты
-    if (b.powerPct) powerPctTotal += b.powerPct;
-    if (b.torquePct) torquePctTotal += b.torquePct;
-    if (b.topSpeedPct) topSpeedPctTotal += b.topSpeedPct;
-    if (b.accelerationPct) accelPctTotal += b.accelerationPct;
-  }
 
-  // 2. Применяем процентные модификаторы с учётом коэффициентов
-  // Коэффициент > 1 = деталь даёт больше эффекта, < 1 = меньше
-  if (powerPctTotal) base.power = base.power * (1 + (powerPctTotal * coeff.power) / 100);
-  if (torquePctTotal) base.torque = base.torque * (1 + (torquePctTotal * coeff.torque) / 100);
-  if (topSpeedPctTotal) base.topSpeed = base.topSpeed * (1 + (topSpeedPctTotal * coeff.topSpeed) / 100);
-  if (accelPctTotal) base.acceleration = base.acceleration * (1 - (accelPctTotal * coeff.acceleration) / 100);
+    // Процентные бусты мощности/момента (обычная формула)
+    if (b.powerPct) base.power = base.power * (1 + (b.powerPct * coeff.power) / 100);
+    if (b.torquePct) base.torque = base.torque * (1 + (b.torquePct * coeff.torque) / 100);
+
+    // Процентный буст скорости — формула V = ((450-X)*P/100)*K + X
+    // X = текущая скорость, P = процент из детали, K = коэффициент машины
+    if (b.topSpeedPct) {
+      const X = base.topSpeed;
+      const P = b.topSpeedPct;
+      const K = coeff.topSpeed;
+      base.topSpeed = ((450 - X) * P / 100) * K + X;
+    }
+
+    // Процентный буст разгона: accelerationPct > 0 = улучшение (уменьшение секунд)
+    if (b.accelerationPct) {
+      base.acceleration = base.acceleration * (1 - (b.accelerationPct * coeff.acceleration) / 100);
+    }
+  }
 
   // Округляем
   base.power = Math.max(1, Math.round(base.power));
   base.torque = Math.max(1, Math.round(base.torque));
   base.topSpeed = Math.max(10, Math.round(base.topSpeed));
-  base.acceleration = Math.max(0.5, parseFloat(base.acceleration.toFixed(1)));
+  base.acceleration = Math.max(0.01, parseFloat(base.acceleration.toFixed(2))); // сотые секунды (Task 8)
   base.handling = Math.max(0, Math.round(base.handling));
   base.offroad = Math.max(0, Math.round(base.offroad));
   return base;
@@ -102,7 +103,7 @@ export const simulateRace = (
     const position = index + 1;
     let earnings = 0;
     let points = 0;
-    
+
     if (rewardTable) {
       // Используем таблицу наград из nagrady.csv
       const reward = rewardTable.find(rw => rw.place === position);

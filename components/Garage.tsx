@@ -5,16 +5,35 @@ import { getEffectiveStats } from '../services/gameEngine';
 interface GarageProps {
   cars: Car[];
   storage: Part[];
+  gameStage?: number; // Номер этапа (0 = начало)
   onBack: () => void;
   onRemovePart: (carId: string, partIndex: number) => void;
   onRemovePartToStorage: (carId: string, partIndex: number) => void;
   onInstallFromStorage: (carId: string, storageIndex: number) => void;
+  onSellCar: (carId: string, price: number) => void;
 }
 
 const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
 const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
 const STAT_UNITS = ['лс', 'Нм', '', 'с', '', ''];
 const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
+
+// Task 11: Расчёт текущей цены автомобиля в зависимости от редкости и номера этапа
+function getCurrentPrice(car: Car, stage: number): number {
+  const base = car.price;
+  const rarity = car.rarity ?? 3;
+  let price = base;
+  if (rarity === 1) {
+    price = Math.max(base * 0.5, base - 600 * stage);
+  } else if (rarity === 2) {
+    price = Math.max(base * 0.5, base - 300 * stage);
+  } else if (rarity === 4) {
+    price = base + 500 * stage;
+  } else if (rarity === 5) {
+    price = base + 1000 * stage;
+  }
+  return Math.round(price);
+}
 
 function coeffColor(v: number) {
   if (v > 1) return '#44ff44';
@@ -43,7 +62,7 @@ const boostBadges = (part: Part) => {
   return items;
 };
 
-const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, onRemovePartToStorage, onInstallFromStorage }) => {
+const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, onRemovePart, onRemovePartToStorage, onInstallFromStorage, onSellCar }) => {
   const [tab, setTab] = useState<GarageTab>('cars');
   const [installCarId, setInstallCarId] = useState<string | null>(null);
 
@@ -51,7 +70,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
     <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg retro-title">🏎️ МОЙ ГАРАЖ</h2>
-        <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
+        <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>
           МЕНЮ
         </button>
       </div>
@@ -95,19 +114,19 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                 return (
                   <div key={`${car.id}-${idx}`}
                     className="pixel-card p-0 flex flex-col overflow-hidden"
-                    style={{borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '4px'}}>
+                    style={{ borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '4px' }}>
 
                     {/* Верхняя часть: имя+теги | картинка | статы */}
-                    <div className="flex items-stretch" style={{minHeight: '168px'}}>
+                    <div className="flex items-stretch" style={{ minHeight: '168px' }}>
                       <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
-                        <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
+                        <div className="text-[10px] text-white leading-tight mb-1" style={{ textShadow: '1px 1px 0 #000' }}>{car.name}</div>
                         <div className="text-[7px] text-white leading-relaxed">
                           {car.carClass && <div>класс: {car.carClass}</div>}
                           {car.tags?.[0] && <div>{car.tags[0]}</div>}
                           {car.tags?.[1] && <div>{car.tags[1]}</div>}
                           {car.rarity && <div>редкость: {car.rarity}</div>}
                           {car.tags?.slice(2).map((tag: string, ti: number) => (
-                            <div key={ti} style={{color:'#ffaa00'}}>{tag}</div>
+                            <div key={ti} style={{ color: '#ffaa00' }}>{tag}</div>
                           ))}
                         </div>
                       </div>
@@ -118,7 +137,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                       </div>
 
                       <div className="flex-grow flex flex-col justify-center">
-                        <table className="w-full text-center" style={{borderCollapse:'collapse'}}>
+                        <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
                           <thead>
                             <tr>
                               {STAT_HEADERS.map((h, hi) => (
@@ -133,8 +152,8 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                                 const eff = effective[k];
                                 const boosted = eff !== base;
                                 return (
-                                  <td key={ki} className="text-[10px] px-2 py-1 border-b border-[#1a1a2e]" style={{color: boosted ? '#ffff00' : '#fff'}}>
-                                    {k === 'acceleration' ? eff.toFixed(1) : eff}
+                                  <td key={ki} className="text-[10px] px-2 py-1 border-b border-[#1a1a2e]" style={{ color: boosted ? '#ffff00' : '#fff' }}>
+                                    {k === 'acceleration' ? eff.toFixed(2) : eff}
                                     {STAT_UNITS[ki] && <span className="text-[7px] text-[#999] ml-0.5">{STAT_UNITS[ki]}</span>}
                                     {boosted && <span className="text-[#ffff00] ml-0.5">★</span>}
                                   </td>
@@ -143,7 +162,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                             </tr>
                             <tr>
                               {STAT_KEYS.map((k, ki) => (
-                                <td key={ki} className="text-[9px] px-2 py-1" style={{color: coeffColor((co as any)[k] || 1)}}>
+                                <td key={ki} className="text-[9px] px-2 py-1" style={{ color: coeffColor((co as any)[k] || 1) }}>
                                   {((co as any)[k] || 1).toFixed(1)}
                                 </td>
                               ))}
@@ -153,13 +172,37 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                       </div>
                     </div>
 
+                    {/* Task 11: Цена + кнопка ПРОДАТЬ */}
+                    <div className="border-t border-[#333] px-4 py-1.5 flex items-center justify-between">
+                      <div className="text-[8px] text-[#888]">
+                        Цена: <span className="text-[#00ff00]">${getCurrentPrice(car, gameStage).toLocaleString()}</span>
+                        {(car.rarity ?? 3) !== 3 && (
+                          <span className="ml-2 text-[7px] text-[#555]">
+                            (редкость {car.rarity})
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => {
+                          const price = getCurrentPrice(car, gameStage);
+                          if (window.confirm(`Продать ${car.name} в банк за $${price.toLocaleString()}?`)) {
+                            onSellCar(car.id, price);
+                          }
+                        }}
+                        className="retro-btn text-[7px] py-0.5 px-2"
+                        style={{ backgroundColor: '#001a00', border: '1px solid #00aa00', color: '#00aa00' }}
+                      >
+                        ПРОДАТЬ
+                      </button>
+                    </div>
+
                     {/* Разделитель + Детали */}
                     <div className="border-t-2 border-[#333] px-4 py-2">
                       <div className="flex items-center gap-3 flex-wrap">
                         <span className="text-[8px] text-[#555]">ДЕТАЛИ ({car.installedParts.length}/{partLimit}):</span>
                         {car.installedParts.length > 0 ? (
                           car.installedParts.map((part, pIdx) => (
-                            <div key={pIdx} className="flex items-center gap-1 bg-[#111] px-2 py-0.5 border border-[#333]" style={{borderRadius:'2px'}}>
+                            <div key={pIdx} className="flex items-center gap-1 bg-[#111] px-2 py-0.5 border border-[#333]" style={{ borderRadius: '2px' }}>
                               <span className="text-[8px] text-[#4488ff]">🔧 {part.name}</span>
                               <button onClick={() => onRemovePartToStorage(car.id, pIdx)} className="text-[8px] text-[#ffaa00] hover:text-[#ffcc00] ml-1" title="На склад">📦</button>
                               <button onClick={() => onRemovePart(car.id, pIdx)} className="text-[8px] text-[#ff4444] hover:text-[#ff6666] ml-0.5" title="Удалить">✕</button>
@@ -217,7 +260,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, onBack, onRemovePart, on
                     && (!part.slot || !targetCar.installedParts.some(p => p.slot === part.slot));
 
                   return (
-                    <div key={si} className="pixel-card p-0 flex items-stretch overflow-hidden" style={{borderWidth:'2px'}}>
+                    <div key={si} className="pixel-card p-0 flex items-stretch overflow-hidden" style={{ borderWidth: '2px' }}>
                       <div className="flex-grow px-3 py-2 border-r border-[#222]">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-[10px] text-white">{part.name}</span>

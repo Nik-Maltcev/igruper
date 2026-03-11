@@ -23,6 +23,32 @@ const App = () => {
   const [currentView, setCurrentView] = useState<View>('MULTIPLAYER');
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
 
+  // Task 18: При загрузке страницы восстанавливаем сессию из localStorage
+  useEffect(() => {
+    const savedPlayerId = localStorage.getItem('mp_player_id');
+    const savedRoomId = localStorage.getItem('mp_room_id');
+    if (savedPlayerId && savedRoomId && !playerId) {
+      // Пробуем восстановить игрока и комнату
+      supabase.from('room_players').select('*').eq('id', savedPlayerId).single().then(({ data: pData }) => {
+        if (!pData) {
+          localStorage.removeItem('mp_player_id');
+          localStorage.removeItem('mp_room_id');
+          return;
+        }
+        supabase.from('rooms').select('*').eq('id', savedRoomId).single().then(({ data: rData }) => {
+          if (!rData) {
+            localStorage.removeItem('mp_player_id');
+            localStorage.removeItem('mp_room_id');
+            return;
+          }
+          setPlayerId(savedPlayerId);
+          setPlayer(pData as any);
+          setRoom(rData as Room);
+        });
+      });
+    }
+  }, []);
+
   // Загрузка данных игрока при наличии playerId
   const refreshPlayer = useCallback(async () => {
     if (!playerId) return;
@@ -155,7 +181,18 @@ const App = () => {
     await refreshPlayer();
   };
 
+  // Task 11: Продажа автомобиля в банк
+  const handleSellCar = async (carId: string, price: number) => {
+    if (!player) return;
+    const newGarage = player.garage.filter((c: Car) => c.id !== carId);
+    const newMoney = player.money + price;
+    await supabase.from('room_players').update({ garage: newGarage, money: newMoney }).eq('id', playerId);
+    await refreshPlayer();
+  };
+
   const gameYear = room?.current_year || 1960;
+  // Номер этапа — каждые 10 дней это 1 этап (примерно)
+  const gameStage = Math.floor((room?.current_day || 0) / 10);
   const cars = player?.garage || [];
   const storage = player?.storage || [];
   const money = player?.money || 0;
@@ -165,7 +202,7 @@ const App = () => {
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
       {/* Верхняя панель — только в игре */}
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
-        <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{boxShadow:'0 2px 0 #000'}}>
+        <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
             <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
             <span className="text-[#00ff00]">💰 ${money.toLocaleString()}</span>
@@ -175,7 +212,7 @@ const App = () => {
           </div>
           <button onClick={() => navigate('MULTIPLAYER')}
             className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
-            style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>
+            style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>
             ← КОМНАТА
           </button>
         </div>
@@ -190,7 +227,7 @@ const App = () => {
             onRoomJoined={handleRoomJoined}
             onRoomLeft={handleRoomLeft}
             onNavigate={navigate}
-            onBack={() => {}}
+            onBack={() => { }}
           />
         )}
 
@@ -198,10 +235,12 @@ const App = () => {
           <Garage
             cars={cars}
             storage={storage}
+            gameStage={gameStage}
             onBack={() => navigate('MULTIPLAYER')}
             onRemovePart={handleRemovePart}
             onRemovePartToStorage={handleRemovePartToStorage}
             onInstallFromStorage={handleInstallFromStorage}
+            onSellCar={handleSellCar}
           />
         )}
 
