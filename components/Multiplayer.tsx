@@ -392,7 +392,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <button className="retro-btn" onClick={() => onNavigate('GARAGE')}>ГАРАЖ</button>
-                  <button className="retro-btn" onClick={() => onNavigate('SHOP')}>МАГАЗИН</button>
+                  {/* МАГАЗИН: показываем только в фазе тюнинга */}
+                  {room.phase === 'TUNING' && (
+                    <button className="retro-btn" onClick={() => onNavigate('SHOP')}>МАГАЗИН</button>
+                  )}
                   {/* АВТОСАЛОН: показываем только в фазе DEALER */}
                   {room.phase === 'DEALER' && (
                     <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
