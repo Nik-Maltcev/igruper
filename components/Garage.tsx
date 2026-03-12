@@ -128,6 +128,14 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                           {car.tags?.slice(2).map((tag: string, ti: number) => (
                             <div key={ti} style={{ color: '#ffaa00' }}>{tag}</div>
                           ))}
+                          {(() => {
+                            const tiresPart = car.installedParts.find(p => p.slot === 'tires');
+                            if (!tiresPart) return null;
+                            const n = tiresPart.name.toLowerCase();
+                            const letter = n.includes('слик') ? 'С' : n.includes('гоночн') ? 'Г' : n.includes('внедор') ? 'В' : n.includes('универс') ? 'У' : null;
+                            if (!letter) return null;
+                            return <div style={{ color: '#ffdd00', fontWeight: 'bold' }}>шины: {letter}</div>;
+                          })()}
                         </div>
                       </div>
 
@@ -176,11 +184,6 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                     <div className="border-t border-[#333] px-4 py-1.5 flex items-center justify-between">
                       <div className="text-[8px] text-[#888]">
                         Цена: <span className="text-[#00ff00]">${getCurrentPrice(car, gameStage).toLocaleString()}</span>
-                        {(car.rarity ?? 3) !== 3 && (
-                          <span className="ml-2 text-[7px] text-[#555]">
-                            (редкость {car.rarity})
-                          </span>
-                        )}
                       </div>
                       <button
                         onClick={() => {
