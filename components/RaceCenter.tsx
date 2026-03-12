@@ -48,15 +48,26 @@ function checkRequirement(car: Car, req: string): boolean {
   if (r.includes('япония')) return !!car.tags?.some(t => t.toLowerCase() === 'япония');
   if (r.includes('ссср')) return !!car.tags?.some(t => t.toLowerCase() === 'ссср');
 
+  // Определяем фактические шины авто
+  let effectiveTire = car.roadType || null;
+  const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
+  if (tiresPart) {
+    const n = tiresPart.name.toLowerCase();
+    if (n.includes('слик')) effectiveTire = 'С';
+    else if (n.includes('гоночн')) effectiveTire = 'Г';
+    else if (n.includes('внедор')) effectiveTire = 'В';
+    else if (n.includes('универс')) effectiveTire = 'У';
+  }
+
   // Шины и дороги (р1, р2, шины внед)
-  if (r.includes('р1') || r.includes('p1')) return car.roadType === 'У';
-  if (r.includes('р2') || r.includes('p2')) return car.roadType === 'Г';
-  if (r.includes('р3') || r.includes('p3')) return car.roadType === 'С';
-  if (r.includes('р4') || r.includes('p4')) return car.roadType === 'В';
-  if (r.includes('слики')) return car.roadType === 'С';
-  if (r.includes('шины внед') || r.includes('внедорожн')) return car.roadType === 'В';
-  if (r.includes('шины унив') || r.includes('универс')) return car.roadType === 'У';
-  if (r.includes('гоночных ш') || r.includes('гоночн')) return car.roadType === 'Г';
+  if (r.includes('р1') || r.includes('p1')) return effectiveTire === 'У';
+  if (r.includes('р2') || r.includes('p2')) return effectiveTire === 'Г';
+  if (r.includes('р3') || r.includes('p3')) return effectiveTire === 'С';
+  if (r.includes('р4') || r.includes('p4')) return effectiveTire === 'В';
+  if (r.includes('слики')) return effectiveTire === 'С';
+  if (r.includes('шины внед') || r.includes('внедорожн')) return effectiveTire === 'В';
+  if (r.includes('шины унив') || r.includes('универс')) return effectiveTire === 'У';
+  if (r.includes('гоночных ш') || r.includes('гоночн')) return effectiveTire === 'Г';
 
   // Лошадиные силы (120-200, до 121, 201-300)
   const powerMatch = r.match(/(\d+)-(\d+)\s*лс/);
@@ -190,6 +201,17 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
               <div className="flex flex-wrap gap-1">
                 {cars.filter(c => checkRequirement(c, race.requirement)).map(car => {
                   const s = getEffectiveStats(car);
+
+                  let effectiveTire = car.roadType || null;
+                  const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
+                  if (tiresPart) {
+                    const n = tiresPart.name.toLowerCase();
+                    if (n.includes('слик')) effectiveTire = 'С';
+                    else if (n.includes('гоночн')) effectiveTire = 'Г';
+                    else if (n.includes('внедор')) effectiveTire = 'В';
+                    else if (n.includes('универс')) effectiveTire = 'У';
+                  }
+
                   return (
                     <button
                       key={car.id}
@@ -203,7 +225,10 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                       }}
                     >
                       <div>{car.name}</div>
-                      <div style={{ color: '#888' }}>{s.topSpeed}км/ч · {s.power}лс</div>
+                      <div style={{ color: '#888' }}>
+                        {s.topSpeed}км/ч · {s.power}лс
+                        {effectiveTire && <span className="text-[#ffdd00]"> · шины: {effectiveTire}</span>}
+                      </div>
                     </button>
                   );
                 })}

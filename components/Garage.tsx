@@ -129,10 +129,15 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                             <div key={ti} style={{ color: '#ffaa00' }}>{tag}</div>
                           ))}
                           {(() => {
-                            const tiresPart = car.installedParts.find(p => p.slot === 'tires');
-                            if (!tiresPart) return null;
-                            const n = tiresPart.name.toLowerCase();
-                            const letter = n.includes('слик') ? 'С' : n.includes('гоночн') ? 'Г' : n.includes('внедор') ? 'В' : n.includes('универс') ? 'У' : null;
+                            const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
+                            let letter = null;
+                            if (tiresPart) {
+                              const n = tiresPart.name.toLowerCase();
+                              letter = n.includes('слик') ? 'С' : n.includes('гоночн') ? 'Г' : n.includes('внедор') ? 'В' : n.includes('универс') ? 'У' : null;
+                            }
+                            if (!letter && car.roadType) {
+                              letter = car.roadType; // fallback to default
+                            }
                             if (!letter) return null;
                             return <div style={{ color: '#ffdd00', fontWeight: 'bold' }}>шины: {letter}</div>;
                           })()}
