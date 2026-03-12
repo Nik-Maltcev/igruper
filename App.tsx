@@ -269,6 +269,7 @@ const App = () => {
         {currentView === 'WORKLIST' && (
           <RaceCenter
             phase={room?.phase === 'RACING' ? 'RACE_DAY' : 'PREPARATION'}
+            epochRevealed={room?.phase === 'RACE_SETUP' || room?.phase === 'RACING'}
             cars={cars}
             gameYear={gameYear}
             onBack={() => navigate('MULTIPLAYER')}

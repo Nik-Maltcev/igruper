@@ -4,6 +4,7 @@ import { RACES_DATA } from '../constants';
 
 interface RaceCenterProps {
   phase: string;
+  epochRevealed?: boolean;
   cars: Car[];
   gameYear: number;
   onBack: () => void;
@@ -21,7 +22,7 @@ function weightColor(v: number) {
   return '#333';
 }
 
-const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, onRaceComplete }) => {
+const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, cars, gameYear, onBack, onRaceComplete }) => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
   const availableEpochs = useMemo(() => {
@@ -51,7 +52,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
       <div className="p-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-lg retro-title">🏁 ГОНКИ</h2>
-          <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>МЕНЮ</button>
+          <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
         </div>
 
         {/* Квалификация */}
@@ -67,17 +68,26 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
         )}
 
         {/* Эпохи */}
-        <div className="text-[9px] text-[#555] mb-2">ЭПОХИ:</div>
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4">
-          {availableEpochs.map((e: any) => (
-            <button key={e.year} onClick={() => setSelectedYear(e.year)}
-              className="pixel-card p-2 text-center hover:border-[#00ff00] transition-colors cursor-pointer"
-              style={{borderColor: '#333'}}>
-              <div className="text-[10px] text-white" style={{fontFamily:"'Press Start 2P', monospace"}}>{e.year}</div>
-              <div className="text-[7px] text-[#555]">{e.rounds.reduce((s: number, r: any) => s + r.races.length, 0)} гонок</div>
-            </button>
-          ))}
-        </div>
+        {epochRevealed ? (
+          <>
+            <div className="text-[9px] text-[#555] mb-2">ЭПОХИ:</div>
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4">
+              {availableEpochs.map((e: any) => (
+                <button key={e.year} onClick={() => setSelectedYear(e.year)}
+                  className="pixel-card p-2 text-center hover:border-[#00ff00] transition-colors cursor-pointer"
+                  style={{ borderColor: '#333' }}>
+                  <div className="text-[10px] text-white" style={{ fontFamily: "'Press Start 2P', monospace" }}>{e.year}</div>
+                  <div className="text-[7px] text-[#555]">{e.rounds.reduce((s: number, r: any) => s + r.races.length, 0)} гонок</div>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="pixel-card p-4 mb-4 text-center border-[#333]">
+            <div className="text-[9px] text-[#555] mb-1">🔒 ЭПОХИ НЕ ИЗВЕСТНЫ</div>
+            <div className="text-[7px] text-[#444]">Расписание гонок будет раскрыто после закрытия автосалонов в вс 22:00</div>
+          </div>
+        )}
 
         {/* Ралли */}
         {availableRallies.length > 0 && (
@@ -88,7 +98,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
               {availableRallies.map((r: any, ri: number) => (
                 <button key={ri} onClick={() => setSelectedYear(-ri - 100)}
                   className="pixel-card p-3 text-center hover:border-[#44ff44] transition-colors cursor-pointer"
-                  style={{borderColor: '#44ff4466'}}>
+                  style={{ borderColor: '#44ff4466' }}>
                   <div className="text-[9px] text-[#44ff44]">{r.name}</div>
                   <div className="text-[7px] text-[#555]">{r.races.length} этапов</div>
                 </button>
@@ -104,32 +114,34 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
             <div className="text-[7px] text-[#ff4444] mb-2">⚠ только авто с меткой «автоспорт» · машина не участвует в обычных гонках всю неделю</div>
             <button onClick={() => setSelectedYear(-200)}
               className="pixel-card p-3 text-center hover:border-[#ff8800] transition-colors cursor-pointer w-full"
-              style={{borderColor: '#ff880066'}}>
+              style={{ borderColor: '#ff880066' }}>
               <div className="text-[9px] text-[#ff8800]">Гонка Чемпионов</div>
               <div className="text-[7px] text-[#555]">{championship.races.length} этапов</div>
             </button>
           </div>
         )}
 
-        {/* полуФинал / Финал */}
-        <div className="grid grid-cols-2 gap-2">
-          {semiFinal && (
-            <button onClick={() => setSelectedYear(-300)}
-              className="pixel-card p-3 text-center hover:border-[#aa44ff] transition-colors cursor-pointer"
-              style={{borderColor: '#aa44ff66'}}>
-              <div className="text-[9px] text-[#aa44ff]">полуФинал</div>
-              <div className="text-[7px] text-[#555]">{semiFinal.races.length} гонок</div>
-            </button>
-          )}
-          {final && (
-            <button onClick={() => setSelectedYear(-400)}
-              className="pixel-card p-3 text-center hover:border-[#ff4444] transition-colors cursor-pointer"
-              style={{borderColor: '#ff444466'}}>
-              <div className="text-[9px] text-[#ff4444]">ФИНАЛ</div>
-              <div className="text-[7px] text-[#555]">{final.races.length} гонок</div>
-            </button>
-          )}
-        </div>
+        {/* полуФинал / Финал — только когда эпохи раскрыты */}
+        {epochRevealed && (
+          <div className="grid grid-cols-2 gap-2">
+            {semiFinal && (
+              <button onClick={() => setSelectedYear(-300)}
+                className="pixel-card p-3 text-center hover:border-[#aa44ff] transition-colors cursor-pointer"
+                style={{ borderColor: '#aa44ff66' }}>
+                <div className="text-[9px] text-[#aa44ff]">полуФинал</div>
+                <div className="text-[7px] text-[#555]">{semiFinal.races.length} гонок</div>
+              </button>
+            )}
+            {final && (
+              <button onClick={() => setSelectedYear(-400)}
+                className="pixel-card p-3 text-center hover:border-[#ff4444] transition-colors cursor-pointer"
+                style={{ borderColor: '#ff444466' }}>
+                <div className="text-[9px] text-[#ff4444]">ФИНАЛ</div>
+                <div className="text-[7px] text-[#555]">{final.races.length} гонок</div>
+              </button>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -161,9 +173,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
     <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
         <div>
-          <h2 className="text-lg retro-title" style={{color: titleColor}}>🏁 {title}</h2>
+          <h2 className="text-lg retro-title" style={{ color: titleColor }}>🏁 {title}</h2>
         </div>
-        <button onClick={() => setSelectedYear(null)} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>← НАЗАД</button>
+        <button onClick={() => setSelectedYear(null)} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← НАЗАД</button>
       </div>
 
       <div className="flex flex-col gap-4 pb-20">
@@ -188,10 +200,10 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, cars, gameYear, onBack, 
 // Карточка гонки — горизонтальный формат как у машин
 function RaceCard({ race, key: _key }: { race: any; key?: any }) {
   return (
-    <div className="pixel-card p-0 flex items-stretch overflow-hidden" style={{minHeight: '72px', borderColor: '#555', borderWidth: '2px'}}>
+    <div className="pixel-card p-0 flex items-stretch overflow-hidden" style={{ minHeight: '72px', borderColor: '#555', borderWidth: '2px' }}>
       {/* Левая часть: название */}
       <div className="flex flex-col justify-center px-3 py-2 min-w-[160px] max-w-[200px] border-r border-[#222]">
-        <div className="text-[10px] text-white leading-tight" style={{textShadow:'1px 1px 0 #000'}}>{race.name}</div>
+        <div className="text-[10px] text-white leading-tight" style={{ textShadow: '1px 1px 0 #000' }}>{race.name}</div>
         {race.requirement && (
           <div className="text-[7px] text-[#ffaa00] mt-1">{race.requirement}</div>
         )}
@@ -199,7 +211,7 @@ function RaceCard({ race, key: _key }: { race: any; key?: any }) {
 
       {/* Таблица весов */}
       <div className="flex-grow flex flex-col justify-center">
-        <table className="w-full text-center" style={{borderCollapse:'collapse'}}>
+        <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               {STAT_HEADERS.map((h, hi) => (
@@ -210,7 +222,7 @@ function RaceCard({ race, key: _key }: { race: any; key?: any }) {
           <tbody>
             <tr>
               {STAT_KEYS.map((k, ki) => (
-                <td key={ki} className="text-[11px] px-2 py-1" style={{color: weightColor(race.weights[k])}}>
+                <td key={ki} className="text-[11px] px-2 py-1" style={{ color: weightColor(race.weights[k]) }}>
                   {race.weights[k]}
                 </td>
               ))}
