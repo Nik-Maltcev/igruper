@@ -6,6 +6,7 @@ import {
   updateRoomPhase, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
   fetchRaceEntries, updatePlayerState, saveRaceDayResults,
+  leaveRoom as apiLeaveRoom
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
 import { RACES_DATA } from '../constants';
@@ -243,10 +244,19 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     } as any);
 
     const label = schedule.label;
-    const actLabel = schedule.activity === 'RACE' ? `Гонки: ${schedule.raceType}` :
-      schedule.activity === 'DEALER' ? 'Автосалон' : 'Тюнинг';
-    await sendSystemMessage(room.id, `День ${nextDay}: ${label} — ${actLabel}. Эпоха ${nextYear}.`);
-  }, [room, players]);
+    await sendSystemMessage(room.id, `⏩ Переход к дню ${nextDay}: ${label}`);
+  }, [room, players, playerId]);
+
+  // Выход из игры с подтверждением
+  const handleLeaveGame = async () => {
+    if (!room || !playerId) return;
+    if (window.confirm('ВЫ ТОЧНО ЭТОГО ХОТИТЕ? ВСЕ ДОСТИЖЕНИЯ В ИГРЕ БУДУТ ПОТЕРЯНЫ')) {
+      await apiLeaveRoom(room.id, playerId);
+      onRoomLeft();
+    }
+  };
+
+  if (!room && step === 'ROOM') return null;
 
   // Handlers
   const handleLogin = () => {
@@ -279,14 +289,14 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
   };
 
   const copyCode = () => {
-    if (room?.code) {
+    if (room) {
       navigator.clipboard.writeText(room.code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  const leaveRoom = () => {
+  const leaveLobby = () => {
     if (window.confirm('ПОКИНУТЬ КОМНАТУ?')) {
       onRoomLeft();
       setStep('LOBBY_SELECT');
@@ -366,7 +376,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                     СТАРТ ({players.length}/3+)
                   </button>
                 )}
-                <button className="retro-btn text-[#ff8888]" onClick={leaveRoom}>ВЫЙТИ</button>
+                <button className="retro-btn text-[#ff8888]" onClick={handleLeaveGame}>ВЫЙТИ</button>
               </div>
             )}
 
@@ -405,6 +415,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                       {room.phase === 'RACE_SETUP' ? '▶ ЗАПУСТИТЬ ГОНКИ' : '⏩ СЛЕДУЮЩИЙ ДЕНЬ'}
                     </button>
                   )}
+                  {/* Кнопка выхода из игры */}
+                  <button className="retro-btn text-[#ff4444]" style={{ border: '2px solid #ff4444' }} onClick={handleLeaveGame}>
+                    🚪 ВЫЙТИ ИЗ ИГРЫ
+                  </button>
                 </div>
               </>
             )}

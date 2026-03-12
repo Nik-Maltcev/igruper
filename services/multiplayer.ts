@@ -141,8 +141,18 @@ export async function fetchPlayers(roomId: string): Promise<RoomPlayer[]> {
     .from('room_players')
     .select('*')
     .eq('room_id', roomId)
-    .order('joined_at');
   return (data || []) as RoomPlayer[];
+}
+
+// --- Выход из комнаты ---
+export async function leaveRoom(roomId: string, playerId: string) {
+  // 1. Отправляем сообщение в чат
+  const { data: player } = await supabase.from('room_players').select('username').eq('id', playerId).single();
+  if (player) {
+    await sendSystemMessage(roomId, `${player.username} покинул игру`);
+  }
+  // 2. Удаляем игрока
+  await supabase.from('room_players').delete().eq('id', playerId);
 }
 
 // --- Обновление гаража игрока ---
