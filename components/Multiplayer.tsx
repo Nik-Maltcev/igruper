@@ -5,7 +5,9 @@ import {
   createRoom, joinRoom, fetchPlayers, startGame,
   updateRoomPhase, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
+  fetchRaceEntries, updatePlayerState,
 } from '../services/multiplayer';
+import { simulateRace } from '../services/gameEngine';
 import Chat from './Chat';
 
 interface MultiplayerProps {
@@ -107,6 +109,60 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
   const advanceDay = useCallback(async () => {
     if (!room) return;
+
+    // --- Если сейчас фаза RACE_SETUP — запускаем гонки и раздаём призы ---
+    if (room.phase === 'RACE_SETUP') {
+      const entries = await fetchRaceEntries(room.id, room.current_day);
+      if (entries.length > 0) {
+        // Группируем заявки по race_id
+        const byRace: Record<string, typeof entries> = {};
+        for (const e of entries) {
+          if (!byRace[e.race_id]) byRace[e.race_id] = [];
+          byRace[e.race_id].push(e);
+        }
+
+        // Для каждой гонки — симулируем и равдаём призы
+        for (const [raceId, raceEntries] of Object.entries(byRace)) {
+          // Собираем машины игроков
+          const raceCars: Car[] = [];
+          const playerMap: Record<string, string> = {}; // carId -> playerId
+          for (const entry of raceEntries) {
+            const player = players.find(p => p.id === entry.player_id);
+            if (!player) continue;
+            const car = player.garage.find((c: Car) => c.id === entry.car_id);
+            if (!car) continue;
+            raceCars.push(car);
+            playerMap[car.id] = entry.player_id;
+          }
+          if (raceCars.length === 0) continue;
+
+          // Симулируем
+          const results = simulateRace(raceCars, {
+            id: raceId, name: raceId,
+            image: '', description: '',
+            weights: { power: 2, torque: 2, topSpeed: 3, acceleration: 2, handling: 1, offroad: 0 },
+            weatherModifier: 0.3,
+          }, 'SUNNY', false);
+
+          // Раздаём призы
+          for (const result of results) {
+            const pid = playerMap[result.carId];
+            if (!pid) continue;
+            const player = players.find(p => p.id === pid);
+            if (!player) continue;
+            await updatePlayerState(pid, {
+              money: player.money + result.earnings,
+              points: player.points + result.points,
+            });
+            await sendSystemMessage(room.id,
+              `🏁 ${result.carName}: место ${result.position} — +$${result.earnings.toLocaleString()} +${result.points}оч.`);
+          }
+        }
+      } else {
+        await sendSystemMessage(room.id, '⚠ Никто не записался на гонки в этот день.');
+      }
+    }
+
     const nextDay = room.current_day + 1;
     const schedule = getScheduleDay(nextDay);
     let nextPhase: RoomPhase = 'TUNING';
@@ -273,8 +329,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <button className="retro-btn" onClick={() => onNavigate('GARAGE')}>ГАРАЖ</button>
                   <button className="retro-btn" onClick={() => onNavigate('SHOP')}>МАГАЗИН</button>
-                  {/* Task 13: скрываем АВТОСАЛОН во время квалификации (дни 1-3) и когда фаза DEALER */}
-                  {(room.current_day > 3 && room.phase === 'DEALER') && (
+                  {/* АВТОСАЛОН: показываем только в фазе DEALER */}
+                  {room.phase === 'DEALER' && (
                     <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
                   )}
                   <button className="retro-btn" onClick={() => onNavigate('WORKLIST')}>ГОНОЧНЫЙ ЦЕНТР</button>
