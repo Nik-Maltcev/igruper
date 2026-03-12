@@ -269,8 +269,8 @@ const App = () => {
 
         {currentView === 'WORKLIST' && (
           <RaceCenter
-            phase={room?.phase === 'RACING' ? 'RACE_DAY' : 'PREPARATION'}
-            epochRevealed={room?.phase === 'RACE_SETUP' || room?.phase === 'RACING'}
+            phase={room?.phase === 'RACE_SETUP' ? 'RACE_DAY' : 'PREPARATION'}
+            epochRevealed={room?.current_day !== undefined && room.current_day > 3}
             cars={cars}
             gameYear={gameYear}
             roomId={room?.id}
