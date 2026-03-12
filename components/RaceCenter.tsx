@@ -313,9 +313,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
           </div>
         )}
 
-        {/* полуФинал / Финал */}
-        {epochRevealed && (
-          <div className="grid grid-cols-2 gap-2">
+        {/* полуФинал / Финал (только с 1972 года, когда заканчиваются основные эпохи) */}
+        {epochRevealed && gameYear >= 1972 && (
+          <div className="grid grid-cols-2 gap-2 mt-4">
             {semiFinal && (
               <button onClick={() => setSelectedYear(-300)}
                 className="pixel-card p-3 text-center hover:border-[#aa44ff] transition-colors cursor-pointer"
