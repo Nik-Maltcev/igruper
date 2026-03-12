@@ -27,7 +27,7 @@ const App = () => {
   useEffect(() => {
     const savedPlayerId = localStorage.getItem('mp_player_id');
     const savedRoomId = localStorage.getItem('mp_room_id');
-    if (savedPlayerId && savedRoomId && !playerId) {
+    if (savedPlayerId && savedRoomId && !room) {
       // Пробуем восстановить игрока и комнату
       supabase.from('room_players').select('*').eq('id', savedPlayerId).single().then(({ data: pData }) => {
         if (!pData) {

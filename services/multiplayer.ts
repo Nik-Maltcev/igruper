@@ -78,7 +78,22 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
     .single();
 
   if (findErr || !room) return { error: 'Комната не найдена' };
-  if (room.status !== 'WAITING') return { error: 'Игра уже началась' };
+
+  // Если игра уже началась — проверяем есть ли игрок с таким ником (переподключение)
+  if (room.status !== 'WAITING') {
+    const { data: existing } = await supabase
+      .from('room_players')
+      .select('*')
+      .eq('room_id', room.id)
+      .eq('username', username)
+      .single();
+
+    if (existing) {
+      // Игрок уже в комнате — возвращаем его данные (переподключение)
+      return { room: room as Room, playerId: existing.id };
+    }
+    return { error: 'Игра уже началась. Новые игроки не принимаются.' };
+  }
 
   // Проверяем количество игроков
   const { count } = await supabase
@@ -89,13 +104,13 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
   if (count !== null && count >= room.max_players) return { error: `Комната полна (${count}/${room.max_players})` };
 
   // Проверяем уникальность никнейма
-  const { data: existing } = await supabase
+  const { data: existingName } = await supabase
     .from('room_players')
     .select('username')
     .eq('room_id', room.id)
     .eq('username', username);
 
-  if (existing && existing.length > 0) return { error: 'Никнейм уже занят в этой комнате' };
+  if (existingName && existingName.length > 0) return { error: 'Никнейм уже занят в этой комнате' };
 
   const playerId = crypto.randomUUID();
   const starterCars = getStarterCars();
@@ -346,16 +361,16 @@ export async function fetchPurchaseCounts(roomId: string): Promise<Record<string
 
 // --- Недельный цикл ---
 export const WEEK_SCHEDULE = [
-  { dayOfWeek: 'FRIDAY',    dayNum: 1, label: 'Пятница',    activity: 'TUNING',     raceType: null },
-  { dayOfWeek: 'SATURDAY',  dayNum: 2, label: 'Суббота',    activity: 'RACE',       raceType: 'QUALIFICATION' },
-  { dayOfWeek: 'SUNDAY',    dayNum: 3, label: 'Воскресенье', activity: 'DEALER',     raceType: null },
-  { dayOfWeek: 'MONDAY',    dayNum: 4, label: 'Понедельник', activity: 'TUNING',     raceType: null },
-  { dayOfWeek: 'TUESDAY',   dayNum: 5, label: 'Вторник',    activity: 'RACE',       raceType: 'CITY' },
-  { dayOfWeek: 'WEDNESDAY', dayNum: 6, label: 'Среда',      activity: 'TUNING',     raceType: null },
-  { dayOfWeek: 'THURSDAY',  dayNum: 7, label: 'Четверг',    activity: 'RACE',       raceType: 'NATIONAL' },
-  { dayOfWeek: 'FRIDAY_2',  dayNum: 8, label: 'Пятница',    activity: 'TUNING',     raceType: null },
-  { dayOfWeek: 'SATURDAY_2',dayNum: 9, label: 'Суббота',    activity: 'RACE',       raceType: 'WORLD' },
-  { dayOfWeek: 'SUNDAY_2',  dayNum: 10,label: 'Воскресенье', activity: 'DEALER',    raceType: null },
+  { dayOfWeek: 'FRIDAY', dayNum: 1, label: 'Пятница', activity: 'TUNING', raceType: null },
+  { dayOfWeek: 'SATURDAY', dayNum: 2, label: 'Суббота', activity: 'RACE', raceType: 'QUALIFICATION' },
+  { dayOfWeek: 'SUNDAY', dayNum: 3, label: 'Воскресенье', activity: 'DEALER', raceType: null },
+  { dayOfWeek: 'MONDAY', dayNum: 4, label: 'Понедельник', activity: 'TUNING', raceType: null },
+  { dayOfWeek: 'TUESDAY', dayNum: 5, label: 'Вторник', activity: 'RACE', raceType: 'CITY' },
+  { dayOfWeek: 'WEDNESDAY', dayNum: 6, label: 'Среда', activity: 'TUNING', raceType: null },
+  { dayOfWeek: 'THURSDAY', dayNum: 7, label: 'Четверг', activity: 'RACE', raceType: 'NATIONAL' },
+  { dayOfWeek: 'FRIDAY_2', dayNum: 8, label: 'Пятница', activity: 'TUNING', raceType: null },
+  { dayOfWeek: 'SATURDAY_2', dayNum: 9, label: 'Суббота', activity: 'RACE', raceType: 'WORLD' },
+  { dayOfWeek: 'SUNDAY_2', dayNum: 10, label: 'Воскресенье', activity: 'DEALER', raceType: null },
 ] as const;
 
 // Категории мощности для Мировой Серии
