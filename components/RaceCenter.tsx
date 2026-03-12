@@ -13,12 +13,66 @@ interface RaceCenterProps {
   roomId?: string;
   playerId?: string;
   currentDay?: number;
+  raceWeather?: any; // { isRaining: boolean, rainyTrackIdx: number | null }
   onBack: () => void;
   onRaceComplete: (results: RaceResult[]) => void;
 }
 
 const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
 const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
+
+// Проверка требований трассы (простая эвристика по строке requirement)
+function checkRequirement(car: Car, req: string): boolean {
+  if (!req || req.trim() === '') return true;
+  const r = req.toLowerCase();
+
+  // Классы
+  if (r.includes('а-класс') || r.includes('а класс')) return car.carClass === 'A';
+  if (r.includes('в класс') || r.includes('в-класс') || r.includes('b класс') || r.includes('b-класс')) return car.carClass === 'B' || car.carClass === 'В';
+  if (r.includes('с класс') || r.includes('с-класс') || r.includes('c класс') || r.includes('c-класс')) return car.carClass === 'C' || car.carClass === 'С';
+
+  // Тип кузова/теги 
+  if (r.includes('хэтчбек') || r.includes('hatch')) return !!car.tags?.some(t => t.toLowerCase() === 'хэтчбек');
+  if (r.includes('купе')) return !!car.tags?.some(t => t.toLowerCase() === 'купе');
+  if (r.includes('седан')) return !!car.tags?.some(t => t.toLowerCase() === 'седан');
+  if (r.includes('внедорожник')) return !!car.tags?.some(t => t.toLowerCase() === 'внедорожник');
+  if (r.includes('muscle')) return !!car.tags?.some(t => t.toLowerCase() === 'muscle car');
+  if (r.includes('комфорт')) return !!car.tags?.some(t => t.toLowerCase() === 'комфорт');
+  if (r.includes('коллекция')) return !!car.tags?.some(t => t.toLowerCase() === 'коллекция');
+
+  // Страны
+  if (r.includes('франция')) return !!car.tags?.some(t => t.toLowerCase() === 'франция');
+  if (r.includes('сша')) return !!car.tags?.some(t => t.toLowerCase() === 'сша');
+  if (r.includes('италия')) return !!car.tags?.some(t => t.toLowerCase() === 'италия');
+  if (r.includes('германия')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
+  if (r.includes('япония')) return !!car.tags?.some(t => t.toLowerCase() === 'япония');
+  if (r.includes('ссср')) return !!car.tags?.some(t => t.toLowerCase() === 'ссср');
+
+  // Шины и дороги (р1, р2, шины внед)
+  if (r.includes('р1') || r.includes('p1')) return car.roadType === 'У';
+  if (r.includes('р2') || r.includes('p2')) return car.roadType === 'Г';
+  if (r.includes('р3') || r.includes('p3')) return car.roadType === 'С';
+  if (r.includes('р4') || r.includes('p4')) return car.roadType === 'В';
+  if (r.includes('слики')) return car.roadType === 'С';
+  if (r.includes('шины внед') || r.includes('внедорожн')) return car.roadType === 'В';
+  if (r.includes('шины унив') || r.includes('универс')) return car.roadType === 'У';
+  if (r.includes('гоночных ш') || r.includes('гоночн')) return car.roadType === 'Г';
+
+  // Лошадиные силы (120-200, до 121, 201-300)
+  const powerMatch = r.match(/(\d+)-(\d+)\s*лс/);
+  if (powerMatch) {
+    const min = parseInt(powerMatch[1]);
+    const max = parseInt(powerMatch[2]);
+    return car.stats.power >= min && car.stats.power <= max;
+  }
+  if (r.includes('до 121 лс') || r.includes('до 121')) return car.stats.power < 121;
+
+  // Вес/модель (1000)
+  if (r.includes('1000')) return car.name.includes('1000') || !!car.tags?.some(t => t.includes('1000'));
+
+  // По умолчанию разрешаем если эвристика не поняла
+  return true;
+}
 
 function weightColor(v: number) {
   if (v >= 6) return '#ff4444';
@@ -30,7 +84,7 @@ function weightColor(v: number) {
 
 const RaceCenter: React.FC<RaceCenterProps> = ({
   phase, epochRevealed = false, cars, gameYear,
-  roomId, playerId, currentDay = 0,
+  roomId, playerId, currentDay = 0, raceWeather,
   onBack, onRaceComplete,
 }) => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
@@ -127,12 +181,14 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
       <div className="mt-2">
         {pickingRaceId === race.id ? (
           <div className="flex flex-col gap-1">
-            <div className="text-[7px] text-[#888] mb-1">Выберите машину:</div>
-            {cars.length === 0 ? (
-              <span className="text-[7px] text-[#555]">Нет машин в гараже</span>
+            <div className="text-[7px] text-[#888] mb-1">
+              Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>:
+            </div>
+            {cars.filter(c => checkRequirement(c, race.requirement)).length === 0 ? (
+              <span className="text-[7px] text-[#ff4444]">Нет подходящих машин в гараже</span>
             ) : (
               <div className="flex flex-wrap gap-1">
-                {cars.map(car => {
+                {cars.filter(c => checkRequirement(c, race.requirement)).map(car => {
                   const s = getEffectiveStats(car);
                   return (
                     <button
@@ -180,7 +236,14 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     return (
       <div className="p-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg retro-title">🏁 ГОНКИ</h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg retro-title">🏁 ГОНКИ</h2>
+            {raceWeather && (
+              <div className="text-[12px]" title={raceWeather.isRaining ? 'Ожидается дождь на одной из трасс' : 'Солнечная погода'}>
+                {raceWeather.isRaining ? '🌧️ ДОЖДЬ' : '☀️ ЯСНО'}
+              </div>
+            )}
+          </div>
           <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
         </div>
 
@@ -327,7 +390,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
 };
 
 // Карточка гонки
-function RaceCard({ race, entryButton }: { race: any; entryButton?: React.ReactNode }) {
+const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race, entryButton }) => {
   return (
     <div className="pixel-card p-0 overflow-hidden" style={{ borderColor: '#555', borderWidth: '2px' }}>
       <div className="flex items-stretch" style={{ minHeight: '72px' }}>

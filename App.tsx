@@ -14,6 +14,7 @@ import RaceCenter from './components/RaceCenter';
 import Multiplayer from './components/Multiplayer';
 import Rules from './components/Rules';
 import RaceSchedule from './components/RaceSchedule';
+import RaceResults from './components/RaceResults';
 
 const App = () => {
   // Мультиплеер — основной режим
@@ -275,6 +276,7 @@ const App = () => {
             roomId={room?.id}
             playerId={playerId}
             currentDay={room?.current_day}
+            raceWeather={room?.race_weather}
             onBack={() => navigate('MULTIPLAYER')}
             onRaceComplete={handleRaceComplete}
           />
@@ -282,6 +284,14 @@ const App = () => {
 
         {currentView === 'RULES' && (
           <Rules onBack={() => navigate('MULTIPLAYER')} />
+        )}
+
+        {currentView === 'RACE_RESULTS' && room && (
+          <RaceResults
+            roomId={room.id}
+            currentDay={room.current_day}
+            onBack={() => navigate('MULTIPLAYER')}
+          />
         )}
 
         {currentView === 'SCHEDULE' && (

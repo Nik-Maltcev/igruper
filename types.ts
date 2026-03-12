@@ -94,6 +94,11 @@ export interface PlayerState {
 export type RoomStatus = 'WAITING' | 'PLAYING' | 'FINISHED';
 export type RoomPhase = 'LOBBY' | 'TUNING' | 'RACE_SETUP' | 'RACING' | 'RESULTS' | 'DEALER';
 
+export interface RaceWeather {
+  isRaining: boolean;
+  rainyTrackIdx: number | null; // индекс трассы в дне (0, 1 или 2), где идет дождь
+}
+
 export type WeekDay = 'FRIDAY' | 'SATURDAY' | 'SUNDAY' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY';
 
 export interface Room {
@@ -108,6 +113,7 @@ export interface Room {
   week_started_at: string | null;
   created_at: string;
   max_players: number;
+  race_weather?: RaceWeather | null;
 }
 
 export interface RoomPlayer {
@@ -144,4 +150,14 @@ export interface ChatMessage {
 }
 
 export type GamePhase = 'PREPARATION' | 'RACE_DAY' | 'RACING' | 'RESULTS';
-export type View = 'DASHBOARD' | 'GARAGE' | 'DEALER' | 'SHOP' | 'AUCTION' | 'WORKLIST' | 'PLAYERS' | 'RULES' | 'HISTORY' | 'MULTIPLAYER' | 'SCHEDULE';
+export type View = 'DASHBOARD' | 'GARAGE' | 'DEALER' | 'SHOP' | 'AUCTION' | 'WORKLIST' | 'PLAYERS' | 'RULES' | 'HISTORY' | 'MULTIPLAYER' | 'SCHEDULE' | 'RACE_RESULTS';
+
+export interface RaceDayResult {
+  id?: string;
+  room_id: string;
+  day: number;
+  race_id: string;
+  race_name: string;
+  results: RaceResult[];
+  weather: 'SUNNY' | 'RAIN' | 'STORM';
+}

@@ -5,9 +5,10 @@ import {
   createRoom, joinRoom, fetchPlayers, startGame,
   updateRoomPhase, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
-  fetchRaceEntries, updatePlayerState,
+  fetchRaceEntries, updatePlayerState, saveRaceDayResults,
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
+import { RACES_DATA } from '../constants';
 import Chat from './Chat';
 
 interface MultiplayerProps {
@@ -136,13 +137,45 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
           }
           if (raceCars.length === 0) continue;
 
+          // Определяем погоду для гонки
+          let raceWeatherStr: 'SUNNY' | 'RAIN' | 'STORM' = 'SUNNY';
+          if (room.race_weather?.isRaining) {
+            // Найдем индекс гонки в раунде, чтобы проверить идет ли тут дождь
+            const schedule = getScheduleDay(room.current_day);
+            const epochData = RACES_DATA.epochs.find(e => e.year === room.current_year);
+            const roundNum = schedule.raceType === 'QUALIFICATION' ? 1 :
+              schedule.raceType === 'CITY' ? 2 : 3;
+            const roundData = epochData?.rounds.find(r => r.round === roundNum);
+
+            if (roundData) {
+              const raceIdx = roundData.races.findIndex(r => r.name === raceId);
+              if (raceIdx === room.race_weather.rainyTrackIdx) {
+                raceWeatherStr = 'RAIN'; // Или STORM для экстрима, пока RAIN
+              }
+            }
+          }
+
+          // Настоящие веса трассы (берем из RACES_DATA)
+          let raceWeights = { power: 2, torque: 2, topSpeed: 3, acceleration: 2, handling: 1, offroad: 0 };
+          const schedule = getScheduleDay(room.current_day);
+          const epochData = RACES_DATA.epochs.find(e => e.year === room.current_year);
+          const roundNum = schedule.raceType === 'QUALIFICATION' ? 1 : schedule.raceType === 'CITY' ? 2 : 3;
+          const roundData = epochData?.rounds.find(r => r.round === roundNum);
+          if (roundData) {
+            const trackDef = roundData.races.find(r => r.name === raceId);
+            if (trackDef) raceWeights = trackDef.weights;
+          }
+
           // Симулируем
           const results = simulateRace(raceCars, {
             id: raceId, name: raceId,
             image: '', description: '',
-            weights: { power: 2, torque: 2, topSpeed: 3, acceleration: 2, handling: 1, offroad: 0 },
-            weatherModifier: 0.3,
-          }, 'SUNNY', false);
+            weights: raceWeights,
+            weatherModifier: 0.3, // Влияние погоды
+          }, raceWeatherStr, false);
+
+          // Сохраняем результаты в БД для экрана результатов
+          await saveRaceDayResults(room.id, room.current_day, raceId, raceId, results, raceWeatherStr);
 
           // Раздаём призы
           for (const result of results) {
@@ -161,6 +194,17 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
       } else {
         await sendSystemMessage(room.id, '⚠ Никто не записался на гонки в этот день.');
       }
+
+      // Переходим в фазу показа результатов
+      await updateRoomPhase(room.id, 'RESULTS');
+      await sendSystemMessage(room.id, `🏁 Гоночный день завершен. Смотрите результаты!`);
+      return; // Ждем пока хост нажмет "СЛЕДУЮЩИЙ ДЕНЬ" на экране результатов
+    }
+
+    // Если фаза RESULTS — переходим к следующему дню
+    if (room.phase === 'RESULTS') {
+      // Очищаем погоду перед следующим днем
+      await supabase.from('rooms').update({ race_weather: null }).eq('id', room.id);
     }
 
     const nextDay = room.current_day + 1;
@@ -168,13 +212,22 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     let nextPhase: RoomPhase = 'TUNING';
     let nextYear = room.current_year;
 
+    // Генерируем погоду если следующий день — RACE
+    let nextWeather = null;
     if (schedule.activity === 'RACE') {
       nextPhase = 'RACE_SETUP';
+      // 30% шанс дождя
+      const isRaining = Math.random() < 0.3;
+      nextWeather = {
+        isRaining,
+        // Если дождь, выбираем случайную трассу из 3-х возможных в этот день (0, 1 или 2)
+        rainyTrackIdx: isRaining ? Math.floor(Math.random() * 3) : null
+      };
     } else if (schedule.activity === 'DEALER') {
       nextPhase = 'DEALER';
       if (nextDay > 3 && schedule.dayNum === 10) {
-        const yearIdx = EPOCHS_LIST.indexOf(nextYear);
-        if (yearIdx < EPOCHS_LIST.length - 1) nextYear = EPOCHS_LIST[yearIdx + 1];
+        // Упрощенный инкремент года
+        nextYear += 2;
       }
     }
 
@@ -186,6 +239,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     await updateRoomPhase(room.id, nextPhase, {
       current_day: nextDay,
       current_year: nextYear,
+      race_weather: nextWeather,
     } as any);
 
     const label = schedule.label;
@@ -339,10 +393,16 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                     <button className="retro-btn" onClick={() => onNavigate('SCHEDULE')}>РАСПИСАНИЕ</button>
                   )}
                   <button className="retro-btn" onClick={() => onNavigate('RULES')}>ПРАВИЛА</button>
+                  {/* Кнопка результатов гонок */}
+                  {room.phase === 'RESULTS' && (
+                    <button className="retro-btn text-[#00ffaa]" style={{ border: '2px solid #00ffaa' }} onClick={() => onNavigate('RACE_RESULTS')}>
+                      РЕЗУЛЬТАТЫ ГОНОК
+                    </button>
+                  )}
                   {/* Task 16: кнопка перемотки дня только для хоста */}
                   {me?.is_host && (
                     <button className="retro-btn text-[#ffaa00]" style={{ border: '2px solid #ffaa00' }} onClick={advanceDay}>
-                      ⏩ СЛЕДУЮЩИЙ ДЕНЬ
+                      {room.phase === 'RACE_SETUP' ? '▶ ЗАПУСТИТЬ ГОНКИ' : '⏩ СЛЕДУЮЩИЙ ДЕНЬ'}
                     </button>
                   )}
                 </div>

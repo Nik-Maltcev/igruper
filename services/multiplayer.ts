@@ -339,6 +339,22 @@ export async function fetchRaceEntries(roomId: string, day: number): Promise<Rac
   return (data || []) as RaceEntry[];
 }
 
+// --- Результаты гоночного дня ---
+export async function saveRaceDayResults(roomId: string, day: number, raceId: string, raceName: string, results: any, weather: string) {
+  await supabase
+    .from('race_day_results')
+    .insert({ room_id: roomId, day, race_id: raceId, race_name: raceName, results, weather });
+}
+
+export async function fetchRaceDayResults(roomId: string, day: number): Promise<any[]> {
+  const { data } = await supabase
+    .from('race_day_results')
+    .select('*')
+    .eq('room_id', roomId)
+    .eq('day', day);
+  return data || [];
+}
+
 // --- Покупка машин (синхронизация наличия) ---
 export async function logCarPurchase(roomId: string, playerId: string, carOriginalId: string) {
   await supabase
