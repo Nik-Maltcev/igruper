@@ -1,12 +1,18 @@
-import React, { useState, useMemo } from 'react';
-import { Car, RaceResult } from '../types';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { Car, RaceResult, RaceEntry } from '../types';
 import { RACES_DATA } from '../constants';
+import { submitRaceEntry, fetchRaceEntries } from '../services/multiplayer';
+import { getEffectiveStats } from '../services/gameEngine';
+import { supabase } from '../services/supabase';
 
 interface RaceCenterProps {
   phase: string;
   epochRevealed?: boolean;
   cars: Car[];
   gameYear: number;
+  roomId?: string;
+  playerId?: string;
+  currentDay?: number;
   onBack: () => void;
   onRaceComplete: (results: RaceResult[]) => void;
 }
@@ -22,30 +28,153 @@ function weightColor(v: number) {
   return '#333';
 }
 
-const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, cars, gameYear, onBack, onRaceComplete }) => {
+const RaceCenter: React.FC<RaceCenterProps> = ({
+  phase, epochRevealed = false, cars, gameYear,
+  roomId, playerId, currentDay = 0,
+  onBack, onRaceComplete,
+}) => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [entries, setEntries] = useState<RaceEntry[]>([]);
+  const [pickingRaceId, setPickingRaceId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const availableEpochs = useMemo(() => {
     return (RACES_DATA.epochs || []).filter((e: any) => e.year <= gameYear);
   }, [gameYear]);
 
   const specials = RACES_DATA.specials || [];
-
-  // Квалификация
   const qualification = specials.find((s: any) => s.name === 'квалификация');
-  // Ралли доступные по году
   const availableRallies = specials.filter((s: any) =>
     s.years && s.years.some((y: number) => y <= gameYear)
   );
-  // Гонка Чемпионов
   const championship = specials.find((s: any) => s.name === 'Гонка Чемпионов');
   const championshipAvailable = championship?.years?.some((y: number) => y <= gameYear);
-  // полуФинал / Финал
   const semiFinal = specials.find((s: any) => s.name === 'полуФинал');
   const final = specials.find((s: any) => s.name === 'Финал');
-
-  // Выбранная эпоха
   const selectedEpoch = availableEpochs.find((e: any) => e.year === selectedYear);
+
+  // Загружаем заявки текущего дня
+  const loadEntries = useCallback(async () => {
+    if (!roomId || !currentDay) return;
+    const data = await fetchRaceEntries(roomId, currentDay);
+    setEntries(data);
+  }, [roomId, currentDay]);
+
+  useEffect(() => { loadEntries(); }, [loadEntries]);
+
+  // Заявка игрока на конкретную гонку
+  const myEntryForRace = (raceId: string) =>
+    entries.find(e => e.player_id === playerId && e.race_id === raceId);
+
+  // Выбрать машину для гонки
+  const handleEnterCar = async (raceId: string, carId: string) => {
+    if (!roomId || !playerId) return;
+    setSubmitting(true);
+    if (carId) {
+      await submitRaceEntry(roomId, playerId, raceId, carId, currentDay);
+    } else {
+      // Отмена заявки
+      await supabase.from('race_entries').delete()
+        .eq('room_id', roomId).eq('player_id', playerId)
+        .eq('race_id', raceId).eq('day', currentDay);
+    }
+    await loadEntries();
+    setSubmitting(false);
+    setPickingRaceId(null);
+  };
+
+  // Все гонки всех раундов в плоский список для поиска заявок
+  const allRaces = useMemo(() => {
+    const result: any[] = [];
+    (RACES_DATA.epochs || []).forEach((e: any) =>
+      (e.rounds || []).forEach((r: any) =>
+        (r.races || []).forEach((race: any) => result.push(race))
+      )
+    );
+    (RACES_DATA.specials || []).forEach((s: any) =>
+      (s.races || []).forEach((race: any) => result.push(race))
+    );
+    return result;
+  }, []);
+
+  // Компонент для кнопки записи
+  const EntryButton = ({ race }: { race: any }) => {
+    const myEntry = myEntryForRace(race.id);
+    const myCar = myEntry ? cars.find(c => c.id === myEntry.car_id) : null;
+    const otherEntries = entries.filter(e => e.race_id === race.id && e.player_id !== playerId);
+
+    if (!roomId || !playerId || phase !== 'RACE_DAY') return null;
+
+    if (myEntry && myCar) {
+      return (
+        <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <div className="flex items-center gap-1 bg-[#002200] border border-[#00aa00] px-2 py-1">
+            <span className="text-[8px] text-[#00ff00]">✔ {myCar.name}</span>
+            <button
+              onClick={() => handleEnterCar(race.id, '')}
+              className="text-[7px] text-[#ff4444] ml-1 hover:text-[#ff6666]"
+              title="Отменить заявку"
+            >✕</button>
+          </div>
+          {otherEntries.length > 0 && (
+            <span className="text-[7px] text-[#555]">+{otherEntries.length} соперников</span>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-2">
+        {pickingRaceId === race.id ? (
+          <div className="flex flex-col gap-1">
+            <div className="text-[7px] text-[#888] mb-1">Выберите машину:</div>
+            {cars.length === 0 ? (
+              <span className="text-[7px] text-[#555]">Нет машин в гараже</span>
+            ) : (
+              <div className="flex flex-wrap gap-1">
+                {cars.map(car => {
+                  const s = getEffectiveStats(car);
+                  return (
+                    <button
+                      key={car.id}
+                      disabled={submitting}
+                      onClick={() => handleEnterCar(race.id, car.id)}
+                      className="text-[7px] px-2 py-1 border hover:border-[#00ff00] transition-colors"
+                      style={{
+                        backgroundColor: '#001a00',
+                        borderColor: '#333',
+                        color: '#ccc',
+                      }}
+                    >
+                      <div>{car.name}</div>
+                      <div style={{ color: '#888' }}>{s.topSpeed}км/ч · {s.power}лс</div>
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() => setPickingRaceId(null)}
+                  className="text-[7px] px-2 py-1 border border-[#333] text-[#555]"
+                >✕</button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPickingRaceId(race.id)}
+              className="retro-btn text-[7px] py-0.5 px-2"
+              style={{ backgroundColor: '#001a00', border: '1px solid #00aa00', color: '#00aa00' }}
+            >
+              🏎 ЗАПИСАТЬСЯ
+            </button>
+            {otherEntries.length > 0 && (
+              <span className="text-[7px] text-[#555]">{otherEntries.length} записались</span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (!selectedYear) {
     return (
@@ -61,7 +190,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, c
             <div className="text-[9px] text-[#ffaa00] mb-2">🏅 КВАЛИФИКАЦИЯ (1958)</div>
             <div className="flex flex-col gap-2">
               {qualification.races.map((race: any, ri: number) => (
-                <RaceCard key={ri} race={race} />
+                <RaceCard key={ri} race={race} entryButton={<EntryButton race={race} />} />
               ))}
             </div>
           </div>
@@ -121,7 +250,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, c
           </div>
         )}
 
-        {/* полуФинал / Финал — только когда эпохи раскрыты */}
+        {/* полуФинал / Финал */}
         {epochRevealed && (
           <div className="grid grid-cols-2 gap-2">
             {semiFinal && (
@@ -187,7 +316,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, c
             </div>
             <div className="flex flex-col gap-3">
               {round.races.map((race: any, rri: number) => (
-                <RaceCard key={rri} race={race} />
+                <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} />} />
               ))}
             </div>
           </div>
@@ -197,39 +326,48 @@ const RaceCenter: React.FC<RaceCenterProps> = ({ phase, epochRevealed = false, c
   );
 };
 
-// Карточка гонки — горизонтальный формат как у машин
-function RaceCard({ race, key: _key }: { race: any; key?: any }) {
+// Карточка гонки
+function RaceCard({ race, entryButton }: { race: any; entryButton?: React.ReactNode }) {
   return (
-    <div className="pixel-card p-0 flex items-stretch overflow-hidden" style={{ minHeight: '72px', borderColor: '#555', borderWidth: '2px' }}>
-      {/* Левая часть: название */}
-      <div className="flex flex-col justify-center px-3 py-2 min-w-[160px] max-w-[200px] border-r border-[#222]">
-        <div className="text-[10px] text-white leading-tight" style={{ textShadow: '1px 1px 0 #000' }}>{race.name}</div>
-        {race.requirement && (
-          <div className="text-[7px] text-[#ffaa00] mt-1">{race.requirement}</div>
-        )}
+    <div className="pixel-card p-0 overflow-hidden" style={{ borderColor: '#555', borderWidth: '2px' }}>
+      <div className="flex items-stretch" style={{ minHeight: '72px' }}>
+        {/* Левая часть: название */}
+        <div className="flex flex-col justify-center px-3 py-2 min-w-[160px] max-w-[200px] border-r border-[#222]">
+          <div className="text-[10px] text-white leading-tight" style={{ textShadow: '1px 1px 0 #000' }}>{race.name}</div>
+          {race.requirement && (
+            <div className="text-[7px] text-[#ffaa00] mt-1">{race.requirement}</div>
+          )}
+        </div>
+
+        {/* Таблица весов */}
+        <div className="flex-grow flex flex-col justify-center">
+          <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                {STAT_HEADERS.map((h, hi) => (
+                  <th key={hi} className="text-[8px] text-[#ddd] px-2 py-1 font-normal border-b border-[#333]">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {STAT_KEYS.map((k, ki) => (
+                  <td key={ki} className="text-[11px] px-2 py-1" style={{ color: weightColor(race.weights[k]) }}>
+                    {race.weights[k]}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Таблица весов */}
-      <div className="flex-grow flex flex-col justify-center">
-        <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              {STAT_HEADERS.map((h, hi) => (
-                <th key={hi} className="text-[8px] text-[#ddd] px-2 py-1 font-normal border-b border-[#333]">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {STAT_KEYS.map((k, ki) => (
-                <td key={ki} className="text-[11px] px-2 py-1" style={{ color: weightColor(race.weights[k]) }}>
-                  {race.weights[k]}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {/* Кнопка записи — под таблицей */}
+      {entryButton && (
+        <div className="border-t border-[#1a1a2e] px-3 py-2">
+          {entryButton}
+        </div>
+      )}
     </div>
   );
 }

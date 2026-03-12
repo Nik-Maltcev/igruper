@@ -272,6 +272,9 @@ const App = () => {
             epochRevealed={room?.phase === 'RACE_SETUP' || room?.phase === 'RACING'}
             cars={cars}
             gameYear={gameYear}
+            roomId={room?.id}
+            playerId={playerId}
+            currentDay={room?.current_day}
             onBack={() => navigate('MULTIPLAYER')}
             onRaceComplete={handleRaceComplete}
           />
