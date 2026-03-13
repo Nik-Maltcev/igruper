@@ -131,21 +131,35 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const myEntryForRace = (raceId: string) =>
     entries.find(e => e.player_id === playerId && e.race_id === raceId);
 
-  // Выбрать машину для гонки
   const handleEnterCar = async (raceId: string, carId: string) => {
     if (!roomId || !playerId) return;
-    setSubmitting(true);
+
+    // Проверка: участвует ли эта машина уже в другой гонке сегодня?
     if (carId) {
-      await submitRaceEntry(roomId, playerId, raceId, carId, currentDay);
-    } else {
-      // Отмена заявки
-      await supabase.from('race_entries').delete()
-        .eq('room_id', roomId).eq('player_id', playerId)
-        .eq('race_id', raceId).eq('day', currentDay);
+      const alreadyAssigned = entries.find(e => e.player_id === playerId && e.car_id === carId && e.race_id !== raceId);
+      if (alreadyAssigned) {
+        alert('Эта машина уже заявлена на другую гонку сегодня!');
+        return;
+      }
     }
-    await loadEntries();
-    setSubmitting(false);
-    setPickingRaceId(null);
+
+    setSubmitting(true);
+    try {
+      if (carId) {
+        await submitRaceEntry(roomId, playerId, raceId, carId, currentDay);
+      } else {
+        // Отмена заявки
+        await supabase.from('race_entries').delete()
+          .eq('room_id', roomId).eq('player_id', playerId)
+          .eq('race_id', raceId).eq('day', currentDay);
+      }
+      await loadEntries();
+      setPickingRaceId(null);
+    } catch (e: any) {
+      alert(`Ошибка при заявке на гонку: ${e.message}`);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Все гонки всех раундов в плоский список для поиска заявок
@@ -212,23 +226,29 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                     else if (n.includes('универс')) effectiveTire = 'У';
                   }
 
+                  const isAssignedElsewhere = entries.some(e => e.player_id === playerId && e.car_id === car.id && e.race_id !== race.id);
+
                   return (
                     <button
                       key={car.id}
-                      disabled={submitting}
+                      disabled={submitting || isAssignedElsewhere}
                       onClick={() => handleEnterCar(race.id, car.id)}
                       className="text-[7px] px-2 py-1 border hover:border-[#00ff00] transition-colors"
                       style={{
-                        backgroundColor: '#001a00',
-                        borderColor: '#333',
-                        color: '#ccc',
+                        backgroundColor: isAssignedElsewhere ? '#330000' : '#001a00',
+                        borderColor: isAssignedElsewhere ? '#880000' : '#333',
+                        color: isAssignedElsewhere ? '#888' : '#ccc',
+                        opacity: isAssignedElsewhere ? 0.5 : 1,
+                        cursor: isAssignedElsewhere ? 'not-allowed' : 'pointer'
                       }}
+                      title={isAssignedElsewhere ? "Машина уже участвует в другой гонке" : ""}
                     >
                       <div>{car.name}</div>
                       <div style={{ color: '#888' }}>
                         {s.topSpeed}км/ч · {s.power}лс
                         {effectiveTire && <span className="text-[#ffdd00]"> · шины: {effectiveTire}</span>}
                       </div>
+                      {isAssignedElsewhere && <div className="text-[#ff4444] mt-1">ЗАНЯТА</div>}
                     </button>
                   );
                 })}

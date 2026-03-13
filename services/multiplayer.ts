@@ -335,17 +335,26 @@ export async function submitRaceEntry(roomId: string, playerId: string, raceId: 
     .eq('race_id', raceId)
     .eq('day', day);
 
-  await supabase
+  const { error } = await supabase
     .from('race_entries')
     .insert({ room_id: roomId, player_id: playerId, race_id: raceId, car_id: carId, day });
+
+  if (error) {
+    console.error('Supabase insert error in submitRaceEntry:', error);
+    throw new Error(error.message);
+  }
 }
 
 export async function fetchRaceEntries(roomId: string, day: number): Promise<RaceEntry[]> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('race_entries')
     .select('*')
     .eq('room_id', roomId)
     .eq('day', day);
+    
+  if (error) {
+    console.error('Supabase fetch error in fetchRaceEntries:', error);
+  }
   return (data || []) as RaceEntry[];
 }
 

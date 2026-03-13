@@ -1,0 +1,61 @@
+[35m.kiro/specs/multiplayer/design.md[m[36m-[m```
+[35m.kiro/specs/multiplayer/design.md[m[36m-[m
+[35m.kiro/specs/multiplayer/design.md[m[36m:[m### Таблица `[1;31mrace_entries[m`
+[35m.kiro/specs/multiplayer/design.md[m[36m-[m```sql
+[35m.kiro/specs/multiplayer/design.md[m[36m:[mcreate table [1;31mrace_entries[m (
+[35m.kiro/specs/multiplayer/design.md[m[36m-[m  id uuid primary key default gen_random_uuid(),
+[35m.kiro/specs/multiplayer/design.md[m[36m-[m  room_id uuid references rooms(id) on delete cascade,
+[36m--[m
+[35m.kiro/specs/multiplayer/requirements.md[m[36m-[m- `rooms` — id, code, status, host_id, current_day, current_year, phase, day_started_at, created_at, max_players (3-8)
+[35m.kiro/specs/multiplayer/requirements.md[m[36m-[m- `room_players` — id, room_id, player_id, username, is_host, money, garage (JSONB), points, joined_at
+[35m.kiro/specs/multiplayer/requirements.md[m[36m:[m- `[1;31mrace_entries[m` — id, room_id, player_id, race_id, car_id, day
+[35m.kiro/specs/multiplayer/requirements.md[m[36m-[m- `race_results` — id, room_id, race_id, player_id, car_name, position, earnings, points, day
+[35m.kiro/specs/multiplayer/requirements.md[m[36m-[m- `chat_messages` — id, room_id, player_id, username, message, type (user/system), created_at
+[36m--[m
+[35mcomponents/RaceCenter.tsx[m[36m-[m    } else {
+[35mcomponents/RaceCenter.tsx[m[36m-[m      // Отмена заявки
+[35mcomponents/RaceCenter.tsx[m[36m:[m      await supabase.from('[1;31mrace_entries[m').delete()
+[35mcomponents/RaceCenter.tsx[m[36m-[m        .eq('room_id', roomId).eq('player_id', playerId)
+[35mcomponents/RaceCenter.tsx[m[36m-[m        .eq('race_id', raceId).eq('day', currentDay);
+[36m--[m
+[35mscripts/supabase-schema.sql[m[36m-[m
+[35mscripts/supabase-schema.sql[m[36m-[m-- 3. Заявки на гонки (кто какую машину на какую трассу)
+[35mscripts/supabase-schema.sql[m[36m:[mcreate table if not exists [1;31mrace_entries[m (
+[35mscripts/supabase-schema.sql[m[36m-[m  id uuid primary key default gen_random_uuid(),
+[35mscripts/supabase-schema.sql[m[36m-[m  room_id uuid references rooms(id) on delete cascade,
+[36m--[m
+[35mscripts/supabase-schema.sql[m[36m-[malter publication supabase_realtime add table race_results;
+[35mscripts/supabase-schema.sql[m[36m-[malter publication supabase_realtime add table chat_messages;
+[35mscripts/supabase-schema.sql[m[36m:[malter publication supabase_realtime add table [1;31mrace_entries[m;
+[35mscripts/supabase-schema.sql[m[36m-[malter publication supabase_realtime add table purchase_log;
+[35mscripts/supabase-schema.sql[m[36m-[m
+[36m--[m
+[35mscripts/supabase-schema.sql[m[36m-[malter table rooms enable row level security;
+[35mscripts/supabase-schema.sql[m[36m-[malter table room_players enable row level security;
+[35mscripts/supabase-schema.sql[m[36m:[malter table [1;31mrace_entries[m enable row level security;
+[35mscripts/supabase-schema.sql[m[36m-[malter table race_results enable row level security;
+[35mscripts/supabase-schema.sql[m[36m-[malter table chat_messages enable row level security;
+[36m--[m
+[35mscripts/supabase-schema.sql[m[36m-[mcreate policy "rooms_all" on rooms for all using (true) with check (true);
+[35mscripts/supabase-schema.sql[m[36m-[mcreate policy "room_players_all" on room_players for all using (true) with check (true);
+[35mscripts/supabase-schema.sql[m[36m:[mcreate policy "[1;31mrace_entries[m_all" on [1;31mrace_entries[m for all using (true) with check (true);
+[35mscripts/supabase-schema.sql[m[36m-[mcreate policy "race_results_all" on race_results for all using (true) with check (true);
+[35mscripts/supabase-schema.sql[m[36m-[mcreate policy "chat_messages_all" on chat_messages for all using (true) with check (true);
+[36m--[m
+[35mservices/multiplayer.ts[m[36m-[m  // Удаляем старую заявку на эту гонку если есть
+[35mservices/multiplayer.ts[m[36m-[m  await supabase
+[35mservices/multiplayer.ts[m[36m:[m    .from('[1;31mrace_entries[m')
+[35mservices/multiplayer.ts[m[36m-[m    .delete()
+[35mservices/multiplayer.ts[m[36m-[m    .eq('room_id', roomId)
+[36m--[m
+[35mservices/multiplayer.ts[m[36m-[m
+[35mservices/multiplayer.ts[m[36m-[m  await supabase
+[35mservices/multiplayer.ts[m[36m:[m    .from('[1;31mrace_entries[m')
+[35mservices/multiplayer.ts[m[36m-[m    .insert({ room_id: roomId, player_id: playerId, race_id: raceId, car_id: carId, day });
+[35mservices/multiplayer.ts[m[36m-[m}
+[36m--[m
+[35mservices/multiplayer.ts[m[36m-[mexport async function fetchRaceEntries(roomId: string, day: number): Promise<RaceEntry[]> {
+[35mservices/multiplayer.ts[m[36m-[m  const { data } = await supabase
+[35mservices/multiplayer.ts[m[36m:[m    .from('[1;31mrace_entries[m')
+[35mservices/multiplayer.ts[m[36m-[m    .select('*')
+[35mservices/multiplayer.ts[m[36m-[m    .eq('room_id', roomId)
