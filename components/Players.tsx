@@ -57,16 +57,51 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                   }
 
                   return (
-                    <div key={car.id} className="p-2 border border-[#333] bg-[#111]">
-                      <div className="text-[10px] text-[#ccc] mb-1 truncate">{car.name}</div>
-                      <div className="flex justify-between text-[8px] text-[#888]">
-                        <span>Мощ: <b className="text-[#fff]">{s.power}</b> лс</span>
-                        <span>Скор: <b className="text-[#fff]">{s.topSpeed}</b> км/ч</span>
+                    <div key={car.id} className="p-2 border border-[#333] bg-[#111] flex flex-col justify-between">
+                      <div>
+                        <div className="text-[10px] text-[#ccc] mb-1 font-bold truncate">
+                          {car.name} <span className="text-[#888] font-normal">({car.year})</span>
+                        </div>
+                        
+                        {/* Характеристики */}
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-2">
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Мощ: <b className="text-[#fff]">{s.power}</b> лс</span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Скор: <b className="text-[#fff]">{s.topSpeed}</b> км/ч</span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Разг: <b className="text-[#fff]">{s.acceleration}</b></span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Мом: <b className="text-[#fff]">{s.torque}</b></span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Упр: <b className="text-[#fff]">{s.handling}</b></span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-[#888]">
+                            <span>Внед: <b className="text-[#fff]">{s.offroad}</b></span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-[8px] text-[#888] mt-1">
-                        <span>Разг: <b className="text-[#fff]">{s.acceleration}</b></span>
-                        <span className="text-[#ffdd00]">Шины: {effectiveTire}</span>
+
+                      <div className="mt-2 text-[8px] text-[#888] flex flex-wrap gap-1">
+                        <span className="text-[#ffdd00] mr-1">Шины: {effectiveTire}</span>
+                        <span>Привод: {car.drive}</span>
+                        <span>Масса: {car.weight}</span>
                       </div>
+
+                      {/* Метки */}
+                      {car.tags && car.tags.length > 0 && (
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {car.tags.map(tag => (
+                            <span key={tag} className="text-[7px] bg-[#222] text-[#aaa] px-1 border border-[#444]">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })
