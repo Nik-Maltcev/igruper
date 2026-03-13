@@ -86,10 +86,10 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                         </div>
                       </div>
 
-                      <div className="mt-2 text-[8px] text-[#888] flex flex-wrap gap-1">
-                        <span className="text-[#ffdd00] mr-1">Шины: {effectiveTire}</span>
-                        <span>Привод: {car.drive}</span>
-                        <span>Масса: {car.weight}</span>
+                      <div className="mt-2 text-[8px] text-[#888] flex flex-wrap gap-2">
+                        <span className="text-[#ffdd00]">Шины: {effectiveTire}</span>
+                        {car.carClass && <span className="text-[#00ffcc]">Класс: {car.carClass}</span>}
+                        {car.rarity && <span className="text-[#aa44ff]">Редкость: {car.rarity}</span>}
                       </div>
 
                       {/* Метки */}
@@ -97,7 +97,7 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                         <div className="mt-1 flex flex-wrap gap-1">
                           {car.tags.map(tag => (
                             <span key={tag} className="text-[7px] bg-[#222] text-[#aaa] px-1 border border-[#444]">
-                              {tag}
+                              {tag.toLowerCase()}
                             </span>
                           ))}
                         </div>
