@@ -176,11 +176,11 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     return result;
   }, []);
 
-  // Компонент для кнопки записи
   const EntryButton = ({ race }: { race: any }) => {
-    const myEntry = myEntryForRace(race.id);
+    const raceId = race.name || race.id || Math.random().toString();
+    const myEntry = myEntryForRace(raceId);
     const myCar = myEntry ? cars.find(c => c.id === myEntry.car_id) : null;
-    const otherEntries = entries.filter(e => e.race_id === race.id && e.player_id !== playerId);
+    const otherEntries = entries.filter(e => e.race_id === raceId && e.player_id !== playerId);
 
     if (!roomId || !playerId || phase !== 'RACE_DAY') return null;
 
@@ -190,7 +190,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
           <div className="flex items-center gap-1 bg-[#002200] border border-[#00aa00] px-2 py-1">
             <span className="text-[8px] text-[#00ff00]">✔ {myCar.name}</span>
             <button
-              onClick={() => handleEnterCar(race.id, '')}
+              onClick={() => handleEnterCar(raceId, '')}
               className="text-[7px] text-[#ff4444] ml-1 hover:text-[#ff6666]"
               title="Отменить заявку"
             >✕</button>
@@ -204,7 +204,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
 
     return (
       <div className="mt-2">
-        {pickingRaceId === race.id ? (
+        {pickingRaceId === raceId ? (
           <div className="flex flex-col gap-1">
             <div className="text-[7px] text-[#888] mb-1">
               Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>:
@@ -226,13 +226,13 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                     else if (n.includes('универс')) effectiveTire = 'У';
                   }
 
-                  const isAssignedElsewhere = entries.some(e => e.player_id === playerId && e.car_id === car.id && e.race_id !== race.id);
+                  const isAssignedElsewhere = entries.some(e => e.player_id === playerId && e.car_id === car.id && e.race_id !== raceId);
 
                   return (
                     <button
                       key={car.id}
                       disabled={submitting || isAssignedElsewhere}
-                      onClick={() => handleEnterCar(race.id, car.id)}
+                      onClick={() => handleEnterCar(raceId, car.id)}
                       className="text-[7px] px-2 py-1 border hover:border-[#00ff00] transition-colors"
                       style={{
                         backgroundColor: isAssignedElsewhere ? '#330000' : '#001a00',
@@ -262,7 +262,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPickingRaceId(race.id)}
+              onClick={() => setPickingRaceId(raceId)}
               className="retro-btn text-[7px] py-0.5 px-2"
               style={{ backgroundColor: '#001a00', border: '1px solid #00aa00', color: '#00aa00' }}
             >

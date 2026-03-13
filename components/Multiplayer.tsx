@@ -143,15 +143,22 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
           if (room.race_weather?.isRaining) {
             // Найдем индекс гонки в раунде, чтобы проверить идет ли тут дождь
             const schedule = getScheduleDay(room.current_day);
-            const epochData = RACES_DATA.epochs.find(e => e.year === room.current_year);
-            const roundNum = schedule.raceType === 'QUALIFICATION' ? 1 :
-              schedule.raceType === 'CITY' ? 2 : 3;
-            const roundData = epochData?.rounds.find(r => r.round === roundNum);
-
-            if (roundData) {
-              const raceIdx = roundData.races.findIndex(r => r.name === raceId);
-              if (raceIdx === room.race_weather.rainyTrackIdx) {
-                raceWeatherStr = 'RAIN'; // Или STORM для экстрима, пока RAIN
+            
+            if (schedule.raceType === 'QUALIFICATION') {
+              const qualData = RACES_DATA.specials?.find((s: any) => s.name === 'квалификация');
+              if (qualData) {
+                const raceIdx = qualData.races.findIndex((r: any) => r.name === raceId);
+                if (raceIdx === room.race_weather.rainyTrackIdx) raceWeatherStr = 'RAIN';
+              }
+            } else {
+              const epochData = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
+              const roundNum = schedule.raceType === 'CITY' ? 2 : 3;
+              const roundData = epochData?.rounds.find((r: any) => r.round === roundNum);
+              if (roundData) {
+                const raceIdx = roundData.races.findIndex((r: any) => r.name === raceId);
+                if (raceIdx === room.race_weather.rainyTrackIdx) {
+                  raceWeatherStr = 'RAIN'; // Или STORM для экстрима, пока RAIN
+                }
               }
             }
           }
@@ -159,12 +166,23 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
           // Настоящие веса трассы (берем из RACES_DATA)
           let raceWeights = { power: 2, torque: 2, topSpeed: 3, acceleration: 2, handling: 1, offroad: 0 };
           const schedule = getScheduleDay(room.current_day);
-          const epochData = RACES_DATA.epochs.find(e => e.year === room.current_year);
-          const roundNum = schedule.raceType === 'QUALIFICATION' ? 1 : schedule.raceType === 'CITY' ? 2 : 3;
-          const roundData = epochData?.rounds.find(r => r.round === roundNum);
-          if (roundData) {
-            const trackDef = roundData.races.find(r => r.name === raceId);
-            if (trackDef) raceWeights = trackDef.weights;
+
+          if (schedule.raceType === 'QUALIFICATION') {
+            const numPlayers = Math.max(3, Math.min(8, players.length));
+            // Ищем в specials
+            const qualData = RACES_DATA.specials?.find((s: any) => s.name === 'квалификация');
+            if (qualData) {
+              const trackDef = qualData.races.find((r: any) => r.name === raceId);
+              if (trackDef) raceWeights = trackDef.weights;
+            }
+          } else {
+            const epochData = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
+            const roundNum = schedule.raceType === 'CITY' ? 2 : 3;
+            const roundData = epochData?.rounds.find((r: any) => r.round === roundNum);
+            if (roundData) {
+              const trackDef = roundData.races.find((r: any) => r.name === raceId);
+              if (trackDef) raceWeights = trackDef.weights;
+            }
           }
 
           // Симулируем
