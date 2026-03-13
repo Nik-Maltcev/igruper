@@ -98,7 +98,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   roomId, playerId, currentDay = 0, raceWeather,
   onBack, onRaceComplete,
 }) => {
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(gameYear > 1958 ? gameYear : null);
   const [entries, setEntries] = useState<RaceEntry[]>([]);
   const [pickingRaceId, setPickingRaceId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -293,7 +293,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
         </div>
 
         {/* Квалификация */}
-        {qualification && (
+        {qualification && gameYear === 1958 && (
           <div className="mb-4">
             <div className="text-[9px] text-[#ffaa00] mb-2">🏅 КВАЛИФИКАЦИЯ (1958)</div>
             <div className="flex flex-col gap-2">
