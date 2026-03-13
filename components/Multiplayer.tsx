@@ -400,6 +400,9 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                   {room.phase === 'DEALER' && (
                     <button className="retro-btn" onClick={() => onNavigate('DEALER')}>АВТОСАЛОН</button>
                   )}
+                  {room.phase !== 'TUNING' && (
+                    <button className="retro-btn" style={{ borderColor: '#44ffaa', color: '#44ffaa' }} onClick={() => onNavigate('PLAYERS')}>СОПЕРНИКИ</button>
+                  )}
                   <button className="retro-btn" onClick={() => onNavigate('WORKLIST')}>ГОНОЧНЫЙ ЦЕНТР</button>
                   {/* Task 13: скрываем РАСПИСАНИЕ во время квалификации (дни 1-3) */}
                   {room.current_day > 3 && (
