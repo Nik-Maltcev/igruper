@@ -413,7 +413,14 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
                   <div>Эпоха: <b>{room.current_year}</b></div>
                   <div>Фаза: <b>{room.phase}</b></div>
                   {currentSchedule && <div>Сегодня: <b>{currentSchedule.label}</b> ({currentSchedule.activity})</div>}
-                  <div>До 22:00: <b>{timeLeft || '—'}</b></div>
+                  <div className="flex items-center gap-2">
+                    До 22:00: <b>{timeLeft || '—'}</b>
+                    {me?.is_host && (
+                      <button onClick={advanceDay} className="text-[8px] px-2 py-0.5 retro-btn" style={{ backgroundColor: '#663300', border: '1px solid #ffaa00', color: '#ffaa00' }}>
+                        +12 ЧАСОВ ⏩
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
