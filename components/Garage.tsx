@@ -135,10 +135,9 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                               const n = tiresPart.name.toLowerCase();
                               letter = n.includes('слик') ? 'С' : n.includes('гоночн') ? 'Г' : n.includes('внедор') ? 'В' : n.includes('универс') ? 'У' : null;
                             }
-                            if (!letter && car.roadType) {
-                              letter = car.roadType; // fallback to default
+                            if (!letter) {
+                              letter = car.roadType || 'У'; // fallback to default
                             }
-                            if (!letter) return null;
                             return <div style={{ color: '#ffdd00', fontWeight: 'bold' }}>шины: {letter}</div>;
                           })()}
                         </div>

@@ -107,6 +107,7 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
                   {car.tags?.slice(2).map((tag: string, ti: number) => (
                     <div key={ti} style={{color:'#ffaa00'}}>{tag}</div>
                   ))}
+                  <div style={{color: '#ffdd00', fontWeight: 'bold'}}>шины: {car.roadType || 'У'}</div>
                 </div>
               </div>
 

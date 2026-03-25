@@ -56,15 +56,36 @@ export const simulateRace = (
 ): RaceResult[] => {
   const allRacers = includeBots ? [...userCars, ...MOCK_OPPONENTS] : [...userCars];
 
-  let weatherPenalty = 0;
-  if (weather === 'RAIN') weatherPenalty = 0.2;
-  if (weather === 'STORM') weatherPenalty = 0.4;
-
   const results: RaceResult[] = allRacers.map(car => {
     const s = getEffectiveStats(car);
 
+    // Определяем эффективный тип шин: заводские или купленные
+    let tireType = car.roadType || 'У';
+    const installedTires = car.installedParts?.find(p => p.slot === 'tires');
+    if (installedTires) {
+      const n = installedTires.name.toLowerCase();
+      if (n.includes('универсал')) tireType = 'У';
+      else if (n.includes('гоноч')) tireType = 'Г';
+      else if (n.includes('внедорож') || n.includes('шипов')) tireType = 'В';
+      else if (n.includes('слик')) tireType = 'С';
+    }
+
+    // Определяем штраф за погоду в зависимости от шин
+    let weatherPenalty = 0;
+    if (weather === 'RAIN') {
+      if (tireType === 'С') weatherPenalty = 0.40; // Слики: сильный штраф в дождь
+      else if (tireType === 'Г') weatherPenalty = 0.25; // Гоночные: средний штраф
+      else if (tireType === 'У') weatherPenalty = 0.10; // Универсальные: слабый штраф
+      else if (tireType === 'В') weatherPenalty = 0.05; // Внедорожные: минимальный штраф
+    } else if (weather === 'STORM') {
+      if (tireType === 'С') weatherPenalty = 0.60;
+      else if (tireType === 'Г') weatherPenalty = 0.40;
+      else if (tireType === 'У') weatherPenalty = 0.25;
+      else if (tireType === 'В') weatherPenalty = 0.15;
+    }
+
     // Нормализуем acceleration: меньше секунд = лучше, инвертируем для формулы
-    const accelScore = Math.max(1, 40 - s.acceleration); // 40 - потолок, чем меньше разгон тем выше скор
+    const accelScore = Math.max(1, 40 - s.acceleration);
 
     let averageSpeed =
       (s.power * track.weights.power) +
@@ -74,7 +95,7 @@ export const simulateRace = (
       (s.handling * track.weights.handling) +
       (s.offroad * track.weights.offroad);
 
-    // Погода
+    // Применяем влияние погоды с учетом коэффициента трассы
     const mitigation = (s.handling * 0.5 + s.offroad * 0.5) / 200;
     const effectivePenalty = weatherPenalty * track.weatherModifier * Math.max(0, (1 - mitigation));
     averageSpeed = averageSpeed * (1 - effectivePenalty);

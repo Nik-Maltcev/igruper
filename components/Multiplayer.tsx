@@ -231,8 +231,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     let nextWeather = null;
     if (schedule.activity === 'RACE') {
       nextPhase = 'RACE_SETUP';
-      // 30% шанс дождя
-      const isRaining = Math.random() < 0.3;
+      // 25% шанс дождя
+      const isRaining = Math.random() < 0.25;
       nextWeather = {
         isRaining,
         // Если дождь, выбираем случайную трассу из 3-х возможных в этот день (0, 1 или 2)
