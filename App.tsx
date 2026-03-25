@@ -24,6 +24,7 @@ const App = () => {
   const [player, setPlayer] = useState<RoomPlayer | null>(null);
   const [currentView, setCurrentView] = useState<View>('MULTIPLAYER');
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
 
   // Task 18: При загрузке страницы восстанавливаем сессию из localStorage
   useEffect(() => {
@@ -35,19 +36,24 @@ const App = () => {
         if (!pData) {
           localStorage.removeItem('mp_player_id');
           localStorage.removeItem('mp_room_id');
+          setIsLoadingSession(false);
           return;
         }
         supabase.from('rooms').select('*').eq('id', savedRoomId).single().then(({ data: rData }) => {
           if (!rData) {
             localStorage.removeItem('mp_player_id');
             localStorage.removeItem('mp_room_id');
+            setIsLoadingSession(false);
             return;
           }
           setPlayerId(savedPlayerId);
           setPlayer(pData as any);
           setRoom(rData as Room);
+          setIsLoadingSession(false);
         });
       });
+    } else {
+      setIsLoadingSession(false);
     }
   }, []);
 
@@ -199,6 +205,14 @@ const App = () => {
   const storage = player?.storage || [];
   const money = player?.money || 0;
   const shopVisits = player?.shop_visits || {};
+
+  if (isLoadingSession) {
+    return (
+      <div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]">
+        <div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
