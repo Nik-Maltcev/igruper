@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AVAILABLE_CARS } from '../constants';
-import { Car } from '../types';
+import { Car, RoomPlayer } from '../types';
+import { fetchPlayers } from '../services/multiplayer';
 
 interface DealerProps {
   money: number;
@@ -8,6 +9,9 @@ interface DealerProps {
   purchaseCounts: Record<string, number>;
   onBuyCar: (car: Car) => void;
   onBack: () => void;
+  roomId: string;
+  playerId: string;
+  shopVisits: Record<string, string>;
 }
 
 const DEALERS = [
@@ -31,8 +35,74 @@ const CLASS_COLORS: Record<string, string> = {
   A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
 };
 
-const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyCar, onBack }) => {
+const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyCar, onBack, roomId, playerId, shopVisits }) => {
   const [selectedDealer, setSelectedDealer] = useState<string | null>(null);
+  const [players, setPlayers] = useState<RoomPlayer[]>([]);
+
+  useEffect(() => {
+    if (roomId) {
+      fetchPlayers(roomId).then(setPlayers);
+    }
+  }, [roomId]);
+
+  const allowedDealersCount = useMemo(() => {
+    if (players.length < 3) return 4;
+    
+    // Сортировка по очкам (desc)
+    const sorted = [...players].sort((a,b) => b.points - a.points);
+    const myRank = sorted.findIndex(p => p.id === playerId) + 1;
+    const total = players.length;
+    
+    if (total === 3) {
+      if (myRank === 1) return 1;
+      if (myRank === 2) return 2;
+      return 3;
+    }
+    if (total === 4) {
+      if (myRank === 1) return 1;
+      if (myRank === 2) return 2;
+      if (myRank === 3) return 3;
+      return 4;
+    }
+    if (total === 5) {
+      if (myRank === 1) return 1;
+      if (myRank === 2) return 2;
+      if (myRank === 3) return 3;
+      return 4;
+    }
+    if (total === 6) {
+      if (myRank <= 2) return 1;
+      if (myRank === 3) return 2;
+      if (myRank === 4) return 3;
+      return 4;
+    }
+    if (total === 7) {
+      if (myRank <= 2) return 1;
+      if (myRank <= 4) return 2;
+      if (myRank === 5) return 3;
+      return 4;
+    }
+    if (total >= 8) {
+      if (myRank <= 2) return 1;
+      if (myRank <= 4) return 2;
+      if (myRank <= 6) return 3;
+      return 4;
+    }
+    
+    return 4;
+  }, [players, playerId]);
+
+  const visitedDealers = useMemo(() => {
+    return Object.keys(shopVisits).filter(k => k.startsWith('DEALER_') && shopVisits[k] === 'visited').map(k => k.replace('DEALER_', ''));
+  }, [shopVisits]);
+
+  const handleDealerClick = (dlrId: string) => {
+    if (!visitedDealers.includes(dlrId) && visitedDealers.length >= allowedDealersCount) {
+      alert(`Вам доступно только ${allowedDealersCount} автосалона(ов) на этом этапе, согласно вашему рейтингу!`);
+      return;
+    }
+    setSelectedDealer(dlrId);
+  };
 
   const availableCars = useMemo(() => {
     return AVAILABLE_CARS.filter((car: any) => car.year && car.year <= gameYear);
@@ -59,13 +129,15 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
         <div className="grid grid-cols-2 gap-4">
           {DEALERS.map(d => {
             const count = availableCars.filter((c: any) => c.dealer === d.id).length;
+            const isVisited = visitedDealers.includes(d.id);
+            const isLocked = !isVisited && visitedDealers.length >= allowedDealersCount;
             return (
-              <button key={d.id} onClick={() => setSelectedDealer(d.id)}
-                className="pixel-card p-6 text-center hover:border-[#00ff00] transition-colors cursor-pointer"
+              <button key={d.id} onClick={() => handleDealerClick(d.id)}
+                className={`pixel-card p-6 text-center transition-colors cursor-pointer ${isLocked ? 'opacity-40 grayscale' : 'hover:border-[#00ff00]'}`}
                 style={{borderColor: d.color + '66'}}>
                 <div className="text-3xl mb-3">{d.icon}</div>
                 <div className="text-[12px] mb-2" style={{color: d.color, fontFamily:"'Press Start 2P', monospace"}}>{d.label}</div>
-                <div className="text-[8px] text-[#555]">{count} машин</div>
+                <div className="text-[8px] text-[#555]">{count} машин {isVisited ? ' (Посещен)' : isLocked ? ' (Недоступен)' : ''}</div>
               </button>
             );
           })}

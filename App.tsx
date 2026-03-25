@@ -267,6 +267,9 @@ const App = () => {
             purchaseCounts={purchaseCounts}
             onBuyCar={handleBuyCar}
             onBack={() => navigate('MULTIPLAYER')}
+            roomId={room?.id || ''}
+            playerId={playerId}
+            shopVisits={shopVisits}
           />
         )}
 
