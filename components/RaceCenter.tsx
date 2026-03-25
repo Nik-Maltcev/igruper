@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Car, RaceResult, RaceEntry } from '../types';
 import { RACES_DATA } from '../constants';
-import { submitRaceEntry, fetchRaceEntries } from '../services/multiplayer';
+import { submitRaceEntry, fetchRaceEntries, fetchPlayers } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 import { supabase } from '../services/supabase';
 
@@ -102,6 +102,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const [entries, setEntries] = useState<RaceEntry[]>([]);
   const [pickingRaceId, setPickingRaceId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [allPlayers, setAllPlayers] = useState<any[]>([]);
 
   const availableEpochs = useMemo(() => {
     return (RACES_DATA.epochs || []).filter((e: any) => e.year <= gameYear);
@@ -126,6 +127,21 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   }, [roomId, currentDay]);
 
   useEffect(() => { loadEntries(); }, [loadEntries]);
+
+  // Загружаем список игроков для отображения имён на стартовой решётке
+  useEffect(() => {
+    if (!roomId) return;
+    fetchPlayers(roomId).then(setAllPlayers);
+  }, [roomId]);
+
+  // Получить имя игрока и название машины по entry
+  const getEntryLabel = (entry: RaceEntry) => {
+    const p = allPlayers.find(pl => pl.id === entry.player_id);
+    const playerName = p?.username || 'Игрок';
+    const car = p?.garage?.find((c: any) => c.id === entry.car_id);
+    const carName = car?.name || 'Авто';
+    return `${playerName} — ${carName}`;
+  };
 
   // Заявка игрока на конкретную гонку
   const myEntryForRace = (raceId: string) =>
@@ -196,7 +212,12 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
             >✕</button>
           </div>
           {otherEntries.length > 0 && (
-            <span className="text-[7px] text-[#555]">+{otherEntries.length} соперников</span>
+            <div className="mt-1">
+              <div className="text-[7px] text-[#888] mb-0.5">Стартовая решётка:</div>
+              {otherEntries.map(e => (
+                <div key={e.id} className="text-[7px] text-[#aaa]">• {getEntryLabel(e)}</div>
+              ))}
+            </div>
           )}
         </div>
       );
@@ -269,7 +290,12 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
               🏎 ЗАПИСАТЬСЯ
             </button>
             {otherEntries.length > 0 && (
-              <span className="text-[7px] text-[#555]">{otherEntries.length} записались</span>
+              <div className="mt-1">
+                <div className="text-[7px] text-[#888] mb-0.5">Стартовая решётка:</div>
+                {otherEntries.map(e => (
+                  <div key={e.id} className="text-[7px] text-[#aaa]">• {getEntryLabel(e)}</div>
+                ))}
+              </div>
             )}
           </div>
         )}
