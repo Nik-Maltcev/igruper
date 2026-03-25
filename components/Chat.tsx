@@ -28,13 +28,25 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
         filter: `room_id=eq.${roomId}`,
       }, (payload) => {
         const msg = payload.new as ChatMessage;
-        setMessages(prev => [...prev, msg]);
+        setMessages(prev => {
+          // Проверяем, есть ли оптимистичное сообщение с тем же содержанием — заменяем его реальным
+          const optIdx = prev.findIndex(m =>
+            m.id.startsWith('opt-') && m.player_id === msg.player_id && m.message === msg.message
+          );
+          if (optIdx !== -1) {
+            const updated = [...prev];
+            updated[optIdx] = msg;
+            return updated;
+          }
+          // Нет дубликата — просто добавляем
+          return [...prev, msg];
+        });
         if (collapsed) setUnread(prev => prev + 1);
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [roomId]);
+  }, [roomId, collapsed]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
