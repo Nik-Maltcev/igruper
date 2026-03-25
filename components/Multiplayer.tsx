@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
 import { Car, Room, RoomPlayer, RoomPhase, View } from '../types';
 import {
@@ -94,20 +94,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     }, 1000);
     return () => clearInterval(interval);
   }, [room?.status]);
-
-  // Auto phase change at 22:00 (host only)
-  useEffect(() => {
-    if (!room || room.status !== 'PLAYING') return;
-    const me = players.find(p => p.id === playerId);
-    if (!me?.is_host) return;
-    const checkPhase = setInterval(async () => {
-      const now = new Date();
-      if (now.getHours() === 22 && now.getMinutes() === 0 && now.getSeconds() < 15) {
-        await advanceDay();
-      }
-    }, 10000);
-    return () => clearInterval(checkPhase);
-  }, [room, players, playerId]);
 
   const advanceDay = useCallback(async () => {
     if (!room) return;
@@ -272,6 +258,28 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     const label = schedule.label;
     await sendSystemMessage(room.id, `⏩ Переход к дню ${nextDay}: ${label}`);
   }, [room, players, playerId]);
+
+  // Auto phase change at 22:00 (host only)
+  const lastAutoAdvanceDate = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!room || room.status !== 'PLAYING') return;
+    const me = players.find(p => p.id === playerId);
+    if (!me?.is_host) return;
+
+    const checkPhase = setInterval(async () => {
+      const now = new Date();
+      const todayStr = now.toDateString();
+      if (now.getHours() === 22 && now.getMinutes() === 0) {
+        // Убедимся, что мы не запускали перевод времени сегодня
+        if (lastAutoAdvanceDate.current !== todayStr) {
+          lastAutoAdvanceDate.current = todayStr;
+          await advanceDay();
+        }
+      }
+    }, 10000);
+    return () => clearInterval(checkPhase);
+  }, [room, players, advanceDay, playerId]);
 
   // Выход из игры с подтверждением
   const handleLeaveGame = async () => {
