@@ -387,7 +387,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
             <div className="pixel-card p-2 bg-[#0f0f1f]">
               <div className="text-[#aaa] mb-1">Игроки:</div>
-              {players.map((p) => (
+              {[...players].sort((a, b) => b.points - a.points).map((p) => (
                 <div key={p.id} className="flex justify-between text-[#ddd]">
                   <span>{p.username} {p.is_host ? '👑' : ''}</span>
                   <span className="text-[#888]">💰 {p.money.toLocaleString()} | 🏆 {p.points}</span>
