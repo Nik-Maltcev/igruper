@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RoomPlayer } from '../types';
+import { Car, CarStats, RoomPlayer } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 
@@ -8,105 +8,165 @@ interface PlayersProps {
   onBack: () => void;
 }
 
+const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
+const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
+const STAT_UNITS = ['лс', 'Нм', '', 'с', '', ''];
+
+const CLASS_COLORS: Record<string, string> = {
+  A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
+};
+
+const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
+
+function coeffColor(v: number) {
+  if (v > 1) return '#44ff44';
+  if (v < 1) return '#ff4444';
+  return '#888';
+}
+
 const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
+  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchPlayers(roomId).then(setPlayers);
+    fetchPlayers(roomId).then(list =>
+      setPlayers([...list].sort((a, b) => b.points - a.points))
+    );
   }, [roomId]);
+
   return (
-    <div className="flex flex-col min-h-full p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl md:text-2xl retro-title text-[#44ffaa]">👥 СОПЕРНИКИ</h2>
-        <button onClick={onBack} className="retro-btn text-[10px] px-3 py-1 bg-[#1a1a2e] text-[#aaa]">
-          НАЗАД
+    <div className="p-3 max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-lg retro-title text-[#44ffaa]">👥 СОПЕРНИКИ</h2>
+        <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>
+          МЕНЮ
         </button>
       </div>
 
-      <div className="space-y-4 overflow-y-auto pb-20">
+      <div className="flex flex-col gap-3 pb-20">
         {players.map(p => (
-          <div key={p.id} className="pixel-card p-3 border-2 border-[#44ffaa] bg-[#0a0a1a]">
-            <div className="flex justify-between items-center mb-2 pb-2 border-b border-[#333]">
-              <div className="text-lg text-[#fff] font-bold">
-                {p.username} {p.is_host && <span className="text-[12px]">👑</span>}
+          <div key={p.id} className="pixel-card p-0 overflow-hidden" style={{ borderColor: '#44ffaa', borderWidth: '2px' }}>
+            {/* Шапка игрока */}
+            <button
+              className="w-full flex justify-between items-center px-4 py-2 bg-[#0a0a1a] hover:bg-[#111] transition-colors cursor-pointer"
+              onClick={() => setExpandedPlayer(expandedPlayer === p.id ? null : p.id)}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-[12px] text-[#fff] font-bold">{p.username}</span>
+                {p.is_host && <span className="text-[10px]">👑</span>}
+                <span className="text-[9px] text-[#666]">({p.garage.length} авто)</span>
               </div>
-              <div className="text-right text-[10px]">
-                <div className="text-[#ffdd00]">💰 {p.money.toLocaleString()} ₽</div>
-                <div className="text-[#00ffaa]">🏆 {p.points} очков</div>
+              <div className="flex items-center gap-3 text-[9px]">
+                <span className="text-[#ffdd00]">💰 {p.money.toLocaleString()}</span>
+                <span className="text-[#00ffaa]">🏆 {p.points}</span>
+                <span className="text-[#555]">{expandedPlayer === p.id ? '▲' : '▼'}</span>
               </div>
-            </div>
+            </button>
 
-            <div className="mt-2 text-[10px] text-[#aaa] mb-1">
-              ГАРАЖ ({p.garage.length}):
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {p.garage.length === 0 ? (
-                <div className="text-[10px] text-[#555] italic">Гараж пуст</div>
-              ) : (
-                p.garage.map(car => {
-                  const s = getEffectiveStats(car);
-                  let effectiveTire = car.roadType || 'У';
-                  const tiresPart = car.installedParts?.find(part => part.slot === 'tires');
-                  if (tiresPart) {
-                    const n = tiresPart.name.toLowerCase();
-                    if (n.includes('слик')) effectiveTire = 'С';
-                    else if (n.includes('гоночн')) effectiveTire = 'Г';
-                    else if (n.includes('внедор')) effectiveTire = 'В';
-                    else if (n.includes('универс')) effectiveTire = 'У';
-                  }
+            {/* Гараж — раскрывается */}
+            {expandedPlayer === p.id && (
+              <div className="flex flex-col gap-3 p-3 bg-[#050510]">
+                {p.garage.length === 0 ? (
+                  <div className="text-center py-4 text-[10px] text-[#555]">Гараж пуст</div>
+                ) : (
+                  p.garage.map((car: Car, idx: number) => {
+                    const effective = getEffectiveStats(car);
+                    const co = car.coefficients || {} as Partial<CarStats>;
+                    const partLimit = CLASS_PART_LIMITS[car.carClass || 'A'] || 16;
 
-                  return (
-                    <div key={car.id} className="p-2 border border-[#333] bg-[#111] flex flex-col justify-between">
-                      <div>
-                        <div className="text-[10px] text-[#ccc] mb-1 font-bold truncate">
-                          {car.name} <span className="text-[#888] font-normal">({car.year})</span>
+                    return (
+                      <div key={`${car.id}-${idx}`}
+                        className="pixel-card p-0 flex flex-col overflow-hidden"
+                        style={{ borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '4px' }}>
+
+                        {/* Верхняя часть: имя+теги | картинка | статы */}
+                        <div className="flex items-stretch" style={{ minHeight: '168px' }}>
+                          <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
+                            <div className="text-[10px] text-white leading-tight mb-1" style={{ textShadow: '1px 1px 0 #000' }}>{car.name}</div>
+                            <div className="text-[7px] text-white leading-relaxed">
+                              {car.carClass && <div>класс: {car.carClass}</div>}
+                              {car.tags?.[0] && <div>{car.tags[0]}</div>}
+                              {car.tags?.[1] && <div>{car.tags[1]}</div>}
+                              {car.rarity && <div>редкость: {car.rarity}</div>}
+                              {car.tags?.slice(2).map((tag: string, ti: number) => (
+                                <div key={ti} style={{ color: '#ffaa00' }}>{tag}</div>
+                              ))}
+                              {(() => {
+                                const tiresPart = car.installedParts?.find(pt => pt.slot === 'tires');
+                                let letter = null;
+                                if (tiresPart) {
+                                  const n = tiresPart.name.toLowerCase();
+                                  letter = n.includes('слик') ? 'С' : n.includes('гоночн') ? 'Г' : n.includes('внедор') ? 'В' : n.includes('универс') ? 'У' : null;
+                                }
+                                if (!letter && car.roadType) letter = car.roadType;
+                                if (!letter) return null;
+                                return <div style={{ color: '#ffdd00', fontWeight: 'bold' }}>шины: {letter}</div>;
+                              })()}
+                            </div>
+                          </div>
+
+                          <div className="w-[336px] min-w-[336px] bg-[#111] border-r border-[#222] relative overflow-hidden">
+                            <img src={car.image} alt={car.name} className="w-full h-full object-cover"
+                              onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = `https://placehold.co/400x200/111/555?text=${encodeURIComponent(car.name.substring(0, 12))}`; }} />
+                          </div>
+
+                          <div className="flex-grow flex flex-col justify-center">
+                            <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
+                              <thead>
+                                <tr>
+                                  {STAT_HEADERS.map((h, hi) => (
+                                    <th key={hi} className="text-[8px] text-[#ddd] px-2 py-1 font-normal border-b border-[#333]">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  {STAT_KEYS.map((k, ki) => {
+                                    const base = car.stats[k];
+                                    const eff = effective[k];
+                                    const boosted = eff !== base;
+                                    return (
+                                      <td key={ki} className="text-[10px] px-2 py-1 border-b border-[#1a1a2e]" style={{ color: boosted ? '#ffff00' : '#fff' }}>
+                                        {k === 'acceleration' ? eff.toFixed(2) : eff}
+                                        {STAT_UNITS[ki] && <span className="text-[7px] text-[#999] ml-0.5">{STAT_UNITS[ki]}</span>}
+                                        {boosted && <span className="text-[#ffff00] ml-0.5">★</span>}
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                                <tr>
+                                  {STAT_KEYS.map((k, ki) => (
+                                    <td key={ki} className="text-[9px] px-2 py-1" style={{ color: coeffColor((co as any)[k] || 1) }}>
+                                      {((co as any)[k] || 1).toFixed(1)}
+                                    </td>
+                                  ))}
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
-                        
-                        {/* Характеристики */}
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-2">
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Мощ: <b className="text-[#fff]">{s.power}</b> лс</span>
-                          </div>
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Скор: <b className="text-[#fff]">{s.topSpeed}</b> км/ч</span>
-                          </div>
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Разг: <b className="text-[#fff]">{s.acceleration}</b></span>
-                          </div>
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Мом: <b className="text-[#fff]">{s.torque}</b></span>
-                          </div>
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Упр: <b className="text-[#fff]">{s.handling}</b></span>
-                          </div>
-                          <div className="flex justify-between text-[8px] text-[#888]">
-                            <span>Внед: <b className="text-[#fff]">{s.offroad}</b></span>
+
+                        {/* Детали (только чтение) */}
+                        <div className="border-t-2 border-[#333] px-4 py-2">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <span className="text-[8px] text-[#555]">ДЕТАЛИ ({car.installedParts.length}/{partLimit}):</span>
+                            {car.installedParts.length > 0 ? (
+                              car.installedParts.map((part, pIdx) => (
+                                <div key={pIdx} className="flex items-center gap-1 bg-[#111] px-2 py-0.5 border border-[#333]" style={{ borderRadius: '2px' }}>
+                                  <span className="text-[8px] text-[#4488ff]">🔧 {part.name}</span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-[8px] text-[#444]">СТОК</span>
+                            )}
                           </div>
                         </div>
                       </div>
-
-                      <div className="mt-2 text-[8px] text-[#888] flex flex-wrap gap-2">
-                        <span className="text-[#ffdd00]">Шины: {effectiveTire}</span>
-                        {car.carClass && <span className="text-[#00ffcc]">Класс: {car.carClass}</span>}
-                        {car.rarity && <span className="text-[#aa44ff]">Редкость: {car.rarity}</span>}
-                      </div>
-
-                      {/* Метки */}
-                      {car.tags && car.tags.length > 0 && (
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {car.tags.map(tag => (
-                            <span key={tag} className="text-[7px] bg-[#222] text-[#aaa] px-1 border border-[#444]">
-                              {tag.toLowerCase()}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )}
-            </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
