@@ -98,7 +98,6 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   roomId, playerId, currentDay = 0, raceWeather,
   onBack, onRaceComplete,
 }) => {
-  const [selectedYear, setSelectedYear] = useState<number | null>(gameYear > 1958 ? gameYear : null);
   const [entries, setEntries] = useState<RaceEntry[]>([]);
   const [pickingRaceId, setPickingRaceId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -110,14 +109,6 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
 
   const specials = RACES_DATA.specials || [];
   const qualification = specials.find((s: any) => s.name === 'квалификация');
-  const availableRallies = specials.filter((s: any) =>
-    s.years && s.years.some((y: number) => y <= gameYear)
-  );
-  const championship = specials.find((s: any) => s.name === 'Гонка Чемпионов');
-  const championshipAvailable = championship?.years?.some((y: number) => y <= gameYear);
-  const semiFinal = specials.find((s: any) => s.name === 'полуФинал');
-  const final = specials.find((s: any) => s.name === 'Финал');
-  const selectedEpoch = availableEpochs.find((e: any) => e.year === selectedYear);
 
   // Загружаем заявки текущего дня
   const loadEntries = useCallback(async () => {
@@ -134,10 +125,29 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     fetchPlayers(roomId).then(setAllPlayers);
   }, [roomId]);
 
+  // Определяем предстоящую гонку
+  const cycleDay = currentDay <= 3 ? currentDay : ((currentDay - 4) % 7) + 4;
+  const epochData = availableEpochs.find((e: any) => e.year === gameYear);
+  
+  let targetRace: { title: string, titleColor: string, rounds: any[] } | null = null;
+  if (cycleDay <= 2) {
+    if (qualification) targetRace = { title: 'КВАЛИФИКАЦИЯ', titleColor: '#ffaa00', rounds: [{ round: 1, requirement: '', races: qualification.races }] };
+  } else if (cycleDay >= 4 && cycleDay <= 5) {
+    const round = epochData?.rounds.find((r: any) => r.round === 1);
+    if (round) targetRace = { title: `ГОРОДСКИЕ СОРЕВНОВАНИЯ`, titleColor: '#4488ff', rounds: [round] };
+  } else if (cycleDay >= 6 && cycleDay <= 7) {
+    const round = epochData?.rounds.find((r: any) => r.round === 2);
+    if (round) targetRace = { title: `НАЦИОНАЛЬНЫЕ СОРЕВНОВАНИЯ`, titleColor: '#ff44aa', rounds: [round] };
+  } else if (cycleDay >= 8 && cycleDay <= 9) {
+    const round = epochData?.rounds.find((r: any) => r.round === 3);
+    if (round) targetRace = { title: `МИРОВАЯ СЕРИЯ`, titleColor: '#ffdd00', rounds: [round] };
+  }
+
   // Получить имя игрока и название машины по entry
   const getEntryLabel = (entry: RaceEntry) => {
     const p = allPlayers.find(pl => pl.id === entry.player_id);
     const playerName = p?.username || 'Игрок';
+
     const car = p?.garage?.find((c: any) => c.id === entry.car_id);
     const carName = car?.name || 'Авто';
     return `${playerName} — ${carName}`;
@@ -303,151 +313,44 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     );
   };
 
-  if (!selectedYear) {
+  if (!targetRace) {
     return (
       <div className="p-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg retro-title">🏁 ГОНКИ</h2>
-            {raceWeather && (
-              <div className="text-[12px]" title={raceWeather.isRaining ? 'Ожидается дождь на одной из трасс' : 'Солнечная погода'}>
-                {raceWeather.isRaining ? '🌧️ ДОЖДЬ' : '☀️ ЯСНО'}
-              </div>
-            )}
-          </div>
+          <h2 className="text-lg retro-title text-[#aaa]">🏎 ГОНОЧНЫЙ ЦЕНТР</h2>
           <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
         </div>
-
-        {/* Квалификация — показываем только в первую субботу (день 2) */}
-        {qualification && currentDay <= 3 && (
-          <div className="mb-4">
-            <div className="text-[9px] text-[#ffaa00] mb-2">🏅 КВАЛИФИКАЦИЯ</div>
-            <div className="flex flex-col gap-2">
-              {qualification.races.map((race: any, ri: number) => (
-                <RaceCard key={ri} race={race} entryButton={<EntryButton race={race} />} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Эпохи */}
-        {epochRevealed ? (
-          <>
-            <div className="text-[9px] text-[#555] mb-2">ЭПОХИ:</div>
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4">
-              {availableEpochs.map((e: any) => (
-                <button key={e.year} onClick={() => setSelectedYear(e.year)}
-                  className="pixel-card p-2 text-center hover:border-[#00ff00] transition-colors cursor-pointer"
-                  style={{ borderColor: '#333' }}>
-                  <div className="text-[10px] text-white" style={{ fontFamily: "'Press Start 2P', monospace" }}>{e.year}</div>
-                  <div className="text-[7px] text-[#555]">{e.rounds.reduce((s: number, r: any) => s + r.races.length, 0)} гонок</div>
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="pixel-card p-4 mb-4 text-center border-[#333]">
-            <div className="text-[9px] text-[#555] mb-1">🔒 ЭПОХИ НЕ ИЗВЕСТНЫ</div>
-            <div className="text-[7px] text-[#444]">Расписание гонок будет раскрыто после закрытия автосалонов в вс 22:00</div>
-          </div>
-        )}
-
-        {/* Ралли */}
-        {availableRallies.length > 0 && (
-          <div className="mb-4">
-            <div className="text-[9px] text-[#44ff44] mb-1">🌍 РАЛЛИ</div>
-            <div className="text-[7px] text-[#ff4444] mb-2">⚠ только авто с меткой «автоспорт» · машина не участвует в обычных гонках всю неделю</div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {availableRallies.map((r: any, ri: number) => (
-                <button key={ri} onClick={() => setSelectedYear(-ri - 100)}
-                  className="pixel-card p-3 text-center hover:border-[#44ff44] transition-colors cursor-pointer"
-                  style={{ borderColor: '#44ff4466' }}>
-                  <div className="text-[9px] text-[#44ff44]">{r.name}</div>
-                  <div className="text-[7px] text-[#555]">{r.races.length} этапов</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Гонка Чемпионов */}
-        {championshipAvailable && (
-          <div className="mb-4">
-            <div className="text-[9px] text-[#ff8800] mb-1">🏆 ГОНКА ЧЕМПИОНОВ</div>
-            <div className="text-[7px] text-[#ff4444] mb-2">⚠ только авто с меткой «автоспорт» · машина не участвует в обычных гонках всю неделю</div>
-            <button onClick={() => setSelectedYear(-200)}
-              className="pixel-card p-3 text-center hover:border-[#ff8800] transition-colors cursor-pointer w-full"
-              style={{ borderColor: '#ff880066' }}>
-              <div className="text-[9px] text-[#ff8800]">Гонка Чемпионов</div>
-              <div className="text-[7px] text-[#555]">{championship.races.length} этапов</div>
-            </button>
-          </div>
-        )}
-
-        {/* полуФинал / Финал (только с 1972 года, когда заканчиваются основные эпохи) */}
-        {epochRevealed && gameYear >= 1972 && (
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            {semiFinal && (
-              <button onClick={() => setSelectedYear(-300)}
-                className="pixel-card p-3 text-center hover:border-[#aa44ff] transition-colors cursor-pointer"
-                style={{ borderColor: '#aa44ff66' }}>
-                <div className="text-[9px] text-[#aa44ff]">полуФинал</div>
-                <div className="text-[7px] text-[#555]">{semiFinal.races.length} гонок</div>
-              </button>
-            )}
-            {final && (
-              <button onClick={() => setSelectedYear(-400)}
-                className="pixel-card p-3 text-center hover:border-[#ff4444] transition-colors cursor-pointer"
-                style={{ borderColor: '#ff444466' }}>
-                <div className="text-[9px] text-[#ff4444]">ФИНАЛ</div>
-                <div className="text-[7px] text-[#555]">{final.races.length} гонок</div>
-              </button>
-            )}
-          </div>
-        )}
+        <div className="pixel-card p-4 text-center border-[#333]">
+          <div className="text-[9px] text-[#555] mb-1">🏁 НЕТ ДОСТУПНЫХ ГОНОК</div>
+          <div className="text-[7px] text-[#444]">Сегодня день закупки в Автосалонах. Гоночные расстановки недоступны.</div>
+        </div>
       </div>
     );
-  }
-
-  // Определяем что показывать
-  let title = '';
-  let titleColor = '#fff';
-  let rounds: any[] = [];
-
-  if (selectedYear > 0 && selectedEpoch) {
-    title = `${selectedEpoch.year}`;
-    rounds = selectedEpoch.rounds;
-  } else if (selectedYear <= -100 && selectedYear > -200) {
-    const idx = -(selectedYear + 100);
-    const rally = availableRallies[idx];
-    if (rally) { title = rally.name; titleColor = '#44ff44'; rounds = [{ round: 1, requirement: '', races: rally.races }]; }
-  } else if (selectedYear === -200 && championship) {
-    title = 'Гонка Чемпионов'; titleColor = '#ff8800';
-    rounds = [{ round: 1, requirement: '', races: championship.races }];
-  } else if (selectedYear === -300 && semiFinal) {
-    title = 'полуФинал'; titleColor = '#aa44ff';
-    rounds = [{ round: 1, requirement: semiFinal.requirement || '', races: semiFinal.races }];
-  } else if (selectedYear === -400 && final) {
-    title = 'ФИНАЛ'; titleColor = '#ff4444';
-    rounds = [{ round: 1, requirement: final.requirement || '', races: final.races }];
   }
 
   return (
     <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
-        <div>
-          <h2 className="text-lg retro-title" style={{ color: titleColor }}>🏁 {title}</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-lg retro-title" style={{ color: targetRace.titleColor }}>🏁 {targetRace.title}</h2>
+          {raceWeather && (
+            <div className="text-[12px]" title={raceWeather.isRaining ? 'Ожидается дождь на одной из трасс' : 'Солнечная погода'}>
+              {raceWeather.isRaining ? '🌧️ ДОЖДЬ' : '☀️ ЯСНО'}
+            </div>
+          )}
         </div>
-        <button onClick={() => setSelectedYear(null)} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← НАЗАД</button>
+        <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
       </div>
 
       <div className="flex flex-col gap-4 pb-20">
-        {rounds.map((round: any, ri: number) => (
+        {targetRace.rounds.map((round: any, ri: number) => (
           <div key={ri}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="text-[10px] text-[#ffaa00]">РАУНД {round.round}</div>
-              {round.requirement && <div className="text-[8px] text-[#ff4444] bg-[#330000] px-2 py-0.5 border border-[#ff4444]">{round.requirement}</div>}
-            </div>
+            {round.requirement && (
+              <div className="mb-2 bg-[#330000] p-2 border border-[#ff4444]">
+                <div className="text-[8px] text-[#ff4444] mb-1">ОБЩЕЕ ТРЕБОВАНИЕ РАУНДА:</div>
+                <div className="text-[10px] text-white font-bold">{round.requirement}</div>
+              </div>
+            )}
             <div className="flex flex-col gap-3">
               {round.races.map((race: any, rri: number) => (
                 <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} />} />

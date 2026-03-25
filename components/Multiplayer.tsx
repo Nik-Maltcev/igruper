@@ -138,7 +138,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
               }
             } else {
               const epochData = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
-              const roundNum = schedule.raceType === 'CITY' ? 2 : 3;
+              const roundNum = schedule.raceType === 'CITY' ? 1 : schedule.raceType === 'NATIONAL' ? 2 : 3;
               const roundData = epochData?.rounds.find((r: any) => r.round === roundNum);
               if (roundData) {
                 const raceIdx = roundData.races.findIndex((r: any) => r.name === raceId);
@@ -163,7 +163,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
             }
           } else {
             const epochData = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
-            const roundNum = schedule.raceType === 'CITY' ? 2 : 3;
+            const roundNum = schedule.raceType === 'CITY' ? 1 : schedule.raceType === 'NATIONAL' ? 2 : 3;
             const roundData = epochData?.rounds.find((r: any) => r.round === roundNum);
             if (roundData) {
               const trackDef = roundData.races.find((r: any) => r.name === raceId);
