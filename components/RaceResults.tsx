@@ -9,17 +9,29 @@ interface RaceResultsProps {
     onBack: () => void;
 }
 
+// Форматирование времени: ДРЭГ — секунды, остальные — минуты:секунды
+function formatTime(seconds: number, raceName: string): string {
+    const isDrag = raceName.toLowerCase().includes('дрэг');
+    if (isDrag) {
+        return `${seconds.toFixed(2)} сек`;
+    }
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    const ms = Math.round((seconds % 1) * 100);
+    if (mins > 0) {
+        return `${mins} мин ${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')} сек`;
+    }
+    return `${secs}.${ms.toString().padStart(2, '0')} сек`;
+}
+
+// Цвета машинок по позициям
+const CAR_COLORS = ['#ffdd00', '#aaaaaa', '#cd7f32', '#4488ff', '#44ff44', '#ff8800', '#aa44ff', '#ff4444'];
+
 export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsProps) {
     const [results, setResults] = useState<RaceDayResult[]>([]);
     const [loading, setLoading] = useState(true);
-
-    // Текущая гонка, которую смотрим (индекс в массиве results)
     const [currentIdx, setCurrentIdx] = useState(0);
-
-    // Состояние просмотра текущей гонки: 'GRID' (сетка машин) -> 'ANIMATION' (гонка) -> 'WINNERS' (результаты)
     const [viewStep, setViewStep] = useState<'GRID' | 'ANIMATION' | 'WINNERS'>('GRID');
-
-    // Для анимации
     const [animationProgress, setAnimationProgress] = useState(0);
 
     useEffect(() => {
@@ -34,7 +46,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
 
     useEffect(() => {
         if (viewStep === 'ANIMATION') {
-            const duration = 3000; // 3 секунды
+            const duration = 4000;
             const interval = 50;
             let elapsed = 0;
             const timer = setInterval(() => {
@@ -43,7 +55,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                 setAnimationProgress(p);
                 if (p >= 100) {
                     clearInterval(timer);
-                    setTimeout(() => setViewStep('WINNERS'), 500);
+                    setTimeout(() => setViewStep('WINNERS'), 600);
                 }
             }, interval);
             return () => clearInterval(timer);
@@ -67,6 +79,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
 
     const currentRace = results[currentIdx];
     const isLastRace = currentIdx === results.length - 1;
+    const isDrag = currentRace.race_name.toLowerCase().includes('дрэг');
 
     const handleNext = () => {
         if (viewStep === 'GRID') {
@@ -132,37 +145,56 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                 )}
 
                 {viewStep === 'ANIMATION' && (
-                    <div className="py-8">
-                        <h3 className="text-center text-sm mb-8 text-[#ff4444] animate-pulse">ГОНКА ИДЕТ...</h3>
-                        <div className="flex flex-col gap-4">
-                            {currentRace.results.map((r, i) => {
-                                // Для анимации рассчитываем "скорость" каждой машины так, чтобы победитель (с самым маленьким временем) приехал первым
-                                // Победитель имеет progressModifier = 1.0 (заканчивает гонку быстрее всего)
-                                // Остальные имеют меньший модификатор, чтобы отстать
-                                const minTime = Math.min(...currentRace.results.map(res => res.time));
-                                const progressModifier = minTime / r.time;
-                                const currentProgress = Math.min(100, animationProgress * progressModifier);
+                    <div className="py-6">
+                        <h3 className="text-center text-sm mb-6 text-[#ff4444] animate-pulse">ГОНКА ИДЕТ...</h3>
+                        
+                        {/* Дорога */}
+                        <div className="relative bg-[#1a1a1a] border-2 border-[#333] p-3" style={{ borderRadius: '4px' }}>
+                            {/* Линия финиша */}
+                            <div className="absolute right-[24px] top-0 bottom-0 w-[3px]" style={{
+                                background: 'repeating-linear-gradient(to bottom, #fff 0px, #fff 6px, #000 6px, #000 12px)',
+                                zIndex: 10
+                            }} />
+                            <div className="absolute right-[20px] top-[-2px] text-[7px] text-[#ffaa00]" style={{ zIndex: 11 }}>🏁</div>
 
-                                return (
-                                    <div key={r.carId} className="flex flex-col relative">
-                                        <div className="flex justify-between text-[8px] mb-1 text-[#aaa]">
-                                            <span>{r.carName}</span>
-                                        </div>
-                                        <div className="h-2 bg-[#222] relative border-y border-[#111]">
+                            <div className="flex flex-col gap-1">
+                                {currentRace.results.map((r, i) => {
+                                    const minTime = Math.min(...currentRace.results.map(res => res.time));
+                                    const progressModifier = minTime / r.time;
+                                    const currentProgress = Math.min(95, animationProgress * progressModifier * 0.95);
+                                    const color = CAR_COLORS[i % CAR_COLORS.length];
+
+                                    return (
+                                        <div key={r.carId} className="relative" style={{ height: '32px' }}>
+                                            {/* Полоса дороги */}
+                                            <div className="absolute inset-0 border-b border-dashed border-[#333]"
+                                                style={{ background: i % 2 === 0 ? '#0d0d0d' : '#141414' }} />
+                                            
+                                            {/* Имя слева */}
+                                            <div className="absolute left-1 top-1/2 -translate-y-1/2 text-[7px] z-[5]" style={{ color }}>
+                                                {r.carName.length > 15 ? r.carName.substring(0, 15) + '…' : r.carName}
+                                            </div>
+
+                                            {/* Машинка */}
                                             <div
-                                                className="h-full bg-[#ffaa00] absolute top-0 left-0 transition-all duration-75"
-                                                style={{ width: `${currentProgress}%` }}
-                                            />
-                                            <div
-                                                className="absolute top-1/2 -translate-y-1/2 text-[10px]"
-                                                style={{ left: `calc(${currentProgress}% - 8px)`, transition: 'left 75ms linear' }}
+                                                className="absolute top-1/2 -translate-y-1/2 text-[16px] z-[5]"
+                                                style={{
+                                                    left: `${currentProgress}%`,
+                                                    transition: 'left 75ms linear',
+                                                    filter: `drop-shadow(0 0 4px ${color})`,
+                                                }}
                                             >
                                                 🏎️
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Прогресс-бар внизу */}
+                        <div className="mt-3 h-1 bg-[#222] relative">
+                            <div className="h-full bg-[#ff4444] transition-all duration-75" style={{ width: `${animationProgress}%` }} />
                         </div>
                     </div>
                 )}
@@ -181,7 +213,8 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                     </div>
                                     <div className="text-right">
                                         <div className="text-[10px] text-[#ffaa00]">+${r.earnings.toLocaleString()}</div>
-                                        <div className="text-[8px] text-[#aaa]">Время: {r.time} сек</div>
+                                        {r.points > 0 && <div className="text-[8px] text-[#00ffaa]">+{r.points} очк.</div>}
+                                        <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
                                     </div>
                                 </div>
                             ))}
