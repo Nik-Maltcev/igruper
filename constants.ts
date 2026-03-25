@@ -82,6 +82,7 @@ export interface RewardsForPlayerCount {
   worldBonus: RewardEntry[];
   worldMain: RewardEntry[];
   tournament: RewardEntry[];
+  qualification?: RewardEntry[];
   worldSaturdayEntryFee?: number;
 }
 

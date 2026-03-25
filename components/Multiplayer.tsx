@@ -9,7 +9,7 @@ import {
   leaveRoom as apiLeaveRoom
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
-import { RACES_DATA } from '../constants';
+import { RACES_DATA, getRewards } from '../constants';
 import Chat from './Chat';
 
 interface MultiplayerProps {
@@ -185,13 +185,21 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
             }
           }
 
+          // Определяем таблицу наград для этого типа гонки
+          const rewards = getRewards(players.length);
+          let rewardTable = rewards.city; // дефолт
+          if (schedule.raceType === 'QUALIFICATION') rewardTable = rewards.qualification || rewards.city;
+          else if (schedule.raceType === 'CITY') rewardTable = rewards.city;
+          else if (schedule.raceType === 'NATIONAL') rewardTable = rewards.national;
+          else if (schedule.raceType === 'WORLD') rewardTable = rewards.worldMain;
+
           // Симулируем
           const results = simulateRace(raceCars, {
             id: raceId, name: raceId,
             image: '', description: '',
             weights: raceWeights,
             weatherModifier: 0.3, // Влияние погоды
-          }, raceWeatherStr, false);
+          }, raceWeatherStr, false, rewardTable);
 
           // Сохраняем результаты в БД для экрана результатов
           await saveRaceDayResults(room.id, room.current_day, raceId, raceId, results, raceWeatherStr);

@@ -4634,5 +4634,48 @@
         }
       ]
     }
+  ],
+  "specials": [
+    {
+      "name": "квалификация",
+      "races": [
+        {
+          "name": "Сельская дорога (квал.)",
+          "weights": {
+            "power": 2,
+            "torque": 1,
+            "topSpeed": 1,
+            "acceleration": 5,
+            "handling": 3,
+            "offroad": 2
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Трасса (квал.)",
+          "weights": {
+            "power": 5,
+            "torque": 2,
+            "topSpeed": 3,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Дрэг (квал.)",
+          "weights": {
+            "power": 1,
+            "torque": 3,
+            "topSpeed": 4,
+            "acceleration": 8,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    }
   ]
 }

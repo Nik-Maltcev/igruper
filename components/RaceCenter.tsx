@@ -292,10 +292,10 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
           <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
         </div>
 
-        {/* Квалификация */}
-        {qualification && gameYear === 1958 && (
+        {/* Квалификация — показываем только в первую субботу (день 2) */}
+        {qualification && currentDay <= 3 && (
           <div className="mb-4">
-            <div className="text-[9px] text-[#ffaa00] mb-2">🏅 КВАЛИФИКАЦИЯ (1958)</div>
+            <div className="text-[9px] text-[#ffaa00] mb-2">🏅 КВАЛИФИКАЦИЯ</div>
             <div className="flex flex-col gap-2">
               {qualification.races.map((race: any, ri: number) => (
                 <RaceCard key={ri} race={race} entryButton={<EntryButton race={race} />} />
