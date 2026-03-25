@@ -100,19 +100,25 @@ export const simulateRace = (
   results.sort((a, b) => a.time - b.time);
 
   return results.map((r, index) => {
-    const position = index + 1;
+    // Ничья: если время совпадает с предыдущим, берём его позицию
+    let position = index + 1;
+    if (index > 0 && r.time === results[index - 1].time) {
+      // Ищем первого в группе с таким же временем
+      let groupStart = index - 1;
+      while (groupStart > 0 && results[groupStart - 1].time === r.time) groupStart--;
+      position = groupStart + 1;
+    }
+
     let earnings = 0;
     let points = 0;
 
     if (rewardTable) {
-      // Используем таблицу наград из nagrady.csv
       const reward = rewardTable.find(rw => rw.place === position);
       if (reward) {
         earnings = reward.money;
         points = reward.points;
       }
     } else {
-      // Fallback — старая система
       if (position === 1) { earnings = 5000; points = 25; }
       else if (position === 2) { earnings = 2500; points = 18; }
       else if (position === 3) { earnings = 1000; points = 15; }
