@@ -114,6 +114,8 @@ export interface Room {
   created_at: string;
   max_players: number;
   race_weather?: RaceWeather | null;
+  leader_id?: string | null;
+  leader_streak?: number;
 }
 
 export interface RoomPlayer {

@@ -224,6 +224,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
     const schedule = getScheduleDay(nextDay);
     let nextPhase: RoomPhase = 'TUNING';
     let nextYear = room.current_year;
+    let newLeaderId = room.leader_id || null;
+    let newLeaderStreak = room.leader_streak || 0;
 
     // Генерируем погоду если следующий день — RACE
     let nextWeather = null;
@@ -241,6 +243,52 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
       if (nextDay > 3 && schedule.dayNum === 10) {
         // Упрощенный инкремент года
         nextYear += 2;
+
+        // --- Система поддержки отстающих (Catch-up) ---
+        const sortedPlayers = [...players].sort((a, b) => b.points - a.points);
+        if (sortedPlayers.length > 0) {
+          const leader = sortedPlayers[0];
+          const lastPlayer = sortedPlayers[sortedPlayers.length - 1];
+          const secondToLast = sortedPlayers.length >= 2 ? sortedPlayers[sortedPlayers.length - 2] : null;
+
+          // Обновляем статистику лидерства
+          if (room.leader_id === leader.id) {
+            newLeaderStreak += 1;
+          } else {
+            newLeaderId = leader.id;
+            newLeaderStreak = 1;
+          }
+
+          let lastBonus = 7000;
+          let secondToLastBonus = 0;
+          let leaderPenalty = 0;
+
+          // Если лидер удерживает место >= 2 этапов подряд, он платит налог
+          if (newLeaderStreak >= 2 && sortedPlayers.length >= 2) {
+            leaderPenalty = 6500;
+            lastBonus += 4000;
+            if (secondToLast && secondToLast.id !== lastPlayer.id) {
+              secondToLastBonus += 2500;
+            }
+          }
+
+          if (lastBonus > 0 || secondToLastBonus > 0 || leaderPenalty > 0) {
+            await sendSystemMessage(room.id, `🤝 Конец этапа: Система поддержки отстающих активирована.`);
+            
+            if (lastBonus > 0) {
+              await updatePlayerState(lastPlayer.id, { money: lastPlayer.money + lastBonus });
+              await sendSystemMessage(room.id, `💰 ${lastPlayer.username} получает +$${lastBonus.toLocaleString()} (Поддержка).`);
+            }
+            if (secondToLastBonus > 0 && secondToLast) {
+              await updatePlayerState(secondToLast.id, { money: secondToLast.money + secondToLastBonus });
+              await sendSystemMessage(room.id, `💰 ${secondToLast.username} получает +$${secondToLastBonus.toLocaleString()} (Фонд лидера).`);
+            }
+            if (leaderPenalty > 0) {
+              await updatePlayerState(leader.id, { money: leader.money - leaderPenalty });
+              await sendSystemMessage(room.id, `👑 ${leader.username} удерживает лидерство >= 2 этапов и отчисляет в фонд: -$${leaderPenalty.toLocaleString()}`);
+            }
+          }
+        }
       }
     }
 
@@ -253,6 +301,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
       current_day: nextDay,
       current_year: nextYear,
       race_weather: nextWeather,
+      leader_id: newLeaderId,
+      leader_streak: newLeaderStreak,
     } as any);
 
     const label = schedule.label;
