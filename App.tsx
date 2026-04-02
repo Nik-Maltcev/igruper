@@ -295,6 +295,7 @@ const App = () => {
             playerId={playerId}
             currentDay={room?.current_day}
             raceWeather={room?.race_weather}
+            tournamentState={room?.tournament_state}
             onBack={() => navigate('MULTIPLAYER')}
             onRaceComplete={handleRaceComplete}
           />

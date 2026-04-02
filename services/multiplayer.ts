@@ -214,6 +214,42 @@ export async function buyCar(player: RoomPlayer, car: Car, roomId: string): Prom
   return {};
 }
 
+// --- Турниры ---
+export async function joinTournament(player: RoomPlayer, carId: string, room: Room): Promise<{ error?: string }> {
+  const carIndex = player.garage.findIndex(c => c.id === carId);
+  if (carIndex === -1) return { error: 'Машина не найдена' };
+
+  const car = player.garage[carIndex];
+  if (!car.tags?.includes('АВТОСПОРТ')) return { error: 'Для турнира нужна машина с меткой АВТОСПОРТ' };
+  if (car.lockedForTournament) return { error: 'Машина уже отправлена на турнир' };
+
+  // 1. Блокируем машину в гараже
+  const newGarage = [...player.garage];
+  newGarage[carIndex] = { ...car, lockedForTournament: true };
+  await updatePlayerState(player.id, { garage: newGarage });
+
+  // 2. Добавляем в стейт комнаты
+  const currentState = room.tournament_state || {
+    tournamentName: 'Неизвестный Турнир',
+    entries: [],
+    completedSections: 0
+  };
+
+  const newEntries = [...currentState.entries];
+  const existingIdx = newEntries.findIndex(e => e.playerId === player.id);
+  if (existingIdx >= 0) {
+    newEntries[existingIdx] = { playerId: player.id, carId, sectionTimes: [], totalTime: 0 };
+  } else {
+    newEntries.push({ playerId: player.id, carId, sectionTimes: [], totalTime: 0 });
+  }
+
+  const newState = { ...currentState, entries: newEntries };
+  // Используем raw supabase update, потому что updateRoomPhase только для простых полей
+  await updateRoomState(room.id, { tournament_state: newState });
+
+  return {};
+}
+
 // --- Снять деталь с машины (удалить) ---
 export async function removePart(player: RoomPlayer, carId: string, partIndex: number): Promise<void> {
   const garage = [...player.garage];
@@ -274,6 +310,11 @@ export async function fetchPlayer(playerId: string): Promise<RoomPlayer | null> 
     .eq('id', playerId)
     .single();
   return data as RoomPlayer | null;
+}
+
+// --- Обновление полей комнаты (без сброса таймера) ---
+export async function updateRoomState(roomId: string, updates: Partial<Room>) {
+  await supabase.from('rooms').update(updates).eq('id', roomId);
 }
 
 // --- Смена фазы ---

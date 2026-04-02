@@ -93,3 +93,79 @@ export function getRewards(playerCount: number): RewardsForPlayerCount {
   const clamped = Math.max(3, Math.min(8, playerCount));
   return REWARDS_DATA[String(clamped)] || REWARDS_DATA['3'];
 }
+
+export interface TournamentTrack {
+  name: string;
+  weights: {
+    power: number;
+    torque: number;
+    topSpeed: number;
+    acceleration: number;
+    handling: number;
+    offroad: number;
+  };
+  weatherModifier: number;
+}
+
+export interface TournamentDef {
+  name: string;
+  years: number[];
+  sections: TournamentTrack[];
+}
+
+function tTrack(name: string, p: number, t: number, s: number, a: number, h: number, o: number): TournamentTrack {
+  const sum = p + t + s + a + h + o;
+  return {
+    name,
+    weights: { power: p/sum, torque: t/sum, topSpeed: s/sum, acceleration: a/sum, handling: h/sum, offroad: o/sum },
+    weatherModifier: 0.5 // среднее влияние погоды
+  };
+}
+
+export const TOURNAMENTS_DATA: TournamentDef[] = [
+  {
+    name: "Ралли Мексики",
+    years: [1964, 1996],
+    sections: [
+      tTrack("Песок", 1, 4, 0, 1, 3, 6),
+      tTrack("Сельская дорога", 2, 2, 2, 4, 3, 2),
+      tTrack("Асфальт", 3, 2, 4, 4, 2, 0)
+    ]
+  },
+  {
+    name: "Ралли Сибири",
+    years: [1972, 2004],
+    sections: [
+      tTrack("Асфальт", 2, 2, 3, 4, 4, 0),
+      tTrack("Грунтовка", 2, 2, 1, 3, 3, 4),
+      tTrack("Снег", 0, 4, 0, 0, 3, 8)
+    ]
+  },
+  {
+    name: "Ралли Финляндии",
+    years: [1980, 2012],
+    sections: [
+      tTrack("Снег", 0, 4, 0, 0, 3, 8),
+      tTrack("Асфальт", 3, 2, 4, 4, 2, 0),
+      tTrack("Снег", 1, 3, 0, 2, 3, 6)
+    ]
+  },
+  {
+    name: "Ралли Франции",
+    years: [1988, 2020],
+    sections: [
+      tTrack("Асфальт", 2, 2, 2, 4, 4, 1),
+      tTrack("Грунтовка", 2, 3, 1, 3, 3, 3),
+      tTrack("Сельская дорога", 3, 2, 2, 3, 3, 2)
+    ]
+  },
+  {
+    name: "Гонка Чемпионов",
+    years: [1968, 1976, 1984, 1992, 2000, 2008, 2016],
+    sections: [
+      tTrack("Взлётная полоса", 3, 2, 6, 4, 0, 0),
+      tTrack("Pikes Peak", 2, 3, 1, 3, 5, 1),
+      tTrack("Нюрбургринг", 3, 2, 4, 3, 3, 0)
+    ]
+  }
+];

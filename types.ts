@@ -28,6 +28,7 @@ export interface Car {
   roadType?: string;    // Тип дороги: У, Г, В, С
   carClass?: string;    // Класс: A, B, C, D, E, S
   rarity?: number;      // Редкость: 1-5
+  lockedForTournament?: boolean; // Заблокирована ли машина на турнире
 }
 
 export interface PartBoosts {
@@ -116,6 +117,21 @@ export interface Room {
   race_weather?: RaceWeather | null;
   leader_id?: string | null;
   leader_streak?: number;
+  tournament_state?: TournamentState | null; // Состояние текущего турнира
+}
+
+// Запись о прохождении турнира одним участником
+export interface TournamentEntry {
+  playerId: string;
+  carId: string;
+  sectionTimes: number[]; // время по участкам (0 - Вт, 1 - Чт, 2 - Сб)
+  totalTime: number; // сумма времен
+}
+
+export interface TournamentState {
+  tournamentName: string; // название турнира (напр. "Гонка Чемпионов")
+  entries: TournamentEntry[];
+  completedSections: number; // 0..3 (сколько участков проехали)
 }
 
 export interface RoomPlayer {

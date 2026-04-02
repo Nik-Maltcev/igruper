@@ -3,13 +3,13 @@ import { supabase, isSupabaseConfigured } from '../services/supabase';
 import { Car, Room, RoomPlayer, RoomPhase, View } from '../types';
 import {
   createRoom, joinRoom, fetchPlayers, startGame,
-  updateRoomPhase, sendSystemMessage,
+  updateRoomPhase, updateRoomState, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
   fetchRaceEntries, updatePlayerState, saveRaceDayResults,
   leaveRoom as apiLeaveRoom
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
-import { RACES_DATA, getRewards } from '../constants';
+import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
 import Chat from './Chat';
 
 interface MultiplayerProps {
@@ -98,6 +98,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
   const advanceDay = useCallback(async () => {
     if (!room) return;
 
+    try {
     // --- Если сейчас фаза RACE_SETUP — запускаем гонки и раздаём призы ---
     if (room.phase === 'RACE_SETUP') {
       const entries = await fetchRaceEntries(room.id, room.current_day);
@@ -208,6 +209,96 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
         await sendSystemMessage(room.id, '⚠ Никто не записался на гонки в этот день.');
       }
 
+      // === ТУРНИРЫ ===
+      if (room.tournament_state && room.tournament_state.entries.length > 0) {
+        let sectionIdx = -1;
+        if (room.current_day === 2) sectionIdx = 0;
+        else if (room.current_day === 4) sectionIdx = 1;
+        else if (room.current_day === 6) sectionIdx = 2;
+
+        if (sectionIdx !== -1) {
+          const tournamentData = TOURNAMENTS_DATA.find(t => t.name === room.tournament_state!.tournamentName);
+          if (tournamentData && sectionIdx < tournamentData.sections.length) {
+            const section = tournamentData.sections[sectionIdx];
+
+            const tCars: Car[] = [];
+            for (const entry of room.tournament_state.entries) {
+              const player = players.find(p => p.id === entry.playerId);
+              if (player) {
+                const car = player.garage.find(c => c.id === entry.carId);
+                if (car) tCars.push(car);
+              }
+            }
+
+            if (tCars.length > 0) {
+              const tResults = simulateRace(tCars, {
+                id: `tourn-${sectionIdx}`, name: section.name,
+                image: '', description: '', weights: section.weights, weatherModifier: section.weatherModifier
+              }, 'SUNNY', false);
+
+              const newEntries = room.tournament_state.entries.map(entry => {
+                const res = tResults.find(r => r.carId === entry.carId);
+                if (res) {
+                  const newTimes = [...entry.sectionTimes];
+                  newTimes[sectionIdx] = res.time;
+                  const newTotal = newTimes.reduce((acc, val) => acc + val, 0);
+                  return { ...entry, sectionTimes: newTimes, totalTime: newTotal };
+                }
+                return entry;
+              });
+
+              const updatedTournamentState = {
+                ...room.tournament_state,
+                entries: newEntries,
+                completedSections: sectionIdx + 1,
+              };
+              await updateRoomState(room.id, { tournament_state: updatedTournamentState });
+              
+              const sectName = sectionIdx === 0 ? 'ПЕРВЫЙ УЧАСТОК' : sectionIdx === 1 ? 'ВТОРОЙ УЧАСТОК' : 'ФИНАЛЬНЫЙ УЧАСТОК';
+              await sendSystemMessage(room.id, `🏆 Турнир [${room.tournament_state.tournamentName}]: Завершён ${sectName}!`);
+
+              if (sectionIdx === 2) {
+                const sortedEntries = [...newEntries].sort((a,b) => a.totalTime - b.totalTime);
+                const rewards = getRewards(players.length).tournament;
+                if (rewards && rewards.length > 0) {
+                  for (let i = 0; i < sortedEntries.length; i++) {
+                    const place = i + 1;
+                    const rwd = rewards.find(r => r.place === place) || { money: 0, points: 0, prizes: 0 };
+                    if (rwd.money > 0 || rwd.points > 0) {
+                       const pId = sortedEntries[i].playerId;
+                       const p = players.find(pl => pl.id === pId);
+                       if (p) {
+                         await updatePlayerState(p.id, {
+                           money: p.money + rwd.money,
+                           points: p.points + rwd.points
+                         });
+                         await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${place} место! +$${rwd.money} +${rwd.points}оч.`);
+                       }
+                    }
+                  }
+                }
+                
+                // Разблокируем машины
+                for (const player of players) {
+                  let changed = false;
+                  const newGarage = player.garage.map(c => {
+                    if (c.lockedForTournament) {
+                      changed = true;
+                      return { ...c, lockedForTournament: false };
+                    }
+                    return c;
+                  });
+                  if (changed) {
+                    await updatePlayerState(player.id, { garage: newGarage });
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      // === КОНЕЦ ТУРНИРОВ ===
+
       // Переходим в фазу показа результатов
       await updateRoomPhase(room.id, 'RESULTS');
       await sendSystemMessage(room.id, `🏁 Гоночный день завершен. Смотрите результаты!`);
@@ -289,6 +380,21 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
             }
           }
         }
+
+        // --- Установка турнира на новый год ---
+        const nextTourn = TOURNAMENTS_DATA.find(t => t.years.includes(nextYear));
+        if (nextTourn) {
+           await updateRoomState(room.id, {
+             tournament_state: {
+               tournamentName: nextTourn.name,
+               entries: [],
+               completedSections: 0
+             }
+           });
+           await sendSystemMessage(room.id, `🏆 ВНИМАНИЕ: В этом году (${nextYear}) проходит турнир "${nextTourn.name}"! Готовьте машины!`);
+        } else {
+           await updateRoomState(room.id, { tournament_state: null });
+        }
       }
     }
 
@@ -307,6 +413,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
     const label = schedule.label;
     await sendSystemMessage(room.id, `⏩ Переход к дню ${nextDay}: ${label}`);
+    } catch (err) {
+      console.error('advanceDay error:', err);
+      await sendSystemMessage(room.id, `❌ Ошибка при переключении дня: ${err instanceof Error ? err.message : String(err)}`).catch(() => {});
+    }
   }, [room, players, playerId]);
 
   // Auto phase change at 22:00 (host only)
