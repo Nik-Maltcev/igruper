@@ -9,9 +9,13 @@ export async function signUp(email: string, password: string, username: string):
     options: { data: { username } },
   });
   if (error) return { error: error.message };
-  // Если Supabase требует подтверждение email — user будет, но session нет
+  // Если нет сессии после регистрации — возможно требуется подтверждение email
   if (data.user && !data.session) {
-    return { error: 'Проверьте почту — нужно подтвердить email (или отключите Confirm email в Supabase Dashboard → Auth → Settings)' };
+    // Пробуем сразу залогиниться
+    const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInErr) {
+      return { error: 'Регистрация прошла, но нужно подтвердить email. Проверьте почту.' };
+    }
   }
   return {};
 }
@@ -35,23 +39,27 @@ export function getUserName(user: User): string {
 
 // Найти активную игровую сессию для auth user
 export async function findActiveSession(authUid: string): Promise<{ playerId: string; roomId: string } | null> {
-  const { data } = await supabase
-    .from('room_players')
-    .select('id, room_id')
-    .eq('auth_uid', authUid)
-    .limit(1)
-    .single();
+  try {
+    const { data } = await supabase
+      .from('room_players')
+      .select('id, room_id')
+      .eq('auth_uid', authUid)
+      .limit(1)
+      .maybeSingle();
 
-  if (!data) return null;
+    if (!data) return null;
 
-  // Проверяем что комната ещё существует
-  const { data: room } = await supabase
-    .from('rooms')
-    .select('id, status')
-    .eq('id', data.room_id)
-    .single();
+    // Проверяем что комната ещё существует
+    const { data: room } = await supabase
+      .from('rooms')
+      .select('id, status')
+      .eq('id', data.room_id)
+      .maybeSingle();
 
-  if (!room) return null;
+    if (!room) return null;
 
-  return { playerId: data.id, roomId: data.room_id };
+    return { playerId: data.id, roomId: data.room_id };
+  } catch {
+    return null;
+  }
 }

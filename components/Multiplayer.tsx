@@ -48,6 +48,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
   const [copied, setCopied] = useState(false);
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [timeLeft, setTimeLeft] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
 
   // Sync step with room status and auth
   useEffect(() => {
@@ -466,13 +467,22 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     setError(null);
     if (!email.trim()) { setError('ВВЕДИТЕ EMAIL'); return; }
     if (!password || password.length < 6) { setError('ПАРОЛЬ МИНИМУМ 6 СИМВОЛОВ'); return; }
-    if (isRegister) {
-      if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); return; }
-      const result = await signUp(email.trim(), password, username.trim());
-      if (result.error) { setError(result.error); return; }
-    } else {
-      const result = await signIn(email.trim(), password);
-      if (result.error) { setError(result.error); return; }
+    setAuthLoading(true);
+    try {
+      if (isRegister) {
+        if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); setAuthLoading(false); return; }
+        const result = await signUp(email.trim(), password, username.trim());
+        if (result.error) { setError(result.error); setAuthLoading(false); return; }
+      } else {
+        const result = await signIn(email.trim(), password);
+        if (result.error) { setError(result.error); setAuthLoading(false); return; }
+      }
+      // signIn/signUp успешны — onAuthStateChange в App подхватит и обновит authUser
+      // useEffect с [authUser] переключит step на LOBBY_SELECT
+    } catch (e: any) {
+      setError(e.message || 'Неизвестная ошибка');
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -554,8 +564,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               />
             )}
             <div className="flex gap-2">
-              <button className="retro-btn" onClick={handleAuth}>
-                {isRegister ? 'ЗАРЕГИСТРИРОВАТЬСЯ' : 'ВОЙТИ'}
+              <button className="retro-btn" onClick={handleAuth} disabled={authLoading}>
+                {authLoading ? 'ЗАГРУЗКА...' : isRegister ? 'ЗАРЕГИСТРИРОВАТЬСЯ' : 'ВОЙТИ'}
               </button>
             </div>
             <button className="text-[#888] underline" onClick={() => { setIsRegister(!isRegister); setError(null); }}>

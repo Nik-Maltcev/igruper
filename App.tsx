@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { View, Room, RoomPlayer, Car, Part, RaceResult } from './types';
 import { EPOCHS } from './constants';
 import { supabase } from './services/supabase';
@@ -18,7 +18,7 @@ import RaceResults from './components/RaceResults';
 import Players from './components/Players';
 
 const App = () => {
-  // Мультиплеер — основной режим
+  // РњСѓР»СЊС‚РёРїР»РµРµСЂ вЂ” РѕСЃРЅРѕРІРЅРѕР№ СЂРµР¶РёРј
   const [room, setRoom] = useState<Room | null>(null);
   const [playerId, setPlayerId] = useState<string>(() => localStorage.getItem('mp_player_id') || '');
   const [player, setPlayer] = useState<RoomPlayer | null>(null);
@@ -26,12 +26,12 @@ const App = () => {
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
   const [isLoadingSession, setIsLoadingSession] = useState(true);
 
-  // Task 18: При загрузке страницы восстанавливаем сессию из localStorage
+  // Task 18: РџСЂРё Р·Р°РіСЂСѓР·РєРµ СЃС‚СЂР°РЅРёС†С‹ РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРµСЃСЃРёСЋ РёР· localStorage
   useEffect(() => {
     const savedPlayerId = localStorage.getItem('mp_player_id');
     const savedRoomId = localStorage.getItem('mp_room_id');
     if (savedPlayerId && savedRoomId && !room) {
-      // Пробуем восстановить игрока и комнату
+      // РџСЂРѕР±СѓРµРј РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РёРіСЂРѕРєР° Рё РєРѕРјРЅР°С‚Сѓ
       supabase.from('room_players').select('*').eq('id', savedPlayerId).single().then(({ data: pData }) => {
         if (!pData) {
           localStorage.removeItem('mp_player_id');
@@ -57,21 +57,21 @@ const App = () => {
     }
   }, []);
 
-  // Загрузка данных игрока при наличии playerId
+  // Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёРіСЂРѕРєР° РїСЂРё РЅР°Р»РёС‡РёРё playerId
   const refreshPlayer = useCallback(async () => {
     if (!playerId) return;
     const p = await fetchPlayer(playerId);
     if (p) setPlayer(p);
   }, [playerId]);
 
-  // Загрузка комнаты при наличии room
+  // Р—Р°РіСЂСѓР·РєР° РєРѕРјРЅР°С‚С‹ РїСЂРё РЅР°Р»РёС‡РёРё room
   const refreshRoom = useCallback(async () => {
     if (!room) return;
     const { data } = await supabase.from('rooms').select('*').eq('id', room.id).single();
     if (data) setRoom(data as Room);
   }, [room?.id]);
 
-  // Realtime подписка на данные игрока
+  // Realtime РїРѕРґРїРёСЃРєР° РЅР° РґР°РЅРЅС‹Рµ РёРіСЂРѕРєР°
   useEffect(() => {
     if (!playerId) return;
     refreshPlayer();
@@ -85,7 +85,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [playerId]);
 
-  // Realtime подписка на комнату
+  // Realtime РїРѕРґРїРёСЃРєР° РЅР° РєРѕРјРЅР°С‚Сѓ
   useEffect(() => {
     if (!room) return;
     const channel = supabase
@@ -98,7 +98,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [room?.id]);
 
-  // Загрузка purchase counts при входе в комнату
+  // Р—Р°РіСЂСѓР·РєР° purchase counts РїСЂРё РІС…РѕРґРµ РІ РєРѕРјРЅР°С‚Сѓ
   useEffect(() => {
     if (!room) return;
     fetchPurchaseCounts(room.id).then(setPurchaseCounts);
@@ -112,7 +112,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [room?.id]);
 
-  // Обработчики
+  // РћР±СЂР°Р±РѕС‚С‡РёРєРё
   const handleRoomJoined = (r: Room, pid: string) => {
     setRoom(r);
     setPlayerId(pid);
@@ -136,7 +136,7 @@ const App = () => {
     const result = await buyCar(player, car, room.id);
     if (result.error) { alert(result.error); return; }
     await refreshPlayer();
-    alert(`Вы купили ${car.name}!`);
+    alert(`Р’С‹ РєСѓРїРёР»Рё ${car.name}!`);
   };
 
   const handleBuyPart = async (carId: string, part: Part) => {
@@ -165,7 +165,7 @@ const App = () => {
   };
 
   const handleRaceComplete = async (results: RaceResult[]) => {
-    // TODO: записать результаты в Supabase
+    // TODO: Р·Р°РїРёСЃР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ Supabase
     const totalEarnings = results.filter(r => !r.carId.startsWith('bot')).reduce((sum, r) => sum + r.earnings, 0);
     if (player && totalEarnings > 0) {
       await supabase.from('room_players').update({ money: player.money + totalEarnings }).eq('id', playerId);
@@ -173,23 +173,23 @@ const App = () => {
     }
   };
 
-  // Джамшут: снять деталь безвозвратно + записать визит
+  // Р”Р¶Р°РјС€СѓС‚: СЃРЅСЏС‚СЊ РґРµС‚Р°Р»СЊ Р±РµР·РІРѕР·РІСЂР°С‚РЅРѕ + Р·Р°РїРёСЃР°С‚СЊ РІРёР·РёС‚
   const handleJamshutRemove = async (carId: string, partIndex: number) => {
     if (!player) return;
-    // Удаляем деталь из гаража
+    // РЈРґР°Р»СЏРµРј РґРµС‚Р°Р»СЊ РёР· РіР°СЂР°Р¶Р°
     const garage = [...player.garage];
     const carIdx = garage.findIndex(c => c.id === carId);
     if (carIdx === -1) return;
     const car = { ...garage[carIdx] };
     car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex);
     garage[carIdx] = car;
-    // Записываем визит к Джамшуту
-    const shopVisits = { ...player.shop_visits, [carId]: 'Джамшут' };
+    // Р—Р°РїРёСЃС‹РІР°РµРј РІРёР·РёС‚ Рє Р”Р¶Р°РјС€СѓС‚Сѓ
+    const shopVisits = { ...player.shop_visits, [carId]: 'Р”Р¶Р°РјС€СѓС‚' };
     await supabase.from('room_players').update({ garage, shop_visits: shopVisits }).eq('id', playerId);
     await refreshPlayer();
   };
 
-  // Task 11: Продажа автомобиля в банк
+  // Task 11: РџСЂРѕРґР°Р¶Р° Р°РІС‚РѕРјРѕР±РёР»СЏ РІ Р±Р°РЅРє
   const handleSellCar = async (carId: string, price: number) => {
     if (!player) return;
     const newGarage = player.garage.filter((c: Car) => c.id !== carId);
@@ -199,7 +199,7 @@ const App = () => {
   };
 
   const gameYear = room?.current_year || 1960;
-  // Номер этапа — каждые 10 дней это 1 этап (примерно)
+  // РќРѕРјРµСЂ СЌС‚Р°РїР° вЂ” РєР°Р¶РґС‹Рµ 10 РґРЅРµР№ СЌС‚Рѕ 1 СЌС‚Р°Рї (РїСЂРёРјРµСЂРЅРѕ)
   const gameStage = Math.floor((room?.current_day || 0) / 10);
   const cars = player?.garage || [];
   const storage = player?.storage || [];
@@ -209,27 +209,27 @@ const App = () => {
   if (isLoadingSession) {
     return (
       <div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]">
-        <div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div>
+        <div className="text-xl animate-pulse">Р’РћРЎРЎРўРђРќРћР’Р›Р•РќРР• РЎР’РЇР—Р...</div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
-      {/* Верхняя панель — только в игре */}
+      {/* Р’РµСЂС…РЅСЏСЏ РїР°РЅРµР»СЊ вЂ” С‚РѕР»СЊРєРѕ РІ РёРіСЂРµ */}
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
-            <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
-            <span className="text-[#00ff00]">💰 ${money.toLocaleString()}</span>
-            <span className="text-[#ffaa00]">🏆 {player?.points || 0} очков</span>
-            <span className="text-[#888]">🚗 {cars.length} авто</span>
-            <span className="text-[#888]">📦 {storage.length} на складе</span>
+            <span className="text-[#00aaff]">Р­РџРћРҐРђ: {gameYear}</span>
+            <span className="text-[#00ff00]">рџ’° ${money.toLocaleString()}</span>
+            <span className="text-[#ffaa00]">рџЏ† {player?.points || 0} РѕС‡РєРѕРІ</span>
+            <span className="text-[#888]">рџљ— {cars.length} Р°РІС‚Рѕ</span>
+            <span className="text-[#888]">рџ“¦ {storage.length} РЅР° СЃРєР»Р°РґРµ</span>
           </div>
           <button onClick={() => navigate('MULTIPLAYER')}
             className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
             style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>
-            ← КОМНАТА
+            в†ђ РљРћРњРќРђРўРђ
           </button>
         </div>
       )}
