@@ -54,7 +54,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
   useEffect(() => {
     if (room?.status === 'PLAYING') setStep('GAME');
     else if (room?.status === 'WAITING') setStep('ROOM');
-    else if (authUser && !room) setStep('LOBBY_SELECT');
+    else if (authUser && !room) { setStep('LOBBY_SELECT'); setError(`AUTH OK: ${authUser.email}`); }
     else if (!authUser) setStep('AUTH');
   }, [room?.status, authUser]);
 
@@ -473,12 +473,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); setAuthLoading(false); return; }
         const result = await signUp(email.trim(), password, username.trim());
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
+        setError('Регистрация ОК. Ждём authUser...');
       } else {
         const result = await signIn(email.trim(), password);
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
+        setError('Вход ОК. Ждём authUser...');
       }
-      // signIn/signUp успешны — onAuthStateChange в App подхватит и обновит authUser
-      // useEffect с [authUser] переключит step на LOBBY_SELECT
     } catch (e: any) {
       setError(e.message || 'Неизвестная ошибка');
     } finally {
