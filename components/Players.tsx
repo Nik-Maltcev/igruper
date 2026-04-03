@@ -85,6 +85,7 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                             <div className="text-[10px] text-white leading-tight mb-1" style={{ textShadow: '1px 1px 0 #000' }}>{car.name}</div>
                             <div className="text-[7px] text-white leading-relaxed">
                               {car.carClass && <div>класс: {car.carClass}</div>}
+                              {car.epoch && <div style={{color: '#00aaff'}}>эпоха: {car.epoch}</div>}
                               {car.tags?.[0] && <div>{car.tags[0]}</div>}
                               {car.tags?.[1] && <div>{car.tags[1]}</div>}
                               {car.rarity && <div>редкость: {car.rarity}</div>}
