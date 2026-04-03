@@ -105,7 +105,8 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
   };
 
   const availableCars = useMemo(() => {
-    return AVAILABLE_CARS.filter((car: any) => car.year && car.year <= gameYear);
+    // Показываем только машины текущей эпохи (gameYear и gameYear-1)
+    return AVAILABLE_CARS.filter((car: any) => car.year && car.year >= gameYear - 1 && car.year <= gameYear);
   }, [gameYear]);
 
   const dealerCars = useMemo(() => {
