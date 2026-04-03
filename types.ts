@@ -82,6 +82,7 @@ export interface RaceResult {
   time: number;
   earnings: number;
   points: number;
+  playerName?: string;
 }
 
 export interface PlayerState {

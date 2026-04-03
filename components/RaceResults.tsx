@@ -125,7 +125,11 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                     {currentRace.results.map((r, i) => (
                                         <tr key={r.carId} className="border-b border-[#222]">
                                             <td className="p-2 text-[#fff]">#{i + 1}</td>
-                                            <td className="p-2 font-bold text-[#aaa]">{r.carName}</td>
+                                            <td className="p-2">
+                                                {r.playerName && <span className="text-[#44ff44] font-bold">{r.playerName}</span>}
+                                                {r.playerName && <span className="text-[#555] mx-1">—</span>}
+                                                <span className="text-[#aaa]">{r.carName}</span>
+                                            </td>
                                             <td className="p-2 text-center text-[#44ff44]">
                                                 —
                                             </td>
@@ -172,7 +176,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                             
                                             {/* Имя слева */}
                                             <div className="absolute left-1 top-1/2 -translate-y-1/2 text-[7px] z-[5]" style={{ color }}>
-                                                {r.carName.length > 15 ? r.carName.substring(0, 15) + '…' : r.carName}
+                                                {r.playerName ? `${r.playerName} | ${r.carName.length > 12 ? r.carName.substring(0, 12) + '…' : r.carName}` : (r.carName.length > 15 ? r.carName.substring(0, 15) + '…' : r.carName)}
                                             </div>
 
                                             {/* Машинка */}
@@ -210,7 +214,10 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                         <span className={`text-[12px] font-bold ${idx === 0 ? 'text-[#ffdd00]' : idx === 1 ? 'text-[#aaaaaa]' : idx === 2 ? 'text-[#cd7f32]' : 'text-[#777]'}`}>
                                             #{r.position}
                                         </span>
-                                        <span className="text-[10px] text-white">{r.carName}</span>
+                                        <span className="text-[10px] text-white">
+                                            {r.playerName && <span className="text-[#44ff44]">{r.playerName} — </span>}
+                                            {r.carName}
+                                        </span>
                                     </div>
                                     <div className="text-right">
                                         <div className="text-[10px] text-[#ffaa00]">+${r.earnings.toLocaleString()}</div>

@@ -199,8 +199,13 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             weatherModifier: 0.3, // Влияние погоды
           }, raceWeatherStr, false, rewardTable);
 
-          // Сохраняем результаты в БД для экрана результатов
-          await saveRaceDayResults(room.id, room.current_day, raceId, raceId, results, raceWeatherStr);
+          // Сохраняем результаты в БД для экрана результатов (добавляем имя игрока)
+          const resultsWithPlayers = results.map(r => {
+            const pid = playerMap[r.carId];
+            const pl = pid ? players.find(p => p.id === pid) : null;
+            return { ...r, playerName: pl?.username || '' };
+          });
+          await saveRaceDayResults(room.id, room.current_day, raceId, raceId, resultsWithPlayers, raceWeatherStr);
 
           // Раздаём призы
           for (const result of results) {
