@@ -36,7 +36,7 @@ export function getStarterCars(): Car[] {
 }
 
 // --- CRUD комнат ---
-export async function createRoom(username: string): Promise<{ room: Room; playerId: string } | { error: string }> {
+export async function createRoom(username: string, authUid?: string): Promise<{ room: Room; playerId: string } | { error: string }> {
   const code = generateRoomCode();
   const playerId = crypto.randomUUID();
   const starterCars = getStarterCars();
@@ -49,18 +49,21 @@ export async function createRoom(username: string): Promise<{ room: Room; player
 
   if (roomErr || !room) return { error: roomErr?.message || 'Ошибка создания комнаты' };
 
+  const playerRow: any = {
+    id: playerId,
+    room_id: room.id,
+    username,
+    is_host: true,
+    money: 15000,
+    garage: starterCars,
+    storage: [],
+    shop_visits: {},
+  };
+  if (authUid) playerRow.auth_uid = authUid;
+
   const { error: playerErr } = await supabase
     .from('room_players')
-    .insert({
-      id: playerId,
-      room_id: room.id,
-      username,
-      is_host: true,
-      money: 15000,
-      garage: starterCars,
-      storage: [],
-      shop_visits: {},
-    });
+    .insert(playerRow);
 
   if (playerErr) return { error: playerErr.message };
 
@@ -70,7 +73,7 @@ export async function createRoom(username: string): Promise<{ room: Room; player
   return { room: room as Room, playerId };
 }
 
-export async function joinRoom(code: string, username: string): Promise<{ room: Room; playerId: string } | { error: string }> {
+export async function joinRoom(code: string, username: string, authUid?: string): Promise<{ room: Room; playerId: string } | { error: string }> {
   const { data: room, error: findErr } = await supabase
     .from('rooms')
     .select('*')
@@ -79,8 +82,23 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
 
   if (findErr || !room) return { error: 'Комната не найдена' };
 
-  // Если игра уже началась — проверяем есть ли игрок с таким ником (переподключение)
+  // Если игра уже началась — проверяем есть ли игрок с таким auth_uid или ником (переподключение)
   if (room.status !== 'WAITING') {
+    // Сначала ищем по auth_uid (приоритет)
+    if (authUid) {
+      const { data: existingByAuth } = await supabase
+        .from('room_players')
+        .select('*')
+        .eq('room_id', room.id)
+        .eq('auth_uid', authUid)
+        .single();
+
+      if (existingByAuth) {
+        return { room: room as Room, playerId: existingByAuth.id };
+      }
+    }
+
+    // Фоллбэк: ищем по username
     const { data: existing } = await supabase
       .from('room_players')
       .select('*')
@@ -89,7 +107,10 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
       .single();
 
     if (existing) {
-      // Игрок уже в комнате — возвращаем его данные (переподключение)
+      // Привязываем auth_uid если его не было
+      if (authUid && !existing.auth_uid) {
+        await supabase.from('room_players').update({ auth_uid: authUid }).eq('id', existing.id);
+      }
       return { room: room as Room, playerId: existing.id };
     }
     return { error: 'Игра уже началась. Новые игроки не принимаются.' };
@@ -115,18 +136,21 @@ export async function joinRoom(code: string, username: string): Promise<{ room: 
   const playerId = crypto.randomUUID();
   const starterCars = getStarterCars();
 
+  const playerRow: any = {
+    id: playerId,
+    room_id: room.id,
+    username,
+    is_host: false,
+    money: 15000,
+    garage: starterCars,
+    storage: [],
+    shop_visits: {},
+  };
+  if (authUid) playerRow.auth_uid = authUid;
+
   const { error: joinErr } = await supabase
     .from('room_players')
-    .insert({
-      id: playerId,
-      room_id: room.id,
-      username,
-      is_host: false,
-      money: 15000,
-      garage: starterCars,
-      storage: [],
-      shop_visits: {},
-    });
+    .insert(playerRow);
 
   if (joinErr) return { error: joinErr.message };
 

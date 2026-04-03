@@ -10,31 +10,38 @@ import {
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
+import { signIn, signUp, getUserName } from '../services/auth';
+import type { User } from '@supabase/supabase-js';
 import Chat from './Chat';
 
 interface MultiplayerProps {
   room: Room | null;
   player: RoomPlayer | null;
   playerId: string;
+  authUser: User | null;
   onRoomJoined: (room: Room, playerId: string) => void;
   onRoomLeft: () => void;
+  onLogout: () => void;
   onNavigate: (view: View) => void;
   onBack: () => void;
 }
 
-type Step = 'LOGIN' | 'LOBBY_SELECT' | 'ROOM' | 'GAME';
+type Step = 'AUTH' | 'LOBBY_SELECT' | 'ROOM' | 'GAME';
 
 const EPOCHS_LIST = [1960, 1962, 1964, 1966, 1968, 1970, 1972, 1974, 1976, 1978,
   1980, 1982, 1984, 1986, 1988, 1990, 1992, 1994, 1996, 1998,
   2000, 2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024];
 
-const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoomJoined, onRoomLeft, onNavigate, onBack }) => {
-  const [username, setUsername] = useState(() => localStorage.getItem('mp_username') || '');
+const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authUser, onRoomJoined, onRoomLeft, onLogout, onNavigate, onBack }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [isRegister, setIsRegister] = useState(false);
   const [step, setStep] = useState<Step>(() => {
     if (room && room.status === 'PLAYING') return 'GAME';
     if (room) return 'ROOM';
-    if (localStorage.getItem('mp_username')) return 'LOBBY_SELECT';
-    return 'LOGIN';
+    if (authUser) return 'LOBBY_SELECT';
+    return 'AUTH';
   });
   const [roomCodeInput, setRoomCodeInput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -42,11 +49,13 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [timeLeft, setTimeLeft] = useState('');
 
-  // Sync step with room status
+  // Sync step with room status and auth
   useEffect(() => {
     if (room?.status === 'PLAYING') setStep('GAME');
     else if (room?.status === 'WAITING') setStep('ROOM');
-  }, [room?.status]);
+    else if (authUser && !room) setStep('LOBBY_SELECT');
+    else if (!authUser) setStep('AUTH');
+  }, [room?.status, authUser]);
 
   if (!isSupabaseConfigured()) {
     return (
@@ -453,25 +462,35 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
   if (!room && step === 'ROOM') return null;
 
   // Handlers
-  const handleLogin = () => {
-    if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); return; }
-    localStorage.setItem('mp_username', username.trim());
+  const handleAuth = async () => {
     setError(null);
-    setStep('LOBBY_SELECT');
+    if (isRegister) {
+      if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); return; }
+      const result = await signUp(email, password, username.trim());
+      if (result.error) { setError(result.error); return; }
+      // После регистрации Supabase автоматически логинит (если не требуется подтверждение email)
+      // onAuthStateChange в App.tsx подхватит
+    } else {
+      const result = await signIn(email, password);
+      if (result.error) { setError(result.error); return; }
+    }
   };
 
   const handleCreate = async () => {
+    if (!authUser) return;
     setError(null);
-    const result = await createRoom(username);
+    const displayName = getUserName(authUser);
+    const result = await createRoom(displayName, authUser.id);
     if ('error' in result) { setError(result.error); return; }
     onRoomJoined(result.room, result.playerId);
     setStep('ROOM');
   };
 
   const handleJoin = async () => {
-    if (!roomCodeInput.trim()) return;
+    if (!roomCodeInput.trim() || !authUser) return;
     setError(null);
-    const result = await joinRoom(roomCodeInput.trim(), username);
+    const displayName = getUserName(authUser);
+    const result = await joinRoom(roomCodeInput.trim(), displayName, authUser.id);
     if ('error' in result) { setError(result.error); return; }
     onRoomJoined(result.room, result.playerId);
     setStep('ROOM');
@@ -499,6 +518,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
 
   const currentSchedule = room ? getScheduleDay(room.current_day) : null;
   const me = player;
+  const displayName = authUser ? getUserName(authUser) : '';
   return (
     <div className="p-3 max-w-4xl mx-auto text-[8px]">
       <div className="pixel-card p-4 mb-3">
@@ -507,26 +527,49 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
           {room && <span className="text-[#888]">КОД: <b className="text-[#fff]">{room.code}</b></span>}
         </div>
 
-        {step === 'LOGIN' && (
+        {step === 'AUTH' && (
           <div className="space-y-2">
-            <p className="text-[#aaa]">Введите ник для сетевой игры</p>
+            <p className="text-[#aaa]">{isRegister ? 'Регистрация' : 'Вход в аккаунт'}</p>
             <input
               className="w-full bg-[#0f0f1f] border border-[#333] p-2 text-[#fff]"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Никнейм"
-              maxLength={20}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              type="email"
             />
+            <input
+              className="w-full bg-[#0f0f1f] border border-[#333] p-2 text-[#fff]"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Пароль"
+              type="password"
+            />
+            {isRegister && (
+              <input
+                className="w-full bg-[#0f0f1f] border border-[#333] p-2 text-[#fff]"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Никнейм (будет виден в игре)"
+                maxLength={20}
+              />
+            )}
             <div className="flex gap-2">
-              <button className="retro-btn" onClick={handleLogin}>ПРОДОЛЖИТЬ</button>
-              <button className="retro-btn text-[#aaa]" onClick={onBack}>НАЗАД</button>
+              <button className="retro-btn" onClick={handleAuth}>
+                {isRegister ? 'ЗАРЕГИСТРИРОВАТЬСЯ' : 'ВОЙТИ'}
+              </button>
             </div>
+            <button className="text-[#888] underline" onClick={() => { setIsRegister(!isRegister); setError(null); }}>
+              {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Регистрация'}
+            </button>
           </div>
         )}
 
-        {step === 'LOBBY_SELECT' && (
+        {step === 'LOBBY_SELECT' && authUser && (
           <div className="space-y-2">
-            <p className="text-[#aaa]">Привет, <span className="text-[#fff]">{username}</span></p>
+            <div className="flex items-center justify-between">
+              <p className="text-[#aaa]">Привет, <span className="text-[#fff]">{getUserName(authUser)}</span></p>
+              <button className="text-[#888] text-[7px] underline" onClick={onLogout}>ВЫЙТИ ИЗ АККАУНТА</button>
+            </div>
             <div className="flex gap-2">
               <button className="retro-btn" onClick={handleCreate}>СОЗДАТЬ КОМНАТУ</button>
             </div>
@@ -628,7 +671,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, onRoo
               </>
             )}
 
-            <Chat roomId={room.id} playerId={playerId} username={me?.username || ''} />
+            <Chat roomId={room.id} playerId={playerId} username={me?.username || displayName} />
           </div>
         )}
 

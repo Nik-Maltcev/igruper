@@ -146,6 +146,7 @@ export interface RoomPlayer {
   is_ready: boolean;
   shop_visits: Record<string, string>; // carId -> brand (визиты в магазины за день)
   joined_at: string;
+  auth_uid?: string;         // Supabase Auth user ID
 }
 
 export interface RaceEntry {
