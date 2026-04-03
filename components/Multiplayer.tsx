@@ -50,6 +50,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [timeLeft, setTimeLeft] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
+  const [resultsSeen, setResultsSeen] = useState<boolean>(() => {
+    const seen = localStorage.getItem(`results_seen_${playerId}`);
+    return seen === String(room?.current_day);
+  });
 
   // Sync step with room status and auth
   useEffect(() => {
@@ -58,6 +62,13 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     else if (authUser && !room) { setStep('LOBBY_SELECT'); }
     else if (!authUser) setStep('AUTH');
   }, [room?.status, authUser]);
+
+  // Reset resultsSeen when day changes
+  useEffect(() => {
+    if (!room || !playerId) return;
+    const seen = localStorage.getItem(`results_seen_${playerId}`);
+    setResultsSeen(seen === String(room.current_day));
+  }, [room?.current_day, playerId]);
 
   if (!isSupabaseConfigured()) {
     return (
@@ -667,9 +678,13 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                     <button className="retro-btn" onClick={() => onNavigate('SCHEDULE')}>РАСПИСАНИЕ</button>
                   )}
                   <button className="retro-btn" onClick={() => onNavigate('RULES')}>ПРАВИЛА</button>
-                  {/* Кнопка результатов гонок */}
-                  {room.phase === 'RESULTS' && (
-                    <button className="retro-btn text-[#00ffaa]" style={{ border: '2px solid #00ffaa' }} onClick={() => onNavigate('RACE_RESULTS')}>
+                  {/* Кнопка результатов гонок — показываем пока игрок не посмотрит */}
+                  {(room.phase === 'RESULTS' || !resultsSeen) && room.current_day > 1 && (
+                    <button className="retro-btn text-[#00ffaa]" style={{ border: '2px solid #00ffaa' }} onClick={() => {
+                      setResultsSeen(true);
+                      localStorage.setItem(`results_seen_${playerId}`, String(room.current_day));
+                      onNavigate('RACE_RESULTS');
+                    }}>
                       РЕЗУЛЬТАТЫ ГОНОК
                     </button>
                   )}
