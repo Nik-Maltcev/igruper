@@ -22,7 +22,7 @@ interface MultiplayerProps {
   onRoomJoined: (room: Room, playerId: string) => void;
   onRoomLeft: () => void;
   onLogout: () => void;
-  onAuthSuccess: () => void;
+  onAuthSuccess: (user: User) => void;
   onNavigate: (view: View) => void;
   onBack: () => void;
 }
@@ -474,12 +474,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); setAuthLoading(false); return; }
         const result = await signUp(email.trim(), password, username.trim());
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
+        if (result.user) onAuthSuccess(result.user);
       } else {
         const result = await signIn(email.trim(), password);
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
+        if (result.user) onAuthSuccess(result.user);
       }
-      // Force refresh auth state
-      try { onAuthSuccess(); } catch (_) { /* ignore */ }
     } catch (e: any) {
       setError(e.message || 'Неизвестная ошибка');
     } finally {
