@@ -22,6 +22,7 @@ interface MultiplayerProps {
   onRoomJoined: (room: Room, playerId: string) => void;
   onRoomLeft: () => void;
   onLogout: () => void;
+  onAuthSuccess: () => void;
   onNavigate: (view: View) => void;
   onBack: () => void;
 }
@@ -32,7 +33,7 @@ const EPOCHS_LIST = [1960, 1962, 1964, 1966, 1968, 1970, 1972, 1974, 1976, 1978,
   1980, 1982, 1984, 1986, 1988, 1990, 1992, 1994, 1996, 1998,
   2000, 2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024];
 
-const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authUser, onRoomJoined, onRoomLeft, onLogout, onNavigate, onBack }) => {
+const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authUser, onRoomJoined, onRoomLeft, onLogout, onAuthSuccess, onNavigate, onBack }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -54,7 +55,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
   useEffect(() => {
     if (room?.status === 'PLAYING') setStep('GAME');
     else if (room?.status === 'WAITING') setStep('ROOM');
-    else if (authUser && !room) { setStep('LOBBY_SELECT'); setError(`AUTH OK: ${authUser.email}`); }
+    else if (authUser && !room) { setStep('LOBBY_SELECT'); }
     else if (!authUser) setStep('AUTH');
   }, [room?.status, authUser]);
 
@@ -473,11 +474,11 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); setAuthLoading(false); return; }
         const result = await signUp(email.trim(), password, username.trim());
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
-        setError('Регистрация ОК. Ждём authUser...');
+        await onAuthSuccess();
       } else {
         const result = await signIn(email.trim(), password);
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
-        setError('Вход ОК. Ждём authUser...');
+        await onAuthSuccess();
       }
     } catch (e: any) {
       setError(e.message || 'Неизвестная ошибка');
