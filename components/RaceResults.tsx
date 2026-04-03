@@ -177,11 +177,12 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
 
                                             {/* Машинка */}
                                             <div
-                                                className="absolute top-1/2 -translate-y-1/2 text-[16px] z-[5]"
+                                                className="absolute top-1/2 text-[16px] z-[5]"
                                                 style={{
                                                     left: `${currentProgress}%`,
                                                     transition: 'left 75ms linear',
                                                     filter: `drop-shadow(0 0 4px ${color})`,
+                                                    transform: 'translateY(-50%) scaleX(-1)',
                                                 }}
                                             >
                                                 🏎️
