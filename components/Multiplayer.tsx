@@ -480,7 +480,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
       }
       // Force refresh auth state
       try { onAuthSuccess(); } catch (_) { /* ignore */ }
-      }
     } catch (e: any) {
       setError(e.message || 'Неизвестная ошибка');
     } finally {
