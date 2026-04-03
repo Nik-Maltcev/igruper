@@ -1,19 +1,18 @@
 import { supabase } from './supabase';
 import type { User } from '@supabase/supabase-js';
 
-export interface AuthState {
-  user: User | null;
-  loading: boolean;
-}
-
 // Регистрация по email + пароль
 export async function signUp(email: string, password: string, username: string): Promise<{ error?: string }> {
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: { data: { username } },
   });
   if (error) return { error: error.message };
+  // Если Supabase требует подтверждение email — user будет, но session нет
+  if (data.user && !data.session) {
+    return { error: 'Проверьте почту — нужно подтвердить email (или отключите Confirm email в Supabase Dashboard → Auth → Settings)' };
+  }
   return {};
 }
 
@@ -27,12 +26,6 @@ export async function signIn(email: string, password: string): Promise<{ error?:
 // Выход
 export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
-}
-
-// Получить текущего пользователя
-export async function getCurrentUser(): Promise<User | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
 }
 
 // Получить username из метаданных
@@ -51,7 +44,7 @@ export async function findActiveSession(authUid: string): Promise<{ playerId: st
 
   if (!data) return null;
 
-  // Проверяем что комната ещё существует и не завершена
+  // Проверяем что комната ещё существует
   const { data: room } = await supabase
     .from('rooms')
     .select('id, status')

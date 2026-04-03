@@ -464,14 +464,14 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
   // Handlers
   const handleAuth = async () => {
     setError(null);
+    if (!email.trim()) { setError('ВВЕДИТЕ EMAIL'); return; }
+    if (!password || password.length < 6) { setError('ПАРОЛЬ МИНИМУМ 6 СИМВОЛОВ'); return; }
     if (isRegister) {
       if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); return; }
-      const result = await signUp(email, password, username.trim());
+      const result = await signUp(email.trim(), password, username.trim());
       if (result.error) { setError(result.error); return; }
-      // После регистрации Supabase автоматически логинит (если не требуется подтверждение email)
-      // onAuthStateChange в App.tsx подхватит
     } else {
-      const result = await signIn(email, password);
+      const result = await signIn(email.trim(), password);
       if (result.error) { setError(result.error); return; }
     }
   };
