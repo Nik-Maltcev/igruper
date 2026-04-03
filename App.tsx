@@ -87,20 +87,20 @@ const App = () => {
   const money = player?.money || 0;
   const shopVisits = player?.shop_visits || {};
 
-  if (authLoading || isLoadingSession) { return (<div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]"><div className="text-xl animate-pulse">LOADING...</div></div>); }
+  if (authLoading || isLoadingSession) { return (<div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]"><div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div></div>); }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
-            <span className="text-[#00aaff]">EPOCH: {gameYear}</span>
-            <span className="text-[#00ff00]">${money.toLocaleString()}</span>
-            <span className="text-[#ffaa00]">{player?.points || 0} pts</span>
-            <span className="text-[#888]">{cars.length} cars</span>
-            <span className="text-[#888]">{storage.length} storage</span>
+            <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
+            <span className="text-[#00ff00]">💰 ${money.toLocaleString()}</span>
+            <span className="text-[#ffaa00]">🏆 {player?.points || 0} очков</span>
+            <span className="text-[#888]">🚗 {cars.length} авто</span>
+            <span className="text-[#888]">📦 {storage.length} на складе</span>
           </div>
-          <button onClick={() => navigate('MULTIPLAYER')} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>BACK</button>
+          <button onClick={() => navigate('MULTIPLAYER')} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← КОМНАТА</button>
         </div>
       )}
       <main className="flex-grow relative overflow-hidden">
