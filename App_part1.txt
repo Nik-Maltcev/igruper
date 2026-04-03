@@ -1,0 +1,54 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Room, RoomPlayer, Car, Part, RaceResult } from './types';
+import { supabase } from './services/supabase';
+import {
+  fetchPlayer, fetchPurchaseCounts,
+  buyPart, buyCar, removePart, removePartToStorage, installFromStorage,
+} from './services/multiplayer';
+import { findActiveSession, signOut } from './services/auth';
+import type { User } from '@supabase/supabase-js';
+import Garage from './components/Garage';
+import Dealer from './components/Dealer';
+import Marketplace from './components/Marketplace';
+import RaceCenter from './components/RaceCenter';
+import Multiplayer from './components/Multiplayer';
+import Rules from './components/Rules';
+import RaceSchedule from './components/RaceSchedule';
+import RaceResults from './components/RaceResults';
+import Players from './components/Players';
+
+const App = () => {
+  const [authUser, setAuthUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [room, setRoom] = useState<Room | null>(null);
+  const [playerId, setPlayerId] = useState<string>('');
+  const [player, setPlayer] = useState<RoomPlayer | null>(null);
+  const [currentView, setCurrentView] = useState<View>('MULTIPLAYER');
+  const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
+      setAuthUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleAuthSuccess = useCallback((user: User) => { setAuthUser(user); }, []);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!authUser) { setRoom(null); setPlayer(null); setPlayerId(''); setIsLoadingSession(false); return; }
+    findActiveSession(authUser.id).then(async (s) => {
+      if (s) {
+        const { data: p } = await supabase.from('room_players').select('*').eq('id', s.playerId).single();
+        const { data: r } = await supabase.from('rooms').select('*').eq('id', s.roomId).single();
+        if (p && r) { setPlayerId(s.playerId); setPlayer(p as any); setRoom(r as Room); }
+      }
+      setIsLoadingSession(false);
+    });
+  }, [authUser, authLoading]);

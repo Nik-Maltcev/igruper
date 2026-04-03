@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+const fs = require('fs');
+
+const code = `import React, { useState, useEffect, useCallback } from 'react';
 import { View, Room, RoomPlayer, Car, Part, RaceResult } from './types';
 import { supabase } from './services/supabase';
 import {
@@ -56,9 +58,9 @@ const App = () => {
   const refreshPlayer = useCallback(async () => { if (!playerId) return; const p = await fetchPlayer(playerId); if (p) setPlayer(p); }, [playerId]);
   const refreshRoom = useCallback(async () => { if (!room) return; const { data } = await supabase.from('rooms').select('*').eq('id', room.id).single(); if (data) setRoom(data as Room); }, [room?.id]);
 
-  useEffect(() => { if (!playerId) return; refreshPlayer(); const ch = supabase.channel(`player:${playerId}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'room_players', filter: `id=eq.${playerId}` }, () => refreshPlayer()).subscribe(); return () => { supabase.removeChannel(ch); }; }, [playerId]);
-  useEffect(() => { if (!room) return; const ch = supabase.channel(`room:${room.id}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${room.id}` }, () => refreshRoom()).subscribe(); return () => { supabase.removeChannel(ch); }; }, [room?.id]);
-  useEffect(() => { if (!room) return; fetchPurchaseCounts(room.id).then(setPurchaseCounts); const ch = supabase.channel(`purchases:${room.id}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'purchase_log', filter: `room_id=eq.${room.id}` }, () => fetchPurchaseCounts(room.id).then(setPurchaseCounts)).subscribe(); return () => { supabase.removeChannel(ch); }; }, [room?.id]);
+  useEffect(() => { if (!playerId) return; refreshPlayer(); const ch = supabase.channel(\`player:\${playerId}\`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'room_players', filter: \`id=eq.\${playerId}\` }, () => refreshPlayer()).subscribe(); return () => { supabase.removeChannel(ch); }; }, [playerId]);
+  useEffect(() => { if (!room) return; const ch = supabase.channel(\`room:\${room.id}\`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: \`id=eq.\${room.id}\` }, () => refreshRoom()).subscribe(); return () => { supabase.removeChannel(ch); }; }, [room?.id]);
+  useEffect(() => { if (!room) return; fetchPurchaseCounts(room.id).then(setPurchaseCounts); const ch = supabase.channel(\`purchases:\${room.id}\`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'purchase_log', filter: \`room_id=eq.\${room.id}\` }, () => fetchPurchaseCounts(room.id).then(setPurchaseCounts)).subscribe(); return () => { supabase.removeChannel(ch); }; }, [room?.id]);
 
   const handleRoomJoined = (r: Room, pid: string) => { setRoom(r); setPlayerId(pid); };
   const handleRoomLeft = () => { setRoom(null); setPlayer(null); setPlayerId(''); setCurrentView('MULTIPLAYER'); };
@@ -75,7 +77,7 @@ const App = () => {
     if (!player) return;
     const garage = [...player.garage]; const ci = garage.findIndex(c => c.id === carId); if (ci === -1) return;
     const car = { ...garage[ci] }; car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex); garage[ci] = car;
-    const sv = { ...player.shop_visits, [carId]: '\u0414\u0436\u0430\u043c\u0448\u0443\u0442' };
+    const sv = { ...player.shop_visits, [carId]: '\\u0414\\u0436\\u0430\\u043c\\u0448\\u0443\\u0442' };
     await supabase.from('room_players').update({ garage, shop_visits: sv }).eq('id', playerId); await refreshPlayer();
   };
   const handleSellCar = async (carId: string, price: number) => { if (!player) return; const ng = player.garage.filter((c: Car) => c.id !== carId); await supabase.from('room_players').update({ garage: ng, money: player.money + price }).eq('id', playerId); await refreshPlayer(); };
@@ -95,7 +97,7 @@ const App = () => {
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
             <span className="text-[#00aaff]">EPOCH: {gameYear}</span>
-            <span className="text-[#00ff00]">${money.toLocaleString()}</span>
+            <span className="text-[#00ff00]">\${money.toLocaleString()}</span>
             <span className="text-[#ffaa00]">{player?.points || 0} pts</span>
             <span className="text-[#888]">{cars.length} cars</span>
             <span className="text-[#888]">{storage.length} storage</span>
@@ -119,3 +121,7 @@ const App = () => {
 };
 
 export default App;
+`;
+
+fs.writeFileSync('App.tsx', code, 'utf8');
+console.log('Written:', fs.statSync('App.tsx').size, 'bytes');
