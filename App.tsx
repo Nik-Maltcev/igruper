@@ -18,7 +18,7 @@ import RaceResults from './components/RaceResults';
 import Players from './components/Players';
 
 const App = () => {
-  // РњСѓР»СЊС‚РёРїР»РµРµСЂ вЂ” РѕСЃРЅРѕРІРЅРѕР№ СЂРµР¶РёРј
+  // ╨Ь╤Г╨╗╤М╤В╨╕╨┐╨╗╨╡╨╡╤А тАФ ╨╛╤Б╨╜╨╛╨▓╨╜╨╛╨╣ ╤А╨╡╨╢╨╕╨╝
   const [room, setRoom] = useState<Room | null>(null);
   const [playerId, setPlayerId] = useState<string>(() => localStorage.getItem('mp_player_id') || '');
   const [player, setPlayer] = useState<RoomPlayer | null>(null);
@@ -26,12 +26,12 @@ const App = () => {
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
   const [isLoadingSession, setIsLoadingSession] = useState(true);
 
-  // Task 18: РџСЂРё Р·Р°РіСЂСѓР·РєРµ СЃС‚СЂР°РЅРёС†С‹ РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРµСЃСЃРёСЋ РёР· localStorage
+  // Task 18: ╨Я╤А╨╕ ╨╖╨░╨│╤А╤Г╨╖╨║╨╡ ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Л ╨▓╨╛╤Б╤Б╤В╨░╨╜╨░╨▓╨╗╨╕╨▓╨░╨╡╨╝ ╤Б╨╡╤Б╤Б╨╕╤О ╨╕╨╖ localStorage
   useEffect(() => {
     const savedPlayerId = localStorage.getItem('mp_player_id');
     const savedRoomId = localStorage.getItem('mp_room_id');
     if (savedPlayerId && savedRoomId && !room) {
-      // РџСЂРѕР±СѓРµРј РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РёРіСЂРѕРєР° Рё РєРѕРјРЅР°С‚Сѓ
+      // ╨Я╤А╨╛╨▒╤Г╨╡╨╝ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М ╨╕╨│╤А╨╛╨║╨░ ╨╕ ╨║╨╛╨╝╨╜╨░╤В╤Г
       supabase.from('room_players').select('*').eq('id', savedPlayerId).single().then(({ data: pData }) => {
         if (!pData) {
           localStorage.removeItem('mp_player_id');
@@ -57,21 +57,21 @@ const App = () => {
     }
   }, []);
 
-  // Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёРіСЂРѕРєР° РїСЂРё РЅР°Р»РёС‡РёРё playerId
+  // ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨┤╨░╨╜╨╜╤Л╤Е ╨╕╨│╤А╨╛╨║╨░ ╨┐╤А╨╕ ╨╜╨░╨╗╨╕╤З╨╕╨╕ playerId
   const refreshPlayer = useCallback(async () => {
     if (!playerId) return;
     const p = await fetchPlayer(playerId);
     if (p) setPlayer(p);
   }, [playerId]);
 
-  // Р—Р°РіСЂСѓР·РєР° РєРѕРјРЅР°С‚С‹ РїСЂРё РЅР°Р»РёС‡РёРё room
+  // ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ ╨║╨╛╨╝╨╜╨░╤В╤Л ╨┐╤А╨╕ ╨╜╨░╨╗╨╕╤З╨╕╨╕ room
   const refreshRoom = useCallback(async () => {
     if (!room) return;
     const { data } = await supabase.from('rooms').select('*').eq('id', room.id).single();
     if (data) setRoom(data as Room);
   }, [room?.id]);
 
-  // Realtime РїРѕРґРїРёСЃРєР° РЅР° РґР°РЅРЅС‹Рµ РёРіСЂРѕРєР°
+  // Realtime ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨░ ╨╜╨░ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╕╨│╤А╨╛╨║╨░
   useEffect(() => {
     if (!playerId) return;
     refreshPlayer();
@@ -85,7 +85,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [playerId]);
 
-  // Realtime РїРѕРґРїРёСЃРєР° РЅР° РєРѕРјРЅР°С‚Сѓ
+  // Realtime ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨░ ╨╜╨░ ╨║╨╛╨╝╨╜╨░╤В╤Г
   useEffect(() => {
     if (!room) return;
     const channel = supabase
@@ -98,7 +98,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [room?.id]);
 
-  // Р—Р°РіСЂСѓР·РєР° purchase counts РїСЂРё РІС…РѕРґРµ РІ РєРѕРјРЅР°С‚Сѓ
+  // ╨Ч╨░╨│╤А╤Г╨╖╨║╨░ purchase counts ╨┐╤А╨╕ ╨▓╤Е╨╛╨┤╨╡ ╨▓ ╨║╨╛╨╝╨╜╨░╤В╤Г
   useEffect(() => {
     if (!room) return;
     fetchPurchaseCounts(room.id).then(setPurchaseCounts);
@@ -112,7 +112,7 @@ const App = () => {
     return () => { supabase.removeChannel(channel); };
   }, [room?.id]);
 
-  // РћР±СЂР°Р±РѕС‚С‡РёРєРё
+  // ╨Ю╨▒╤А╨░╨▒╨╛╤В╤З╨╕╨║╨╕
   const handleRoomJoined = (r: Room, pid: string) => {
     setRoom(r);
     setPlayerId(pid);
@@ -136,7 +136,7 @@ const App = () => {
     const result = await buyCar(player, car, room.id);
     if (result.error) { alert(result.error); return; }
     await refreshPlayer();
-    alert(`Р’С‹ РєСѓРїРёР»Рё ${car.name}!`);
+    alert(`╨Т╤Л ╨║╤Г╨┐╨╕╨╗╨╕ ${car.name}!`);
   };
 
   const handleBuyPart = async (carId: string, part: Part) => {
@@ -165,7 +165,7 @@ const App = () => {
   };
 
   const handleRaceComplete = async (results: RaceResult[]) => {
-    // TODO: Р·Р°РїРёСЃР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ Supabase
+    // TODO: ╨╖╨░╨┐╨╕╤Б╨░╤В╤М ╤А╨╡╨╖╤Г╨╗╤М╤В╨░╤В╤Л ╨▓ Supabase
     const totalEarnings = results.filter(r => !r.carId.startsWith('bot')).reduce((sum, r) => sum + r.earnings, 0);
     if (player && totalEarnings > 0) {
       await supabase.from('room_players').update({ money: player.money + totalEarnings }).eq('id', playerId);
@@ -173,23 +173,23 @@ const App = () => {
     }
   };
 
-  // Р”Р¶Р°РјС€СѓС‚: СЃРЅСЏС‚СЊ РґРµС‚Р°Р»СЊ Р±РµР·РІРѕР·РІСЂР°С‚РЅРѕ + Р·Р°РїРёСЃР°С‚СЊ РІРёР·РёС‚
+  // ╨Ф╨╢╨░╨╝╤И╤Г╤В: ╤Б╨╜╤П╤В╤М ╨┤╨╡╤В╨░╨╗╤М ╨▒╨╡╨╖╨▓╨╛╨╖╨▓╤А╨░╤В╨╜╨╛ + ╨╖╨░╨┐╨╕╤Б╨░╤В╤М ╨▓╨╕╨╖╨╕╤В
   const handleJamshutRemove = async (carId: string, partIndex: number) => {
     if (!player) return;
-    // РЈРґР°Р»СЏРµРј РґРµС‚Р°Р»СЊ РёР· РіР°СЂР°Р¶Р°
+    // ╨г╨┤╨░╨╗╤П╨╡╨╝ ╨┤╨╡╤В╨░╨╗╤М ╨╕╨╖ ╨│╨░╤А╨░╨╢╨░
     const garage = [...player.garage];
     const carIdx = garage.findIndex(c => c.id === carId);
     if (carIdx === -1) return;
     const car = { ...garage[carIdx] };
     car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex);
     garage[carIdx] = car;
-    // Р—Р°РїРёСЃС‹РІР°РµРј РІРёР·РёС‚ Рє Р”Р¶Р°РјС€СѓС‚Сѓ
-    const shopVisits = { ...player.shop_visits, [carId]: 'Р”Р¶Р°РјС€СѓС‚' };
+    // ╨Ч╨░╨┐╨╕╤Б╤Л╨▓╨░╨╡╨╝ ╨▓╨╕╨╖╨╕╤В ╨║ ╨Ф╨╢╨░╨╝╤И╤Г╤В╤Г
+    const shopVisits = { ...player.shop_visits, [carId]: '╨Ф╨╢╨░╨╝╤И╤Г╤В' };
     await supabase.from('room_players').update({ garage, shop_visits: shopVisits }).eq('id', playerId);
     await refreshPlayer();
   };
 
-  // Task 11: РџСЂРѕРґР°Р¶Р° Р°РІС‚РѕРјРѕР±РёР»СЏ РІ Р±Р°РЅРє
+  // Task 11: ╨Я╤А╨╛╨┤╨░╨╢╨░ ╨░╨▓╤В╨╛╨╝╨╛╨▒╨╕╨╗╤П ╨▓ ╨▒╨░╨╜╨║
   const handleSellCar = async (carId: string, price: number) => {
     if (!player) return;
     const newGarage = player.garage.filter((c: Car) => c.id !== carId);
@@ -199,7 +199,7 @@ const App = () => {
   };
 
   const gameYear = room?.current_year || 1960;
-  // РќРѕРјРµСЂ СЌС‚Р°РїР° вЂ” РєР°Р¶РґС‹Рµ 10 РґРЅРµР№ СЌС‚Рѕ 1 СЌС‚Р°Рї (РїСЂРёРјРµСЂРЅРѕ)
+  // ╨Э╨╛╨╝╨╡╤А ╤Н╤В╨░╨┐╨░ тАФ ╨║╨░╨╢╨┤╤Л╨╡ 10 ╨┤╨╜╨╡╨╣ ╤Н╤В╨╛ 1 ╤Н╤В╨░╨┐ (╨┐╤А╨╕╨╝╨╡╤А╨╜╨╛)
   const gameStage = Math.floor((room?.current_day || 0) / 10);
   const cars = player?.garage || [];
   const storage = player?.storage || [];
@@ -209,27 +209,27 @@ const App = () => {
   if (isLoadingSession) {
     return (
       <div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]">
-        <div className="text-xl animate-pulse">Р’РћРЎРЎРўРђРќРћР’Р›Р•РќРР• РЎР’РЇР—Р...</div>
+        <div className="text-xl animate-pulse">╨Т╨Ю╨б╨б╨в╨Р╨Э╨Ю╨Т╨Ы╨Х╨Э╨Ш╨Х ╨б╨Т╨п╨Ч╨Ш...</div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
-      {/* Р’РµСЂС…РЅСЏСЏ РїР°РЅРµР»СЊ вЂ” С‚РѕР»СЊРєРѕ РІ РёРіСЂРµ */}
+      {/* ╨Т╨╡╤А╤Е╨╜╤П╤П ╨┐╨░╨╜╨╡╨╗╤М тАФ ╤В╨╛╨╗╤М╨║╨╛ ╨▓ ╨╕╨│╤А╨╡ */}
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
-            <span className="text-[#00aaff]">Р­РџРћРҐРђ: {gameYear}</span>
-            <span className="text-[#00ff00]">рџ’° ${money.toLocaleString()}</span>
-            <span className="text-[#ffaa00]">рџЏ† {player?.points || 0} РѕС‡РєРѕРІ</span>
-            <span className="text-[#888]">рџљ— {cars.length} Р°РІС‚Рѕ</span>
-            <span className="text-[#888]">рџ“¦ {storage.length} РЅР° СЃРєР»Р°РґРµ</span>
+            <span className="text-[#00aaff]">╨н╨Я╨Ю╨е╨Р: {gameYear}</span>
+            <span className="text-[#00ff00]">ЁЯТ░ ${money.toLocaleString()}</span>
+            <span className="text-[#ffaa00]">ЁЯПЖ {player?.points || 0} ╨╛╤З╨║╨╛╨▓</span>
+            <span className="text-[#888]">ЁЯЪЧ {cars.length} ╨░╨▓╤В╨╛</span>
+            <span className="text-[#888]">ЁЯУж {storage.length} ╨╜╨░ ╤Б╨║╨╗╨░╨┤╨╡</span>
           </div>
           <button onClick={() => navigate('MULTIPLAYER')}
             className="retro-btn text-[#aaa] text-[8px] py-1 px-3"
             style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>
-            в†ђ РљРћРњРќРђРўРђ
+            тЖР ╨Ъ╨Ю╨Ь╨Э╨Р╨в╨Р
           </button>
         </div>
       )}
