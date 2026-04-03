@@ -474,11 +474,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         if (!username.trim()) { setError('ВВЕДИТЕ НИКНЕЙМ'); setAuthLoading(false); return; }
         const result = await signUp(email.trim(), password, username.trim());
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
-        await onAuthSuccess();
       } else {
         const result = await signIn(email.trim(), password);
         if (result.error) { setError(result.error); setAuthLoading(false); return; }
-        await onAuthSuccess();
+      }
+      // Force refresh auth state
+      try { onAuthSuccess(); } catch (_) { /* ignore */ }
       }
     } catch (e: any) {
       setError(e.message || 'Неизвестная ошибка');
