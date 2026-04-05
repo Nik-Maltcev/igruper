@@ -37,7 +37,7 @@ const CLASS_COLORS: Record<string, string> = {
   A: '#888888', B: '#ffdd00', C: '#4488ff', D: '#44ff44', E: '#ff8800', R: '#aa44ff', S: '#ff4444',
 };
 
-const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyCar, onBack, roomId, playerId, shopVisits }) => {
+const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyCar, onBack, roomId, playerId, shopVisits, playerStorage, onUseDiscount }) => {
   const [selectedDealer, setSelectedDealer] = useState<string | null>(null);
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
 
