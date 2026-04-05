@@ -135,19 +135,28 @@ export interface TournamentState {
   completedSections: number; // 0..3 (сколько участков проехали)
 }
 
+export interface PrizeDiscount {
+  id: string;
+  type: 'discount';
+  dealer: string;       // АЛЬФА | БЕТА | ГАММА | ДЕЛЬТА
+  discount: number;     // 15
+  name: string;         // "Скидка 15% — АЛЬФА"
+  icon: string;
+}
+
 export interface RoomPlayer {
   id: string;
   room_id: string;
   username: string;
   is_host: boolean;
   money: number;
-  garage: Car[];             // Гараж игрока (JSONB)
-  storage: Part[];           // Склад трофейных деталей (JSONB)
+  garage: Car[];
+  storage: (Part | PrizeDiscount)[];
   points: number;
   is_ready: boolean;
-  shop_visits: Record<string, string>; // carId -> brand (визиты в магазины за день)
+  shop_visits: Record<string, string>;
   joined_at: string;
-  auth_uid?: string;         // Supabase Auth user ID
+  auth_uid?: string;
 }
 
 export interface RaceEntry {

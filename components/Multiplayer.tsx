@@ -10,6 +10,7 @@ import {
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
+import { generatePrizesForRace } from '../services/prizeService';
 import { signIn, signUp, getUserName } from '../services/auth';
 import type { User } from '@supabase/supabase-js';
 import Chat from './Chat';
@@ -132,7 +133,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           byRace[e.race_id].push(e);
         }
 
-        // Для каждой гонки — симулируем и равдаём призы
+        // Аккумуляторы для суммирования денег/очков/призов за все гонки дня
+        const moneyAccum: Record<string, number> = {};
+        const pointsAccum: Record<string, number> = {};
+        const prizesAccum: Record<string, any[]> = {};
+
+        // Для каждой гонки — симулируем и раздаём призы
         for (const [raceId, raceEntries] of Object.entries(byRace)) {
           // Собираем машины игроков
           const raceCars: Car[] = [];
@@ -197,10 +203,21 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           // Определяем таблицу наград для этого типа гонки
           const rewards = getRewards(players.length);
           let rewardTable = rewards.city; // дефолт
+          let worldRaceIndex = -1; // -1 = not world series
           if (schedule.raceType === 'QUALIFICATION') rewardTable = rewards.qualification || rewards.city;
           else if (schedule.raceType === 'CITY') rewardTable = rewards.city;
           else if (schedule.raceType === 'NATIONAL') rewardTable = rewards.national;
-          else if (schedule.raceType === 'WORLD') rewardTable = rewards.worldMain;
+          else if (schedule.raceType === 'WORLD') {
+            // Determine which of the 3 World Series races this is by index
+            const epochData2 = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
+            const roundData2 = epochData2?.rounds.find((r: any) => r.round === 3);
+            if (roundData2) {
+              worldRaceIndex = roundData2.races.findIndex((r: any) => r.name === raceId);
+            }
+            if (worldRaceIndex === 0) rewardTable = rewards.worldSaturday || rewards.worldMain;
+            else if (worldRaceIndex === 1) rewardTable = (rewards as any).worldBonus || rewards.worldMain;
+            else rewardTable = rewards.worldMain;
+          }
 
           // Симулируем
           const results = simulateRace(raceCars, {
@@ -218,19 +235,52 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           });
           await saveRaceDayResults(room.id, room.current_day, raceId, raceId, resultsWithPlayers, raceWeatherStr);
 
-          // Раздаём призы
+          // Аккумулируем деньги/очки
           for (const result of results) {
             const pid = playerMap[result.carId];
             if (!pid) continue;
-            const player = players.find(p => p.id === pid);
-            if (!player) continue;
-            await updatePlayerState(pid, {
-              money: player.money + result.earnings,
-              points: player.points + result.points,
-            });
+            if (!moneyAccum[pid]) moneyAccum[pid] = 0;
+            if (!pointsAccum[pid]) pointsAccum[pid] = 0;
+            moneyAccum[pid] += result.earnings;
+            pointsAccum[pid] += result.points;
             await sendSystemMessage(room.id,
-              `🏁 ${result.carName}: место ${result.position} — +$${result.earnings.toLocaleString()} +${result.points}оч.`);
+              `🏁 ${result.carName}: место ${result.position} — +${result.earnings.toLocaleString()} +${result.points}оч.`);
           }
+
+          // Генерируем призы из Bonus Track (World Series Race 2)
+          if (worldRaceIndex === 1) {
+            const prizeMap = generatePrizesForRace(results, players.length, room.current_year);
+            for (const [carId, prizes] of prizeMap) {
+              const pid = playerMap[carId];
+              if (!pid) continue;
+              if (!prizesAccum[pid]) prizesAccum[pid] = [];
+              prizesAccum[pid].push(...prizes);
+              for (const prize of prizes) {
+                const pName = players.find(p => p.id === pid)?.username || '';
+                if ('type' in prize && prize.type === 'discount') {
+                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name}`);
+                } else {
+                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name} (тир ${prize.tier || '?'})`);
+                }
+              }
+            }
+          }
+        }
+
+        // Применяем накопленные деньги, очки и призы
+        for (const p of players) {
+          const extraMoney = moneyAccum[p.id] || 0;
+          const extraPoints = pointsAccum[p.id] || 0;
+          const newPrizes = prizesAccum[p.id] || [];
+          if (extraMoney === 0 && extraPoints === 0 && newPrizes.length === 0) continue;
+          const updates = {
+            money: p.money + extraMoney,
+            points: p.points + extraPoints,
+          };
+          if (newPrizes.length > 0) {
+            updates.storage = [...(p.storage || []), ...newPrizes];
+          }
+          await updatePlayerState(p.id, updates);
         }
       } else {
         await sendSystemMessage(room.id, '⚠ Никто не записался на гонки в этот день.');

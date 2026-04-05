@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry } from '../types';
+import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry, PrizeDiscount } from '../types';
 import { AVAILABLE_CARS } from '../constants';
 
 // --- Генерация кода комнаты ---
@@ -190,7 +190,7 @@ export async function updatePlayerGarage(playerId: string, garage: Car[], money:
 // --- Обновление полного состояния игрока ---
 export async function updatePlayerState(playerId: string, updates: {
   garage?: Car[];
-  storage?: Part[];
+  storage?: (Part | PrizeDiscount)[];
   money?: number;
   shop_visits?: Record<string, string>;
   points?: number;

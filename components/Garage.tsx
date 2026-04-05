@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, CarStats, Part } from '../types';
+import { Car, CarStats, Part, PrizeDiscount } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 
 interface GarageProps {
@@ -232,6 +232,30 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
       {/* === ВКЛАДКА: СКЛАД === */}
       {tab === 'storage' && (
         <div className="pb-20">
+          {(() => {
+            const parts = storage.filter(item => !('type' in item && (item as any).type === 'discount'));
+            const discounts = storage.filter(item => 'type' in item && (item as any).type === 'discount') as unknown as PrizeDiscount[];
+            // Group discounts by dealer
+            const discountsByDealer: Record<string, number> = {};
+            for (const d of discounts) { discountsByDealer[d.dealer] = (discountsByDealer[d.dealer] || 0) + 1; }
+            return (<>
+              {/* Discounts section */}
+              {discounts.length > 0 && (
+                <div className="mb-3 pixel-card p-3 border-[#ffaa00]">
+                  <div className="text-[9px] text-[#ffaa00] mb-2">🏷️ СКИДКИ НА АВТОСАЛОНЫ</div>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(discountsByDealer).map(([dealer, count]) => (
+                      <div key={dealer} className="px-3 py-1 bg-[#1a1a00] border border-[#ffaa00] text-[9px]">
+                        <span className="text-[#ffaa00]">{dealer}</span>
+                        <span className="text-[#fff] ml-2">-{15 * count}%</span>
+                        {count > 1 && <span className="text-[#888] ml-1">({count}x15%)</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>);
+          })()}
           {storage.length === 0 ? (
             <div className="text-center py-16 pixel-card p-8">
               <p className="text-[10px] text-[#666] mb-2">📦 СКЛАД ПУСТ</p>

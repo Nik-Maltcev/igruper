@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AVAILABLE_CARS } from '../constants';
-import { Car, RoomPlayer } from '../types';
+import { Car, RoomPlayer, PrizeDiscount } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 
 interface DealerProps {
@@ -12,6 +12,8 @@ interface DealerProps {
   roomId: string;
   playerId: string;
   shopVisits: Record<string, string>;
+  playerStorage: (any)[];
+  onUseDiscount: (dealerId: string) => void;
 }
 
 const DEALERS = [
@@ -229,7 +231,21 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
               {/* Правая часть: цена + кнопка */}
               <div className="flex flex-col justify-center items-center px-3 py-2 min-w-[96px]">
                 <div className="text-[11px] text-[#00ff00] mb-2">${car.price.toLocaleString()}</div>
-                <button onClick={() => onBuyCar(car)}
+                <button onClick={() => {
+                  const discounts = playerStorage.filter((item: any) => item.type === 'discount' && item.dealer === selectedDealer);
+                  if (discounts.length > 0) {
+                    const totalDiscount = discounts.length * 15;
+                    const discountedPrice = Math.round(car.price * (1 - Math.min(totalDiscount, 100) / 100));
+                    if (window.confirm(`У вас есть скидка -15% на ${selectedDealer} (${discounts.length} шт). Использовать? Цена: ${discountedPrice.toLocaleString()} вместо ${car.price.toLocaleString()}`)) {
+                      onUseDiscount(selectedDealer);
+                      onBuyCar({ ...car, price: discountedPrice });
+                    } else {
+                      onBuyCar(car);
+                    }
+                  } else {
+                    onBuyCar(car);
+                  }
+                }}
                   disabled={money < car.price || soldOut}
                   className="retro-btn text-[8px] py-1 px-3"
                   style={{
