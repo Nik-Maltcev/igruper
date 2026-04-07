@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Car, RaceResult, RaceEntry } from '../types';
 import { RACES_DATA } from '../constants';
-import { submitRaceEntry, fetchRaceEntries, fetchPlayers } from '../services/multiplayer';
+import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 import { supabase } from '../services/supabase';
 
