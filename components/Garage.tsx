@@ -284,7 +284,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
               )}
 
               <div className="flex flex-col gap-2">
-                {storage.map((part, si) => {
+                {storage.map((item, origIdx) => ({ item, origIdx })).filter(({ item }) => !('type' in item && (item as any).type === 'discount')).map(({ item: part, origIdx: si }) => {
                   const badges = boostBadges(part);
                   const targetCar = cars.find(c => c.id === installCarId);
                   const partLimit = targetCar ? (CLASS_PART_LIMITS[targetCar.carClass || 'A'] || 16) : 0;
