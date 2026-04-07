@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { AVAILABLE_CARS } from '../constants';
 import { Car, RoomPlayer, PrizeDiscount } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
+import { supabase } from '../services/supabase';
 
 interface DealerProps {
   money: number;
