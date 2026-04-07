@@ -1,49 +1,71 @@
 import { Part, PrizeDiscount } from '../types';
 import { SHOPS, BONUS_PARTS, getRewards } from '../constants';
 
-const DEALERS = ['АЛЬФА', 'БЕТА', 'ГАММА', 'ДЕЛЬТА'];
+const DEALERS = ['\u0410\u041b\u042c\u0424\u0410', '\u0411\u0415\u0422\u0410', '\u0413\u0410\u041c\u041c\u0410', '\u0414\u0415\u041b\u042c\u0422\u0410'];
 
-export function getMaxShopTier(currentYear: number): number {
-  let maxTier = 1;
+// Get all parts from unlocked shops for the current year
+function getUnlockedParts(currentYear: number): Part[] {
+  const parts: Part[] = [];
   for (const shop of SHOPS) {
     if (shop.unlockYear <= currentYear) {
       for (const part of shop.parts) {
-        if (part.tier && part.tier > maxTier) maxTier = part.tier;
+        parts.push(part);
       }
-    }
-  }
-  return maxTier;
-}
-
-export function getPrizeTier(currentYear: number): number {
-  return Math.min(getMaxShopTier(currentYear) + 1, 4);
-}
-
-function getAllPartsOfTier(tier: number): Part[] {
-  if (tier === 4) return [...BONUS_PARTS];
-  const parts: Part[] = [];
-  for (const shop of SHOPS) {
-    for (const part of shop.parts) {
-      if (part.tier === tier) parts.push(part);
     }
   }
   return parts;
 }
 
+// Get the base name of a part (strip tier number suffix)
+function getPartBaseName(name: string): string {
+  return name.replace(/\s*\d+\s*$/, '').trim().toLowerCase();
+}
+
+// Find a part with the same base name but one tier higher
+function findNextTierPart(baseName: string, currentTier: number): Part | null {
+  const targetTier = currentTier + 1;
+  if (targetTier === 4) {
+    // Look in BONUS_PARTS
+    return BONUS_PARTS.find(p => getPartBaseName(p.name) === baseName) || null;
+  }
+  // Look in ALL shops (including locked ones) for the next tier
+  for (const shop of SHOPS) {
+    for (const part of shop.parts) {
+      if (part.tier === targetTier && getPartBaseName(part.name) === baseName) {
+        return part;
+      }
+    }
+  }
+  return null;
+}
+
 export function generateSinglePrize(currentYear: number): Part | PrizeDiscount {
   const roll = Math.random();
   if (roll < 0.7) {
-    // Prize Part
-    const tier = getPrizeTier(currentYear);
-    const pool = getAllPartsOfTier(tier);
-    if (pool.length === 0) {
-      // Fallback to BONUS_PARTS
-      const fallback = BONUS_PARTS.length > 0 ? BONUS_PARTS : getAllPartsOfTier(tier - 1);
-      const picked = fallback[Math.floor(Math.random() * fallback.length)];
-      return { ...picked, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
+    // Prize Part: pick a random unlocked part, then find it one tier higher
+    const unlocked = getUnlockedParts(currentYear);
+    if (unlocked.length === 0) {
+      // Fallback: random bonus part
+      if (BONUS_PARTS.length > 0) {
+        const picked = BONUS_PARTS[Math.floor(Math.random() * BONUS_PARTS.length)];
+        return { ...picked, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
+      }
     }
-    const picked = pool[Math.floor(Math.random() * pool.length)];
-    return { ...picked, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
+
+    // Try up to 10 times to find a part with a next tier available
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const sourcePart = unlocked[Math.floor(Math.random() * unlocked.length)];
+      const baseName = getPartBaseName(sourcePart.name);
+      const tier = sourcePart.tier || 1;
+      const nextTierPart = findNextTierPart(baseName, tier);
+      if (nextTierPart) {
+        return { ...nextTierPart, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
+      }
+    }
+
+    // Fallback: if no next tier found, give a random unlocked part as prize
+    const fallback = unlocked[Math.floor(Math.random() * unlocked.length)];
+    return { ...fallback, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
   } else {
     // Prize Discount
     const dealer = DEALERS[Math.floor(Math.random() * DEALERS.length)];
@@ -52,8 +74,8 @@ export function generateSinglePrize(currentYear: number): Part | PrizeDiscount {
       type: 'discount' as const,
       dealer,
       discount: 15,
-      name: `Скидка 15% — ${dealer}`,
-      icon: '🏷️',
+      name: `\u0421\u043a\u0438\u0434\u043a\u0430 15% \u2014 ${dealer}`,
+      icon: '\uD83C\uDFF7\uFE0F',
     };
   }
 }
