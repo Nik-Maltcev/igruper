@@ -47,7 +47,7 @@
         },
         {
           "round": 2,
-          "requirement": "1 авто С класса",
+          "requirement": "",
           "races": [
             {
               "name": "Грунтовка 1",
@@ -59,7 +59,7 @@
                 "handling": 4,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "1 авто С класса"
             },
             {
               "name": "Дорога 1",
@@ -172,13 +172,13 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "свободная гонка"
+              "requirement": ""
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "1 авто B класса, 1 авто р1",
+          "requirement": "",
           "races": [
             {
               "name": "Кольцо 2",
@@ -190,7 +190,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "1 авто B класса"
             },
             {
               "name": "Грунтовка 2",
@@ -202,7 +202,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "редкость 1"
             },
             {
               "name": "Трек 2",
@@ -232,7 +232,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "1000"
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дрифт 2",
@@ -256,7 +256,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": "седаны и хэтчбеки"
+              "requirement": "седан или хэтчбек"
             }
           ]
         }
@@ -291,7 +291,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "р3"
+              "requirement": "редкость 3"
             },
             {
               "name": "Трасса 2",
@@ -309,7 +309,7 @@
         },
         {
           "round": 2,
-          "requirement": "2 авто А-класса",
+          "requirement": "",
           "races": [
             {
               "name": "Лёд дрифт 1",
@@ -321,7 +321,7 @@
                 "handling": 4,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "авто А-класса"
             },
             {
               "name": "Песок дрэг 400 м",
@@ -345,7 +345,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "авто А-класса"
             }
           ]
         },
@@ -363,7 +363,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Грунтовка 3",
@@ -410,7 +410,7 @@
                 "handling": 7,
                 "offroad": 0
               },
-              "requirement": "р1"
+              "requirement": "редкость 1"
             },
             {
               "name": "Трасса 3",
@@ -422,7 +422,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "шины внед"
+              "requirement": "шины внедорожные"
             },
             {
               "name": "Мотокросс 2",
@@ -434,13 +434,13 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": "шины уни"
+              "requirement": "шины универсальные"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "muscle car, 1 слики",
+          "requirement": "",
           "races": [
             {
               "name": "Дрэг 1600 метров",
@@ -452,7 +452,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "muscle car"
             },
             {
               "name": "Дрифт 3",
@@ -464,7 +464,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "слики"
             },
             {
               "name": "Трек 4",
@@ -494,7 +494,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Мотокросс 3",
@@ -506,7 +506,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": "201-300 лс"
+              "requirement": "мощность - 201-300 лс"
             },
             {
               "name": "Песок дрэг 800 м",
@@ -518,7 +518,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": "Шины Универс."
+              "requirement": "Шины Универсальные"
             }
           ]
         }
@@ -565,13 +565,13 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": "до 121 лс"
+              "requirement": "мощность до 121 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "1 коллекция, 2 р2",
+          "requirement": "",
           "races": [
             {
               "name": "Трасса 4",
@@ -583,7 +583,7 @@
                 "handling": 5,
                 "offroad": 1
               },
-              "requirement": ""
+              "requirement": "редкость 2"
             },
             {
               "name": "Дорога 4",
@@ -595,7 +595,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "редкость 2"
             },
             {
               "name": "Дрифт 4",
@@ -607,7 +607,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "коллекция"
             }
           ]
         },
@@ -625,7 +625,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Мотокросс 4",
@@ -672,7 +672,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": "р4"
+              "requirement": "редкость 4"
             },
             {
               "name": "Грунтовка 1",
@@ -702,7 +702,7 @@
         },
         {
           "round": 2,
-          "requirement": "3 гоночных ш",
+          "requirement": "",
           "races": [
             {
               "name": "Трасса 1",
@@ -714,7 +714,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "гоночные шины"
             },
             {
               "name": "Дрифт 1",
@@ -726,7 +726,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "гоночные шины"
             },
             {
               "name": "Дорога 1",
@@ -738,7 +738,7 @@
                 "handling": 1,
                 "offroad": 1
               },
-              "requirement": ""
+              "requirement": "гоночные шины"
             }
           ]
         },
@@ -756,7 +756,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дрэг 400 метров",
@@ -768,7 +768,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "60-ые"
+              "requirement": "эпоха -60-ые"
             },
             {
               "name": "Сельская дорога 1",
@@ -803,7 +803,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": "70-ые"
+              "requirement": "эпоха - 70-ые"
             },
             {
               "name": "Снег слалом",
@@ -815,7 +815,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "р1"
+              "requirement": "редкость 1"
             },
             {
               "name": "Лёд дрифт 1",
@@ -833,7 +833,7 @@
         },
         {
           "round": 2,
-          "requirement": "2 muscle car",
+          "requirement": "",
           "races": [
             {
               "name": "Слалом",
@@ -845,7 +845,7 @@
                 "handling": 7,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "muscle car"
             },
             {
               "name": "Кольцо 1",
@@ -869,7 +869,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "muscle car"
             }
           ]
         },
@@ -887,7 +887,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Грунтовка 2",
@@ -958,13 +958,13 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "p5"
+              "requirement": "pедкость 5"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 авто менее 121 лс",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 2",
@@ -976,7 +976,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "мощность менее 121 лс"
             },
             {
               "name": "Трасса 2",
@@ -1000,7 +1000,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "мощность менее 121 лс"
             }
           ]
         },
@@ -1018,7 +1018,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Кольцо 2",
@@ -1030,7 +1030,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "комфорт Гон шины"
+              "requirement": "комфорт+Гоночные шины"
             },
             {
               "name": "Мотокросс 3",
@@ -1042,7 +1042,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": "внедорожники"
+              "requirement": "внедорожник"
             }
           ]
         }
@@ -1077,7 +1077,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": "купе р2"
+              "requirement": "купе+ редкость 2"
             },
             {
               "name": "Сельская дорога 3",
@@ -1089,13 +1089,13 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "301-450 лс"
+              "requirement": "мощность 301-450 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 авто 70-ых",
+          "requirement": "",
           "races": [
             {
               "name": "Песок дрэг 400 м",
@@ -1107,7 +1107,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "эпоха 70-ые"
             },
             {
               "name": "Мотокросс 2",
@@ -1119,7 +1119,7 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": ""
+              "requirement": "эпоха 70-ые"
             },
             {
               "name": "Дрэг 1600 метров",
@@ -1131,7 +1131,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "эпоха 70-ые"
             }
           ]
         },
@@ -1149,7 +1149,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дрифт 4",
@@ -1173,7 +1173,7 @@
                 "handling": 3,
                 "offroad": 2
               },
-              "requirement": "Упр выше 105"
+              "requirement": "Управляемость выше 105"
             }
           ]
         }
@@ -1220,13 +1220,13 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "121-200лс Уни шины"
+              "requirement": "мощность 121-200лс + Универсальные шины"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "1 widow maker, 2 р3",
+          "requirement": "",
           "races": [
             {
               "name": "Трасса 3",
@@ -1238,7 +1238,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "1 widow maker,"
             },
             {
               "name": "Лёд дрифт 2",
@@ -1250,7 +1250,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "редкость 3"
             },
             {
               "name": "Трек 4",
@@ -1262,7 +1262,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "редкость 3"
             }
           ]
         },
@@ -1280,7 +1280,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дорога 4",
@@ -1292,7 +1292,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "Фр автоспорт"
+              "requirement": "Франция+ автоспорт"
             },
             {
               "name": "Песок дрэг 1600 м",
@@ -1304,7 +1304,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": "Седаны"
+              "requirement": "Седан"
             }
           ]
         }
@@ -1327,7 +1327,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": "шины Внед"
+              "requirement": "шины Внедорожные"
             },
             {
               "name": "Грунтовка 4",
@@ -1351,13 +1351,13 @@
                 "handling": 6,
                 "offroad": 5
               },
-              "requirement": "201-300 лс"
+              "requirement": "мощность 201-300 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 авто 60-ых",
+          "requirement": "",
           "races": [
             {
               "name": "Трасса 4",
@@ -1369,7 +1369,7 @@
                 "handling": 5,
                 "offroad": 1
               },
-              "requirement": ""
+              "requirement": "эпоха 60-ые"
             },
             {
               "name": "Сельская дорога 1",
@@ -1393,7 +1393,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "эпоха 60-ые"
             }
           ]
         },
@@ -1411,7 +1411,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дрэг 400 метров",
@@ -1470,7 +1470,7 @@
                 "handling": 3,
                 "offroad": 6
               },
-              "requirement": "р4"
+              "requirement": "редкость 4"
             },
             {
               "name": "Трек 1",
@@ -1482,13 +1482,13 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "нет требований"
+              "requirement": ""
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 muscle cars",
+          "requirement": "",
           "races": [
             {
               "name": "Кольцо 1",
@@ -1500,7 +1500,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "muscle car"
             },
             {
               "name": "Дрэг 800 метров",
@@ -1512,7 +1512,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "muscle car"
             },
             {
               "name": "Дорога 3",
@@ -1542,7 +1542,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дорога 2",
@@ -1554,7 +1554,7 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "80-ые"
+              "requirement": "эпоха -80-ые"
             },
             {
               "name": "Кольцо 2",
@@ -1566,7 +1566,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "С исчерпанным лимитом деталей"
+              "requirement": "С-класс с полным установленным лимитом деталей"
             }
           ]
         }
@@ -1589,7 +1589,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": "С-класс США"
+              "requirement": "С-класс+США"
             },
             {
               "name": "Трек 2",
@@ -1601,7 +1601,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "слики B-класса"
+              "requirement": "слики+ B-класс"
             },
             {
               "name": "Трек 4",
@@ -1613,13 +1613,13 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": "р1"
+              "requirement": "редкость 1"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 комфорт, 2 Франции",
+          "requirement": "",
           "races": [
             {
               "name": "Грунтовка 2",
@@ -1631,7 +1631,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "Франция+комфорт"
             },
             {
               "name": "Сельская дорога 2",
@@ -1643,7 +1643,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "Франция"
             },
             {
               "name": "Кольцо 3",
@@ -1655,7 +1655,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "комфорт"
             }
           ]
         },
@@ -1673,7 +1673,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трасса 2",
@@ -1732,7 +1732,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": "коллекция Италия"
+              "requirement": "коллекция+Италия"
             },
             {
               "name": "Грунтовка 3",
@@ -1744,13 +1744,13 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "60-е р2"
+              "requirement": "эпоха 60-е + редкость 2"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "1 D-класс, 2 шины гон",
+          "requirement": "",
           "races": [
             {
               "name": "Трек 3",
@@ -1762,7 +1762,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Гоночные шины + D-класс"
             },
             {
               "name": "Дрэг 1600 метров",
@@ -1774,7 +1774,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "гоночные шины"
             },
             {
               "name": "Мотокросс 2",
@@ -1804,7 +1804,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Сельская дорога 3",
@@ -1881,7 +1881,7 @@
         },
         {
           "round": 2,
-          "requirement": "BMW,Ford, Lamborghini",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 3",
@@ -1893,7 +1893,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Lamborghini"
             },
             {
               "name": "Песок дрэг 800 м",
@@ -1905,7 +1905,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "BMW"
             },
             {
               "name": "Лёд дрифт 2",
@@ -1917,7 +1917,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "Ford"
             }
           ]
         },
@@ -1935,7 +1935,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Кольцо 4",
@@ -1959,7 +1959,7 @@
                 "handling": 5,
                 "offroad": 1
               },
-              "requirement": "Прох выше 100"
+              "requirement": "Проходимость выше 100"
             }
           ]
         }
@@ -1982,7 +1982,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "хэтчбек США р1"
+              "requirement": "хэтчбек+США + редкость 1"
             },
             {
               "name": "Грунтовка 4",
@@ -1994,7 +1994,7 @@
                 "handling": 3,
                 "offroad": 4
               },
-              "requirement": "widow maker Герм"
+              "requirement": "widow maker+Германия"
             },
             {
               "name": "Мотокросс 4",
@@ -2006,13 +2006,13 @@
                 "handling": 6,
                 "offroad": 5
               },
-              "requirement": "201-300 лс  80-ых"
+              "requirement": "мощность 201-300 лс +эпоха 80-ые"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "1 Е-класс, 2 Италии",
+          "requirement": "",
           "races": [
             {
               "name": "Песок дрэг 1600 м",
@@ -2024,7 +2024,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "Италия Е-класса"
             },
             {
               "name": "Дрифт 4",
@@ -2048,7 +2048,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "Италия"
             }
           ]
         },
@@ -2066,7 +2066,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трек 1",
@@ -2078,7 +2078,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "90 -ые"
+              "requirement": "Эпоха - 90 -ые"
             },
             {
               "name": "Трасса 1",
@@ -2090,7 +2090,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "70-ые гг."
+              "requirement": "Эпоха 70-ые"
             }
           ]
         }
@@ -2113,7 +2113,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "muscle car 70-ых"
+              "requirement": "muscle car + эпоха 70-ые"
             },
             {
               "name": "Дорога 1",
@@ -2125,7 +2125,7 @@
                 "handling": 1,
                 "offroad": 1
               },
-              "requirement": "hot hatch Франция"
+              "requirement": "hot hatch+Франция"
             },
             {
               "name": "Дрэг 400 метров",
@@ -2137,13 +2137,13 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "120-200 лс США"
+              "requirement": "мощность 120-200 лс + США"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 авто A-класса",
+          "requirement": "",
           "races": [
             {
               "name": "Сельская дорога 1",
@@ -2155,7 +2155,7 @@
                 "handling": 3,
                 "offroad": 2
               },
-              "requirement": ""
+              "requirement": "A-класс"
             },
             {
               "name": "Мотокросс 1",
@@ -2167,7 +2167,7 @@
                 "handling": 3,
                 "offroad": 6
               },
-              "requirement": ""
+              "requirement": "A-класс"
             },
             {
               "name": "Грунтовка 1",
@@ -2179,7 +2179,7 @@
                 "handling": 4,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "A-класс"
             }
           ]
         },
@@ -2197,7 +2197,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Лёд дрифт 1",
@@ -2209,7 +2209,7 @@
                 "handling": 4,
                 "offroad": 3
               },
-              "requirement": "р5"
+              "requirement": "редкость 5"
             },
             {
               "name": "Слалом",
@@ -2221,7 +2221,7 @@
                 "handling": 7,
                 "offroad": 0
               },
-              "requirement": "Внедорожники"
+              "requirement": "Внедорожник"
             }
           ]
         }
@@ -2256,7 +2256,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "купе 80-ых"
+              "requirement": "купе + эпоха 80-ыхе"
             },
             {
               "name": "Снег слалом",
@@ -2268,13 +2268,13 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "В-класс выше 250 лс"
+              "requirement": "В-класс + мощность выше 250 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 авто менее 121 лс",
+          "requirement": "",
           "races": [
             {
               "name": "Дрэг 800 метров",
@@ -2286,7 +2286,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "мощность менее 121 лс"
             },
             {
               "name": "Сельская дорога 2",
@@ -2298,7 +2298,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "мощность менее 121 лс"
             },
             {
               "name": "Песок дрэг 800 м",
@@ -2328,7 +2328,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трек 3",
@@ -2340,7 +2340,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "Е-класс р3"
+              "requirement": "Е-класс + редкость 3"
             },
             {
               "name": "Дрифт 2",
@@ -2352,7 +2352,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": "США 60-ых,70-ых"
+              "requirement": "США + эпоха 60-ых или 70-ых"
             }
           ]
         }
@@ -2375,7 +2375,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": "90-ые B-класса"
+              "requirement": "эпоха 90-ых + B-класс"
             },
             {
               "name": "Дорога 2",
@@ -2387,7 +2387,7 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "седан комфорт 301-450лс"
+              "requirement": "седан+ комфорт+ мощность 301-450лс"
             },
             {
               "name": "Кольцо 2",
@@ -2399,13 +2399,13 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "hot hatch США 121-200 лс"
+              "requirement": "hot hatch +США +мощность121-200 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 авто D-класса",
+          "requirement": "",
           "races": [
             {
               "name": "Грунтовка 2",
@@ -2417,7 +2417,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "D-класс"
             },
             {
               "name": "Мотокросс 2",
@@ -2429,7 +2429,7 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": ""
+              "requirement": "D-класс"
             },
             {
               "name": "Дрифт 3",
@@ -2441,7 +2441,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "D-класс"
             }
           ]
         },
@@ -2459,7 +2459,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Сельская дорога 3",
@@ -2483,7 +2483,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": "купе 80ых, 90-ых"
+              "requirement": "купе + эпоха 80ых или 90-ых"
             }
           ]
         }
@@ -2506,7 +2506,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "комфорт Франция"
+              "requirement": "комфорт + Франция"
             },
             {
               "name": "Трек 4",
@@ -2518,7 +2518,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": "коллекция США"
+              "requirement": "коллекция + США"
             },
             {
               "name": "Дрифт 4",
@@ -2530,13 +2530,13 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "Сhevrolet 201-300 лc"
+              "requirement": "Сhevrolet + мощность 201-300 лc"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 автоспорта, 1 widow maker",
+          "requirement": "",
           "races": [
             {
               "name": "Сельская дорога 4",
@@ -2548,7 +2548,7 @@
                 "handling": 3,
                 "offroad": 2
               },
-              "requirement": ""
+              "requirement": "автоспорт"
             },
             {
               "name": "Грунтовка 4",
@@ -2560,7 +2560,7 @@
                 "handling": 3,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "автоспорт"
             },
             {
               "name": "Кольцо 3",
@@ -2572,7 +2572,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "widow maker"
             }
           ]
         },
@@ -2590,7 +2590,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Дорога 3",
@@ -2602,7 +2602,7 @@
                 "handling": 1,
                 "offroad": 2
               },
-              "requirement": "651-900 лс р4"
+              "requirement": "мощность 651-900 лс+ редкость 4"
             },
             {
               "name": "Трасса 3",
@@ -2637,7 +2637,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "седан шины Уни"
+              "requirement": "седан+шины Универсальные"
             },
             {
               "name": "Мотокросс 3",
@@ -2649,7 +2649,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": "хэтчбек менее 121 лс"
+              "requirement": "хэтчбек + мощность менее 121 лс"
             },
             {
               "name": "Дорога 4",
@@ -2661,13 +2661,13 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "muscle car Ford"
+              "requirement": "muscle car + Ford"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "р1,р2, 2 Германии",
+          "requirement": "",
           "races": [
             {
               "name": "Песок дрэг 1600 м",
@@ -2679,7 +2679,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "Германия+редкость 1"
             },
             {
               "name": "Кольцо 4",
@@ -2691,7 +2691,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Германия+редкость 2"
             },
             {
               "name": "Грунтовка 4",
@@ -2721,7 +2721,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Мотокросс 4",
@@ -2733,7 +2733,7 @@
                 "handling": 6,
                 "offroad": 5
               },
-              "requirement": "внедорожник 90-ых"
+              "requirement": "внедорожник + эпоха 90-ых"
             },
             {
               "name": "Трасса 4",
@@ -2768,7 +2768,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "porsche до 300 лс"
+              "requirement": "porsche + мощность до 300 лс"
             },
             {
               "name": "Слалом",
@@ -2780,7 +2780,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "С класс Италия"
+              "requirement": "С-класс + Италия"
             },
             {
               "name": "Трасса 4",
@@ -2792,13 +2792,13 @@
                 "handling": 5,
                 "offroad": 1
               },
-              "requirement": "седан 301-450 лс"
+              "requirement": "седан + мощность 301-450 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "60-ые,70-ые, 80-ые",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 2",
@@ -2810,7 +2810,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "эпоха 60-ых"
             },
             {
               "name": "Дрэг 1600 метров",
@@ -2822,7 +2822,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "эпоха 70-ых"
             },
             {
               "name": "Дрифт 4",
@@ -2834,7 +2834,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "эпоха 80-ых"
             }
           ]
         },
@@ -2852,7 +2852,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Мотокросс 2",
@@ -2864,7 +2864,7 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": "Германия р3"
+              "requirement": "Германия+ редкость 3"
             },
             {
               "name": "Мотокросс 3",
@@ -2899,7 +2899,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "р4"
+              "requirement": "редкость 4"
             },
             {
               "name": "Кольцо 2",
@@ -2911,7 +2911,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "R класс"
+              "requirement": "R-класс"
             },
             {
               "name": "Сельская дорога 1",
@@ -2923,13 +2923,13 @@
                 "handling": 3,
                 "offroad": 2
               },
-              "requirement": "renault 90-ых"
+              "requirement": "renault + эпоха 90-ых"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 коллекции",
+          "requirement": "",
           "races": [
             {
               "name": "Кольцо 4",
@@ -2941,7 +2941,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "коллекция"
             },
             {
               "name": "Кольцо 1",
@@ -2953,7 +2953,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "коллекция"
             },
             {
               "name": "Дорога 1",
@@ -2965,7 +2965,7 @@
                 "handling": 1,
                 "offroad": 1
               },
-              "requirement": ""
+              "requirement": "коллекция"
             }
           ]
         },
@@ -2983,7 +2983,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трек 1",
@@ -2995,7 +2995,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "гон шины 451-650 лс седан"
+              "requirement": "гоночные шины + мощность 451-650 лс + седан"
             },
             {
               "name": "Дрэг 400 метров",
@@ -3007,7 +3007,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "00-ые гг."
+              "requirement": "Эпоха - 00-ые"
             }
           ]
         }
@@ -3030,7 +3030,7 @@
                 "handling": 4,
                 "offroad": 5
               },
-              "requirement": "внедорожник D-класса"
+              "requirement": "внедорожник + D-класс"
             },
             {
               "name": "Трек 1",
@@ -3042,7 +3042,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "Фр.хэтчбек  A-класса"
+              "requirement": "Франция +хэтчбек + A-класс"
             },
             {
               "name": "Лёд дрифт 2",
@@ -3054,13 +3054,13 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "lamborghini 451-600 лс"
+              "requirement": "lamborghini + мощность 451-600 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "три авто р5",
+          "requirement": "",
           "races": [
             {
               "name": "Мотокросс 4",
@@ -3072,7 +3072,7 @@
                 "handling": 6,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "редкость 5"
             },
             {
               "name": "Песок дрэг 1600 м",
@@ -3084,7 +3084,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": ""
+              "requirement": "редкость 5"
             },
             {
               "name": "Дрэг 800 метров",
@@ -3096,7 +3096,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "редкость 5"
             }
           ]
         },
@@ -3114,7 +3114,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трек 2",
@@ -3126,7 +3126,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": "купе E-класса коллекция"
+              "requirement": "купе + E-класс + коллекция"
             },
             {
               "name": "Трасса 1",
@@ -3138,7 +3138,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "80-ые гг."
+              "requirement": "Эпоха 80-ые"
             }
           ]
         }
@@ -3161,7 +3161,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "комфорт B-класса"
+              "requirement": "комфорт +B-класс"
             },
             {
               "name": "Дрэг 400 метров",
@@ -3173,7 +3173,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "ferrari D-класса"
+              "requirement": "ferrari + D-класс"
             },
             {
               "name": "Грунтовка 1",
@@ -3185,13 +3185,13 @@
                 "handling": 4,
                 "offroad": 5
               },
-              "requirement": "Фр 90-ых уни шины"
+              "requirement": "Франция +эпоха 90-ых +универсальные шины"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 Италии на сликах",
+          "requirement": "",
           "races": [
             {
               "name": "Дорога 1",
@@ -3203,7 +3203,7 @@
                 "handling": 1,
                 "offroad": 1
               },
-              "requirement": ""
+              "requirement": "Италия+слики"
             },
             {
               "name": "Дрифт 1",
@@ -3215,7 +3215,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Италия+слики"
             },
             {
               "name": "Трек 1",
@@ -3227,7 +3227,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Италия+слики"
             }
           ]
         },
@@ -3245,7 +3245,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Кольцо 1",
@@ -3257,7 +3257,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": "widow maker Е-класса"
+              "requirement": "widow maker + Е-класс"
             },
             {
               "name": "Дрэг 800 метров",
@@ -3269,7 +3269,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "Германия на внед.ш."
+              "requirement": "Германия + внедорожные шины"
             }
           ]
         }
@@ -3292,7 +3292,7 @@
                 "handling": 3,
                 "offroad": 6
               },
-              "requirement": "р5 внед шины"
+              "requirement": "редкость 5 + внедорожные шины"
             },
             {
               "name": "Дорога 2",
@@ -3304,7 +3304,7 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "С-класс Италия"
+              "requirement": "С-класс + Италия"
             },
             {
               "name": "Кольцо 2",
@@ -3316,13 +3316,13 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "р4 комфорт"
+              "requirement": "редкость 4 + комфорт"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "R-класс, 2 внедорожника",
+          "requirement": "",
           "races": [
             {
               "name": "Грунтовка 2",
@@ -3334,7 +3334,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "внедорожник + R-класс"
             },
             {
               "name": "Трек 2",
@@ -3358,7 +3358,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "внедорожник"
             }
           ]
         },
@@ -3376,7 +3376,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Сельская дорога 2",
@@ -3388,7 +3388,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": "автоспорт США 00-ых"
+              "requirement": "автоспорт +США+ эпоха 00-ых"
             },
             {
               "name": "Песок дрэг 400 м",
@@ -3423,7 +3423,7 @@
                 "handling": 7,
                 "offroad": 0
               },
-              "requirement": "В-класс на гон шинах"
+              "requirement": "В-класс + гоночные шины"
             },
             {
               "name": "Трасса 2",
@@ -3435,7 +3435,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "hot hatch С-класса"
+              "requirement": "hot hatch+ С-класс"
             },
             {
               "name": "Грунтовка 3",
@@ -3447,7 +3447,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "открытый матч"
+              "requirement": ""
             }
           ]
         },
@@ -3465,7 +3465,7 @@
                 "handling": 1,
                 "offroad": 2
               },
-              "requirement": ""
+              "requirement": "Франция+комфорт"
             },
             {
               "name": "Кольцо 3",
@@ -3477,7 +3477,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Германия +комфорт"
             },
             {
               "name": "Мотокросс 2",
@@ -3489,7 +3489,7 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": ""
+              "requirement": "США +комфорт"
             }
           ]
         },
@@ -3507,7 +3507,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Трек 3",
@@ -3519,7 +3519,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "Фр коллекция"
+              "requirement": "Франция + коллекция"
             },
             {
               "name": "Дрэг 1600 метров",
@@ -3531,7 +3531,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "хэтчбеки на сликах"
+              "requirement": "хэтчбек + слики"
             }
           ]
         }
@@ -3554,7 +3554,7 @@
                 "handling": 4,
                 "offroad": 3
               },
-              "requirement": "10-ые гг"
+              "requirement": "Эпоха 10-ые"
             },
             {
               "name": "Сельская дорога 3",
@@ -3566,7 +3566,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": "седан США 451-600 лс"
+              "requirement": "седан + США + мощность 451-600 лс"
             },
             {
               "name": "Трасса 3",
@@ -3578,13 +3578,13 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": "лимит деталей R класса"
+              "requirement": "R-класс+ полностью установленный лимит деталей"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 авто А-класса р1",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 3",
@@ -3596,7 +3596,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "А-класс +редкость 1"
             },
             {
               "name": "Трек 4",
@@ -3608,7 +3608,7 @@
                 "handling": 6,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "А-класс +редкость 1"
             },
             {
               "name": "Мотокросс 3",
@@ -3620,7 +3620,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "А-класс +редкость 1"
             }
           ]
         },
@@ -3638,7 +3638,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Кольцо 4",
@@ -3650,7 +3650,7 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": "мощнее 900лс"
+              "requirement": "мощность выше 900лс"
             },
             {
               "name": "Сельская дорога 4",
@@ -3662,7 +3662,7 @@
                 "handling": 3,
                 "offroad": 2
               },
-              "requirement": "60-ые гг."
+              "requirement": "Эпоха 60-ые"
             }
           ]
         }
@@ -3685,7 +3685,7 @@
                 "handling": 6,
                 "offroad": 5
               },
-              "requirement": "купе внед шины до 300 лс"
+              "requirement": "купе+внедорожные шины+ мощность менее 300 лс"
             },
             {
               "name": "Песок дрэг 800 м",
@@ -3697,7 +3697,7 @@
                 "handling": 1,
                 "offroad": 4
               },
-              "requirement": "121-201 лс"
+              "requirement": "мощность 121-201 лс"
             },
             {
               "name": "Трасса 4",
@@ -3709,13 +3709,13 @@
                 "handling": 5,
                 "offroad": 1
               },
-              "requirement": "до 121 лс"
+              "requirement": "мощность менее 121 лс"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 Италии 00-ых",
+          "requirement": "",
           "races": [
             {
               "name": "Дорога 4",
@@ -3727,7 +3727,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "Италия +эпоха 00-ые"
             },
             {
               "name": "Дрифт 4",
@@ -3751,7 +3751,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "Италия +эпоха 00-ые"
             }
           ]
         },
@@ -3769,7 +3769,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Грунтовка 4",
@@ -3781,7 +3781,7 @@
                 "handling": 3,
                 "offroad": 4
               },
-              "requirement": "автоспорт D класса"
+              "requirement": "автоспорт + D-класс"
             },
             {
               "name": "Песок дрэг 1600 м",
@@ -3793,7 +3793,7 @@
                 "handling": 0,
                 "offroad": 3
               },
-              "requirement": "10-ые гг."
+              "requirement": "Эпоха - 10-ые"
             }
           ]
         }
@@ -3816,7 +3816,7 @@
                 "handling": 1,
                 "offroad": 1
               },
-              "requirement": "Герм уни шины 00-ых"
+              "requirement": "Германия + универсальные шины ++ эпоха 00-ых"
             },
             {
               "name": "Трек 1",
@@ -3828,7 +3828,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "США hot hatch"
+              "requirement": "США + hot hatch"
             },
             {
               "name": "Трасса 1",
@@ -3840,13 +3840,13 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": "widow maker слики"
+              "requirement": "widow maker + слики"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 внедорожника,1 комфорт",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 1",
@@ -3858,7 +3858,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "внедорожник"
             },
             {
               "name": "Снег слалом",
@@ -3870,7 +3870,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "внедорожник"
             },
             {
               "name": "Дрэг 400 метров",
@@ -3882,7 +3882,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "внедорожник + комфорт"
             }
           ]
         },
@@ -3900,7 +3900,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Сельская дорога 1",
@@ -3924,7 +3924,7 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "Италия на Унив. шинах"
+              "requirement": "Италия + Универсальные шины"
             }
           ]
         }
@@ -3947,7 +3947,7 @@
                 "handling": 4,
                 "offroad": 3
               },
-              "requirement": "20-ые"
+              "requirement": "Эпоха 20-ые"
             },
             {
               "name": "Слалом",
@@ -3959,7 +3959,7 @@
                 "handling": 7,
                 "offroad": 0
               },
-              "requirement": "А-класс седан"
+              "requirement": "А-класс + седан"
             },
             {
               "name": "Кольцо 1",
@@ -3971,13 +3971,13 @@
                 "handling": 1,
                 "offroad": 0
               },
-              "requirement": "В-класс купе"
+              "requirement": "В-класс + купе"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "2 S- класса, 1 Фр внедорожник",
+          "requirement": "",
           "races": [
             {
               "name": "Трек 2",
@@ -3989,7 +3989,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "S-класс"
             },
             {
               "name": "Грунтовка 2",
@@ -4001,7 +4001,7 @@
                 "handling": 3,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "Франция+внедорожник"
             },
             {
               "name": "Дрэг 800 метров",
@@ -4013,7 +4013,7 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "S-класс"
             }
           ]
         },
@@ -4031,7 +4031,7 @@
                 "handling": 1,
                 "offroad": 5
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Сельская дорога 2",
@@ -4043,7 +4043,7 @@
                 "handling": 5,
                 "offroad": 3
               },
-              "requirement": "muscle car мощнее 900лс"
+              "requirement": "muscle car + мощность выше 900лс"
             },
             {
               "name": "Песок дрэг 800 м",
@@ -4078,7 +4078,7 @@
                 "handling": 5,
                 "offroad": 0
               },
-              "requirement": "widow maker Германия"
+              "requirement": "widow maker + Германия"
             },
             {
               "name": "Мотокросс 1",
@@ -4090,7 +4090,7 @@
                 "handling": 3,
                 "offroad": 6
               },
-              "requirement": "комфорт США"
+              "requirement": "комфорт +США"
             },
             {
               "name": "Дрэг4",
@@ -4102,13 +4102,13 @@
                 "handling": 0,
                 "offroad": 0
               },
-              "requirement": "коллекция Франция"
+              "requirement": "коллекция + Франция"
             }
           ]
         },
         {
           "round": 2,
-          "requirement": "3 S -класса, 1 Италия, 1 20-ые",
+          "requirement": "",
           "races": [
             {
               "name": "Дрифт 3",
@@ -4120,7 +4120,7 @@
                 "handling": 3,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "S-класс + Италия"
             },
             {
               "name": "Кольцо 2",
@@ -4132,7 +4132,7 @@
                 "handling": 2,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "S-класс + эпоха 20-ые"
             },
             {
               "name": "Снег слалом",
@@ -4144,7 +4144,7 @@
                 "handling": 5,
                 "offroad": 4
               },
-              "requirement": ""
+              "requirement": "S-класс"
             }
           ]
         },
@@ -4162,7 +4162,7 @@
                 "handling": 4,
                 "offroad": 0
               },
-              "requirement": ""
+              "requirement": "оплатить 1000 при записывании на гонку"
             },
             {
               "name": "Мотокросс 2",
@@ -4174,7 +4174,7 @@
                 "handling": 4,
                 "offroad": 7
               },
-              "requirement": "hot hatch автоспорт/ коллекция"
+              "requirement": "hot hatch +автоспорт"
             },
             {
               "name": "Дорога 2",
@@ -4186,7 +4186,7 @@
                 "handling": 2,
                 "offroad": 1
               },
-              "requirement": "внедорож. на гон.шинах"
+              "requirement": "внедорожник +гоночные шины"
             }
           ]
         }
@@ -4208,7 +4208,7 @@
             "handling": 6,
             "offroad": 0
           },
-          "requirement": "открытый матч"
+          "requirement": ""
         },
         {
           "name": "Мотокросс",
@@ -4220,7 +4220,7 @@
             "handling": 3,
             "offroad": 5
           },
-          "requirement": "открытый матч"
+          "requirement": ""
         },
         {
           "name": "Дорога",
@@ -4232,243 +4232,13 @@
             "handling": 1,
             "offroad": 1
           },
-          "requirement": "открытый матч"
-        }
-      ]
-    },
-    {
-      "name": "Ралли Мексики",
-      "years": [
-        1964,
-        1996
-      ],
-      "races": [
-        {
-          "name": "Песок",
-          "weights": {
-            "power": 1,
-            "torque": 4,
-            "topSpeed": 0,
-            "acceleration": 1,
-            "handling": 3,
-            "offroad": 6
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Сельская дорога",
-          "weights": {
-            "power": 2,
-            "torque": 2,
-            "topSpeed": 2,
-            "acceleration": 4,
-            "handling": 3,
-            "offroad": 2
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Асфальт",
-          "weights": {
-            "power": 3,
-            "torque": 2,
-            "topSpeed": 4,
-            "acceleration": 4,
-            "handling": 2,
-            "offroad": 0
-          },
-          "requirement": ""
-        }
-      ]
-    },
-    {
-      "name": "Ралли Сибири",
-      "years": [
-        1972,
-        2004
-      ],
-      "races": [
-        {
-          "name": "Асфальт",
-          "weights": {
-            "power": 2,
-            "torque": 2,
-            "topSpeed": 3,
-            "acceleration": 4,
-            "handling": 4,
-            "offroad": 0
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Грунтовка",
-          "weights": {
-            "power": 2,
-            "torque": 2,
-            "topSpeed": 1,
-            "acceleration": 3,
-            "handling": 3,
-            "offroad": 4
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Снег",
-          "weights": {
-            "power": 0,
-            "torque": 4,
-            "topSpeed": 0,
-            "acceleration": 0,
-            "handling": 3,
-            "offroad": 8
-          },
-          "requirement": ""
-        }
-      ]
-    },
-    {
-      "name": "Ралли Финляндии",
-      "years": [
-        1980,
-        2012
-      ],
-      "races": [
-        {
-          "name": "Снег",
-          "weights": {
-            "power": 0,
-            "torque": 4,
-            "topSpeed": 0,
-            "acceleration": 0,
-            "handling": 3,
-            "offroad": 8
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Асфальт",
-          "weights": {
-            "power": 3,
-            "torque": 2,
-            "topSpeed": 4,
-            "acceleration": 4,
-            "handling": 2,
-            "offroad": 0
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Снег",
-          "weights": {
-            "power": 1,
-            "torque": 3,
-            "topSpeed": 0,
-            "acceleration": 2,
-            "handling": 3,
-            "offroad": 6
-          },
-          "requirement": ""
-        }
-      ]
-    },
-    {
-      "name": "Ралли Франции",
-      "years": [
-        1988,
-        2020
-      ],
-      "races": [
-        {
-          "name": "Асфальт",
-          "weights": {
-            "power": 2,
-            "torque": 2,
-            "topSpeed": 2,
-            "acceleration": 4,
-            "handling": 4,
-            "offroad": 1
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Грунтовка",
-          "weights": {
-            "power": 2,
-            "torque": 3,
-            "topSpeed": 1,
-            "acceleration": 3,
-            "handling": 3,
-            "offroad": 3
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Сельская дорога",
-          "weights": {
-            "power": 3,
-            "torque": 2,
-            "topSpeed": 2,
-            "acceleration": 3,
-            "handling": 3,
-            "offroad": 2
-          },
-          "requirement": ""
-        }
-      ]
-    },
-    {
-      "name": "Гонка Чемпионов",
-      "years": [
-        1968,
-        1976,
-        1984,
-        1992,
-        2000,
-        2008,
-        2016
-      ],
-      "races": [
-        {
-          "name": "Взлётная полоса",
-          "weights": {
-            "power": 3,
-            "torque": 2,
-            "topSpeed": 6,
-            "acceleration": 4,
-            "handling": 0,
-            "offroad": 0
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Pikes Peak",
-          "weights": {
-            "power": 2,
-            "torque": 3,
-            "topSpeed": 1,
-            "acceleration": 3,
-            "handling": 5,
-            "offroad": 1
-          },
-          "requirement": ""
-        },
-        {
-          "name": "Нюрбургринг",
-          "weights": {
-            "power": 3,
-            "torque": 2,
-            "topSpeed": 4,
-            "acceleration": 3,
-            "handling": 3,
-            "offroad": 0
-          },
           "requirement": ""
         }
       ]
     },
     {
       "name": "полуФинал",
-      "requirement": "Открытый матч",
+      "requirement": "",
       "races": [
         {
           "name": "Слалом",
@@ -4534,7 +4304,7 @@
     },
     {
       "name": "Финал",
-      "requirement": "1 hot hatch, 1widow maker, 1 автоспорт 1комфорт, 1 автоспорт 1muscle-car, 1 коллекция, 1 Франция, 1 Италия, 1 США, 1 Германия",
+      "requirement": "",
       "races": [
         {
           "name": "Гонка А",
@@ -4546,7 +4316,7 @@
             "handling": 0,
             "offroad": 1
           },
-          "requirement": ""
+          "requirement": "hot hatch +Франция"
         },
         {
           "name": "Гонка Б",
@@ -4558,7 +4328,7 @@
             "handling": 1,
             "offroad": 0
           },
-          "requirement": ""
+          "requirement": "widow maker + Германия"
         },
         {
           "name": "Гонка В",
@@ -4570,7 +4340,7 @@
             "handling": 1,
             "offroad": 0
           },
-          "requirement": ""
+          "requirement": "автоспорт"
         },
         {
           "name": "Гонка Г",
@@ -4582,7 +4352,7 @@
             "handling": 0,
             "offroad": 1
           },
-          "requirement": ""
+          "requirement": "muscle-car"
         },
         {
           "name": "Гонка Д",
@@ -4594,7 +4364,7 @@
             "handling": 1,
             "offroad": 0
           },
-          "requirement": ""
+          "requirement": "коллекция + США"
         },
         {
           "name": "Гонка Е",
@@ -4606,7 +4376,7 @@
             "handling": 1,
             "offroad": 0
           },
-          "requirement": ""
+          "requirement": "Италия"
         },
         {
           "name": "Гонка Ж",
@@ -4618,7 +4388,7 @@
             "handling": 1,
             "offroad": 2
           },
-          "requirement": ""
+          "requirement": "комфорт"
         },
         {
           "name": "Гонка З",
@@ -4633,45 +4403,647 @@
           "requirement": ""
         }
       ]
-    }
-  ],
-  "specials": [
+    },
     {
-      "name": "квалификация",
+      "name": "Ралли Мексики",
+      "years": [],
+      "requirement": "автоспорт",
       "races": [
         {
-          "name": "Сельская дорога (квал.)",
+          "name": "Песок",
+          "weights": {
+            "power": 1,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
           "weights": {
             "power": 2,
-            "torque": 1,
-            "topSpeed": 1,
-            "acceleration": 5,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
             "handling": 3,
             "offroad": 2
           },
           "requirement": ""
         },
         {
-          "name": "Трасса (квал.)",
+          "name": "Асфальт",
           "weights": {
-            "power": 5,
+            "power": 3,
             "torque": 2,
-            "topSpeed": 3,
-            "acceleration": 3,
-            "handling": 3,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
             "offroad": 0
           },
           "requirement": ""
         },
         {
-          "name": "Дрэг (квал.)",
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Сибири",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 3,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 4
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Финляндии",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
           "weights": {
             "power": 1,
             "torque": 3,
-            "topSpeed": 4,
-            "acceleration": 8,
+            "topSpeed": 0,
+            "acceleration": 2,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
             "handling": 0,
             "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Франции",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 3
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 2
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Мексики",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Песок",
+          "weights": {
+            "power": 1,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 1,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
+            "handling": 3,
+            "offroad": 2
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Сибири",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 3,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 4
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Финляндии",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 0,
+            "torque": 4,
+            "topSpeed": 0,
+            "acceleration": 0,
+            "handling": 3,
+            "offroad": 8
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 4,
+            "handling": 2,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Снег",
+          "weights": {
+            "power": 1,
+            "torque": 3,
+            "topSpeed": 0,
+            "acceleration": 2,
+            "handling": 3,
+            "offroad": 6
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Гонка Чемпионов",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Взлётная полоса",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 6,
+            "acceleration": 4,
+            "handling": 0,
+            "offroad": 0
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Pikes Peak",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 5,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Нюрбургринг",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 4,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 0
+          },
+          "requirement": ""
+        }
+      ]
+    },
+    {
+      "name": "Ралли Франции",
+      "years": [],
+      "requirement": "автоспорт",
+      "races": [
+        {
+          "name": "Асфальт",
+          "weights": {
+            "power": 2,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 4,
+            "handling": 4,
+            "offroad": 1
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Грунтовка",
+          "weights": {
+            "power": 2,
+            "torque": 3,
+            "topSpeed": 1,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 3
+          },
+          "requirement": ""
+        },
+        {
+          "name": "Сельская дорога",
+          "weights": {
+            "power": 3,
+            "torque": 2,
+            "topSpeed": 2,
+            "acceleration": 3,
+            "handling": 3,
+            "offroad": 2
           },
           "requirement": ""
         }
