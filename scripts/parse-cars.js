@@ -130,13 +130,22 @@ for (let li = 1; li < lines.length; li++) {
   
   const price = parseInt(priceStr.replace(/[\s\/]/g, '')) || 5000;
   const rawTags = parseTags(tagStr);
-  let epoch = 60, page = 1;
+  let epoch = 60, page = 1, carClass = '';
   const cleanTags = [];
+  const validClasses = ['A', 'B', 'C', 'D', 'E', 'R', 'S'];
   for (const t of rawTags) {
+    // Check for "класс X" or "класс: X" pattern
+    const classMatch = t.match(/класс[:\s]*([A-Za-zА-Яа-я])/i);
+    if (classMatch) {
+      const letter = classMatch[1].toUpperCase();
+      if (validClasses.includes(letter)) { carClass = letter; continue; }
+    }
     for (const w of t.split(/\s+/)) {
       if (/^\d{2}$/.test(w) && parseInt(w) >= 60) epoch = parseInt(w);
       else if (/^\d$/.test(w) && parseInt(w) >= 1 && parseInt(w) <= 5) page = parseInt(w);
-      else if (w !== 'класс' && w.length > 1) cleanTags.push(w);
+      else if (w !== 'класс' && w !== 'класс:' && w.length > 1) cleanTags.push(w);
+      // Single letter class without "класс" prefix
+      else if (w.length === 1 && validClasses.includes(w.toUpperCase())) { if (!carClass) carClass = w.toUpperCase(); }
     }
   }
   
@@ -154,7 +163,7 @@ for (let li = 1; li < lines.length; li++) {
     price,
     stats: { power: finalPairs[0].value, torque: finalPairs[1].value, topSpeed: finalPairs[2].value, acceleration: finalPairs[3].value, handling: finalPairs[4].value, offroad: finalPairs[5].value },
     coefficients: { power: finalPairs[0].coeff, torque: finalPairs[1].coeff, topSpeed: finalPairs[2].coeff, acceleration: finalPairs[3].coeff, handling: finalPairs[4].coeff, offroad: finalPairs[5].coeff },
-    tags: [...new Set(cleanTags)],
+    tags: [...new Set(cleanTags)], carClass: carClass || undefined,
     epoch, page, hasImage: !!img,
   });
 }
