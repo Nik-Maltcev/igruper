@@ -42,28 +42,36 @@ function findNextTierPart(baseName: string, currentTier: number): Part | null {
 export function generateSinglePrize(currentYear: number): Part | PrizeDiscount {
   const roll = Math.random();
   if (roll < 0.7) {
-    // Prize Part: pick a random unlocked part, then find it one tier higher
+    // Prize Part: pick a random base part name, find max unlocked tier for THAT part, give +1
     const unlocked = getUnlockedParts(currentYear);
     if (unlocked.length === 0) {
-      // Fallback: random bonus part
       if (BONUS_PARTS.length > 0) {
         const picked = BONUS_PARTS[Math.floor(Math.random() * BONUS_PARTS.length)];
         return { ...picked, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
       }
     }
 
-    // Try up to 10 times to find a part with a next tier available
+    // Collect unique base names from unlocked parts
+    const baseNames = [...new Set(unlocked.map(p => getPartBaseName(p.name)))];
+    
+    // Try up to 10 times to find a valid prize
     for (let attempt = 0; attempt < 10; attempt++) {
-      const sourcePart = unlocked[Math.floor(Math.random() * unlocked.length)];
-      const baseName = getPartBaseName(sourcePart.name);
-      const tier = sourcePart.tier || 1;
-      const nextTierPart = findNextTierPart(baseName, tier);
+      const chosenBase = baseNames[Math.floor(Math.random() * baseNames.length)];
+      // Find max tier of THIS specific part among unlocked shops
+      let maxTierForPart = 0;
+      for (const p of unlocked) {
+        if (getPartBaseName(p.name) === chosenBase && (p.tier || 1) > maxTierForPart) {
+          maxTierForPart = p.tier || 1;
+        }
+      }
+      // Prize = this part at maxTier + 1
+      const nextTierPart = findNextTierPart(chosenBase, maxTierForPart);
       if (nextTierPart) {
         return { ...nextTierPart, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
       }
     }
 
-    // Fallback: if no next tier found, give a random unlocked part as prize
+    // Fallback
     const fallback = unlocked[Math.floor(Math.random() * unlocked.length)];
     return { ...fallback, id: `prize-part-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, price: 0 };
   } else {
