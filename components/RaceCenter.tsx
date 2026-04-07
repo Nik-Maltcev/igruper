@@ -241,11 +241,11 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
             <div className="text-[7px] text-[#888] mb-1">
               Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>:
             </div>
-            {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t === 'АВТОСПОРТ'))).length === 0 ? (
+            {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт'))).length === 0 ? (
               <span className="text-[7px] text-[#ff4444]">Нет подходящих машин в гараже</span>
             ) : (
               <div className="flex flex-wrap gap-1">
-                {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t === 'АВТОСПОРТ'))).map(car => {
+                {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт'))).map(car => {
                   const s = getEffectiveStats(car);
 
                   let effectiveTire = car.roadType || null;
