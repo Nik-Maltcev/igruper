@@ -307,10 +307,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
 
       // === ТУРНИРЫ ===
       if (room.tournament_state && room.tournament_state.entries.length > 0) {
+        // Determine tournament section by schedule dayNum (5=Tue, 7=Thu, 9=Sat)
+        const tournSchedule = getScheduleDay(room.current_day);
         let sectionIdx = -1;
-        if (room.current_day === 2) sectionIdx = 0;
-        else if (room.current_day === 4) sectionIdx = 1;
-        else if (room.current_day === 6) sectionIdx = 2;
+        if (tournSchedule.dayNum === 5) sectionIdx = 0;  // Tuesday - section 1
+        else if (tournSchedule.dayNum === 7) sectionIdx = 1;  // Thursday - section 2
+        else if (tournSchedule.dayNum === 9) sectionIdx = 2;  // Saturday - section 3
 
         if (sectionIdx !== -1) {
           const tournamentData = TOURNAMENTS_DATA.find(t => t.name === room.tournament_state!.tournamentName);
