@@ -214,8 +214,8 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                           car.installedParts.map((part, pIdx) => (
                             <div key={pIdx} className="flex items-center gap-1 bg-[#111] px-2 py-0.5 border border-[#333]" style={{ borderRadius: '2px' }}>
                               <span className="text-[8px] text-[#4488ff]">🔧 {part.name}</span>
-                              <button onClick={() => onRemovePartToStorage(car.id, pIdx)} className="text-[8px] text-[#ffaa00] hover:text-[#ffcc00] ml-1" title="На склад">📦</button>
-                              <button onClick={() => onRemovePart(car.id, pIdx)} className="text-[8px] text-[#ff4444] hover:text-[#ff6666] ml-0.5" title="Удалить">✕</button>
+                              
+                              
                             </div>
                           ))
                         ) : (
