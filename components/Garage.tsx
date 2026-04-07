@@ -11,6 +11,7 @@ interface GarageProps {
   onRemovePartToStorage: (carId: string, partIndex: number) => void;
   onInstallFromStorage: (carId: string, storageIndex: number) => void;
   onSellCar: (carId: string, price: number) => void;
+  currentDay?: number;
 }
 
 const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
@@ -62,7 +63,7 @@ const boostBadges = (part: Part) => {
   return items;
 };
 
-const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, onRemovePart, onRemovePartToStorage, onInstallFromStorage, onSellCar }) => {
+const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, onRemovePart, onRemovePartToStorage, onInstallFromStorage, onSellCar, currentDay = 0 }) => {
   const [tab, setTab] = useState<GarageTab>('cars');
   const [installCarId, setInstallCarId] = useState<string | null>(null);
 
@@ -193,6 +194,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                       <button
                         onClick={() => {
                           const price = getCurrentPrice(car, gameStage);
+                          if (car.purchaseDay && car.purchaseDay === currentDay) { alert('Нельзя продать машину в день покупки!'); return; }
                           if (window.confirm(`Продать ${car.name} в банк за $${price.toLocaleString()}?`)) {
                             onSellCar(car.id, price);
                           }

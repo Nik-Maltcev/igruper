@@ -76,7 +76,7 @@ const App = () => {
     }
   };
 
-  const handleBuyCar = async (car: Car) => { if (!player || !room) return; const result = await buyCar(player, car, room.id); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
+  const handleBuyCar = async (car: Car) => { if (!player || !room) return; const result = await buyCar(player, car, room.id, room.current_day); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
   const handleBuyPart = async (carId: string, part: Part) => { if (!player) return; const result = await buyPart(player, carId, part); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
   const handleRemovePart = async (carId: string, partIndex: number) => { if (!player) return; await removePart(player, carId, partIndex); await refreshPlayer(); };
   const handleRemovePartToStorage = async (carId: string, partIndex: number) => { if (!player) return; await removePartToStorage(player, carId, partIndex); await refreshPlayer(); };
@@ -116,7 +116,7 @@ const App = () => {
       )}
       <main className="flex-grow relative overflow-hidden">
         {currentView === 'MULTIPLAYER' && (<Multiplayer room={room} player={player} playerId={playerId} authUser={authUser} onRoomJoined={handleRoomJoined} onRoomLeft={handleRoomLeft} onLogout={handleLogout} onAuthSuccess={handleAuthSuccess} onNavigate={navigate} onBack={() => {}} />)}
-        {currentView === 'GARAGE' && (<Garage cars={cars} storage={storage} gameStage={gameStage} onBack={() => navigate('MULTIPLAYER')} onRemovePart={handleRemovePart} onRemovePartToStorage={handleRemovePartToStorage} onInstallFromStorage={handleInstallFromStorage} onSellCar={handleSellCar} />)}
+        {currentView === 'GARAGE' && (<Garage cars={cars} storage={storage} gameStage={gameStage} currentDay={room?.current_day || 0} onBack={() => navigate('MULTIPLAYER')} onRemovePart={handleRemovePart} onRemovePartToStorage={handleRemovePartToStorage} onInstallFromStorage={handleInstallFromStorage} onSellCar={handleSellCar} />)}
         {currentView === 'DEALER' && (<Dealer money={money} gameYear={gameYear} purchaseCounts={purchaseCounts} onBuyCar={handleBuyCar} onBack={() => navigate('MULTIPLAYER')} roomId={room?.id || ''} playerId={playerId} shopVisits={shopVisits} playerStorage={storage} onUseDiscount={handleUseDiscount} />)}
         {currentView === 'SHOP' && (<Marketplace money={money} gameYear={gameYear} cars={cars} shopVisits={shopVisits} onBuyPart={handleBuyPart} onRemovePart={handleJamshutRemove} onBack={() => navigate('MULTIPLAYER')} />)}
         {currentView === 'WORKLIST' && (<RaceCenter phase={room?.phase === 'RACE_SETUP' ? 'RACE_DAY' : 'PREPARATION'} epochRevealed={room?.current_day !== undefined && room.current_day > 3} cars={cars} gameYear={gameYear} roomId={room?.id} playerId={playerId} currentDay={room?.current_day} raceWeather={room?.race_weather} tournamentState={room?.tournament_state} onBack={() => navigate('MULTIPLAYER')} onRaceComplete={handleRaceComplete} />)}

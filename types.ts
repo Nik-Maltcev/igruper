@@ -29,6 +29,7 @@ export interface Car {
   carClass?: string;    // Класс: A, B, C, D, E, S
   rarity?: number;      // Редкость: 1-5
   lockedForTournament?: boolean; // Заблокирована ли машина на турнире
+  purchaseDay?: number;          // День покупки (нельзя продать в тот же день)
 }
 
 export interface PartBoosts {

@@ -223,10 +223,10 @@ export async function buyPart(player: RoomPlayer, carId: string, part: Part): Pr
 }
 
 // --- Покупка машины (автосалон) ---
-export async function buyCar(player: RoomPlayer, car: Car, roomId: string): Promise<{ error?: string }> {
+export async function buyCar(player: RoomPlayer, car: Car, roomId: string, currentDay?: number): Promise<{ error?: string }> {
   if (player.money < car.price) return { error: 'Недостаточно денег' };
 
-  const newCar: Car = { ...car, id: `my-${Date.now()}`, originalId: car.id, installedParts: [] };
+  const newCar: Car = { ...car, id: `my-${Date.now()}`, originalId: car.id, installedParts: [], ...(currentDay ? { purchaseDay: currentDay } : {}) };
   const garage = [...player.garage, newCar];
 
   await updatePlayerState(player.id, {
