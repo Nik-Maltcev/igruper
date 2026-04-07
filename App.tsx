@@ -76,6 +76,12 @@ const App = () => {
     }
   };
 
+  const handleMoneyChange = async (delta: number) => {
+    if (!player) return;
+    await supabase.from('room_players').update({ money: player.money + delta }).eq('id', playerId);
+    await refreshPlayer();
+  };
+
   const handleBuyCar = async (car: Car) => { if (!player || !room) return; const result = await buyCar(player, car, room.id, room.current_day); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
   const handleBuyPart = async (carId: string, part: Part) => { if (!player) return; const result = await buyPart(player, carId, part); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
   const handleRemovePart = async (carId: string, partIndex: number) => { if (!player) return; await removePart(player, carId, partIndex); await refreshPlayer(); };
@@ -119,7 +125,7 @@ const App = () => {
         {currentView === 'GARAGE' && (<Garage cars={cars} storage={storage} gameStage={gameStage} currentDay={room?.current_day || 0} onBack={() => navigate('MULTIPLAYER')} onRemovePart={handleRemovePart} onRemovePartToStorage={handleRemovePartToStorage} onInstallFromStorage={handleInstallFromStorage} onSellCar={handleSellCar} />)}
         {currentView === 'DEALER' && (<Dealer money={money} gameYear={gameYear} purchaseCounts={purchaseCounts} onBuyCar={handleBuyCar} onBack={() => navigate('MULTIPLAYER')} roomId={room?.id || ''} playerId={playerId} shopVisits={shopVisits} playerStorage={storage} onUseDiscount={handleUseDiscount} />)}
         {currentView === 'SHOP' && (<Marketplace money={money} gameYear={gameYear} cars={cars} shopVisits={shopVisits} onBuyPart={handleBuyPart} onRemovePart={handleJamshutRemove} onBack={() => navigate('MULTIPLAYER')} />)}
-        {currentView === 'WORKLIST' && (<RaceCenter phase={room?.phase === 'RACE_SETUP' ? 'RACE_DAY' : 'PREPARATION'} epochRevealed={room?.current_day !== undefined && room.current_day > 3} cars={cars} gameYear={gameYear} roomId={room?.id} playerId={playerId} currentDay={room?.current_day} raceWeather={room?.race_weather} tournamentState={room?.tournament_state} onBack={() => navigate('MULTIPLAYER')} onRaceComplete={handleRaceComplete} />)}
+        {currentView === 'WORKLIST' && (<RaceCenter phase={room?.phase === 'RACE_SETUP' ? 'RACE_DAY' : 'PREPARATION'} epochRevealed={room?.current_day !== undefined && room.current_day > 3} cars={cars} gameYear={gameYear} roomId={room?.id} playerId={playerId} currentDay={room?.current_day} raceWeather={room?.race_weather} tournamentState={room?.tournament_state} onBack={() => navigate('MULTIPLAYER')} onRaceComplete={handleRaceComplete} playerMoney={money} onMoneyChange={handleMoneyChange} />)}
         {currentView === 'RULES' && <Rules onBack={() => navigate('MULTIPLAYER')} />}
         {currentView === 'SCHEDULE' && (<RaceSchedule gameYear={gameYear} onBack={() => navigate('MULTIPLAYER')} />)}
         {currentView === 'PLAYERS' && room && (<Players roomId={room.id} onBack={() => navigate('MULTIPLAYER')} />)}

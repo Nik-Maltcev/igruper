@@ -15,6 +15,8 @@ interface RaceCenterProps {
   currentDay?: number;
   raceWeather?: any; // { isRaining: boolean, rainyTrackIdx: number | null }
   onBack: () => void;
+  playerMoney?: number;
+  onMoneyChange?: (delta: number) => void;
   onRaceComplete: (results: RaceResult[]) => void;
 }
 
@@ -155,13 +157,16 @@ function weightColor(v: number) {
 const RaceCenter: React.FC<RaceCenterProps> = ({
   phase, epochRevealed = false, cars, gameYear,
   roomId, playerId, currentDay = 0, raceWeather,
-  onBack, onRaceComplete,
+  onBack, onRaceComplete, playerMoney = 0, onMoneyChange,
 }) => {
   const [entries, setEntries] = useState<RaceEntry[]>([]);
   const [pickingRaceId, setPickingRaceId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [allPlayers, setAllPlayers] = useState<any[]>([]);
 
+  const [showPaidConfirm, setShowPaidConfirm] = useState(false);
+  const [paidRaceId, setPaidRaceId] = useState(null);
+  const [mainRaceCategory, setMainRaceCategory] = useState(null);
   const availableEpochs = useMemo(() => {
     return (RACES_DATA.epochs || []).filter((e: any) => e.year <= gameYear);
   }, [gameYear]);
@@ -187,6 +192,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   // Определяем предстоящую гонку
   const cycleDay = currentDay <= 3 ? currentDay : ((currentDay - 4) % 7) + 4;
   const isCityRace = cycleDay >= 4 && cycleDay <= 5;
+  const isWorldSeries = cycleDay >= 8 && cycleDay <= 9;
   const epochData = availableEpochs.find((e: any) => e.year === gameYear);
   
   let targetRace: { title: string, titleColor: string, rounds: any[] } | null = null;
@@ -262,7 +268,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     return result;
   }, []);
 
-  const EntryButton = ({ race }: { race: any }) => {
+  const EntryButton = ({ race, raceIndex = 0 }: { race: any; raceIndex?: number }) => {
     const raceId = race.name || race.id || Math.random().toString();
     const myEntry = myEntryForRace(raceId);
     const myCar = myEntry ? cars.find(c => c.id === myEntry.car_id) : null;
@@ -353,7 +359,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPickingRaceId(raceId)}
+              onClick={() => { if (isWorldSeries && raceIndex === 0) { handlePaidRaceRegister(raceId); } else { setPickingRaceId(raceId); } }}
               className="retro-btn text-[7px] py-0.5 px-2"
               style={{ backgroundColor: '#001a00', border: '1px solid #00aa00', color: '#00aa00' }}
             >
@@ -373,7 +379,28 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     );
   };
 
-  if (!targetRace) {
+  
+  // Paid Race: confirm entry fee before car selection
+  const handlePaidRaceRegister = async (raceId) => {
+    if (playerMoney < 1000) {
+      alert('Недостаточно средств (нужно 1000)');
+      return;
+    }
+    if (window.confirm('Готовы заплатить 1000 за участие в Платной гонке?')) {
+      if (onMoneyChange) await onMoneyChange(-1000);
+      setPickingRaceId(raceId);
+    }
+  };
+
+  // Paid Race: cancel and refund
+  const handlePaidRaceCancel = async (raceId, carId) => {
+    if (onMoneyChange) await onMoneyChange(1000);
+    await supabase.from('race_entries').delete()
+      .eq('room_id', roomId).eq('player_id', playerId).eq('race_id', raceId).eq('day', currentDay);
+    loadEntries();
+  };
+
+if (!targetRace) {
     return (
       <div className="p-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-3">
@@ -413,7 +440,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
             )}
             <div className="flex flex-col gap-3">
               {round.races.map((race: any, rri: number) => (
-                <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} />} />
+                <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} raceIndex={rri} />} />
               ))}
             </div>
           </div>

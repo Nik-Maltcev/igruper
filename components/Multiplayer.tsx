@@ -6,7 +6,7 @@ import {
   updateRoomPhase, updateRoomState, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
   fetchRaceEntries, updatePlayerState, saveRaceDayResults,
-  leaveRoom as apiLeaveRoom
+  leaveRoom as apiLeaveRoom, POWER_CATEGORIES
 } from '../services/multiplayer';
 import { simulateRace } from '../services/gameEngine';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
@@ -252,7 +252,17 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             const pl = pid ? players.find(p => p.id === pid) : null;
             return { ...r, playerName: pl?.username || '' };
           });
-          await saveRaceDayResults(room.id, room.current_day, raceId, raceId, resultsWithPlayers, raceWeatherStr);
+          // Add prizes to Bonus Track results for display
+          if (worldRaceIndex === 1) {
+            const resultsWithPrizes = resultsWithPlayers.map(r => {
+              const pid = playerMap[r.carId];
+              const pp = pid ? (prizesAccum[pid] || []) : [];
+              return { ...r, prizes: pp.map(p => ({ name: (p).name || '', icon: (p).icon || '', type: 'type' in p ? (p).type : undefined })) };
+            });
+            await saveRaceDayResults(room.id, room.current_day, raceId, raceId, resultsWithPrizes, raceWeatherStr);
+          } else {
+            await saveRaceDayResults(room.id, room.current_day, raceId, raceId, resultsWithPlayers, raceWeatherStr);
+          }
 
           // Аккумулируем деньги/очки
           for (const result of results) {

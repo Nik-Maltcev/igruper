@@ -222,6 +222,13 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                     <div className="text-right">
                                         <div className="text-[10px] text-[#ffaa00]">+${r.earnings.toLocaleString()}</div>
                                         {r.points > 0 && <div className="text-[8px] text-[#00ffaa]">+{r.points} очк.</div>}
+                                        {(r as any).prizes?.length > 0 && (
+                                            <div className="text-[7px] text-[#aa44ff] mt-0.5">
+                                                {(r as any).prizes.map((p: any, pi: number) => (
+                                                    <span key={pi}>{p.icon || '🎁'} {p.name}{pi < (r as any).prizes.length - 1 ? ', ' : ''}</span>
+                                                ))}
+                                            </div>
+                                        )}
                                         <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
                                     </div>
                                 </div>
