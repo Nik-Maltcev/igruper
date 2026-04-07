@@ -139,7 +139,26 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         const prizesAccum: Record<string, any[]> = {};
 
         // Для каждой гонки — симулируем и раздаём призы
-        for (const [raceId, raceEntries] of Object.entries(byRace)) {
+        // Определяем порядок гонок из races_data
+        const schedule = getScheduleDay(room.current_day);
+        let raceOrder: string[] = [];
+        if (schedule.raceType === 'QUALIFICATION') {
+          const qualData = RACES_DATA.specials?.find((s: any) => s.name === 'квалификация');
+          if (qualData) raceOrder = qualData.races.map((r: any) => r.name);
+        } else {
+          const epochData = RACES_DATA.epochs.find((e: any) => e.year === room.current_year);
+          const roundNum = schedule.raceType === 'CITY' ? 1 : schedule.raceType === 'NATIONAL' ? 2 : 3;
+          const roundData = epochData?.rounds.find((r: any) => r.round === roundNum);
+          if (roundData) raceOrder = roundData.races.map((r: any) => r.name);
+        }
+        // Сортируем гонки по порядку из расписания
+        const sortedRaceEntries = Object.entries(byRace).sort(([a], [b]) => {
+          const ia = raceOrder.indexOf(a);
+          const ib = raceOrder.indexOf(b);
+          return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+        });
+
+        for (const [raceId, raceEntries] of sortedRaceEntries) {
           // Собираем машины игроков
           const raceCars: Car[] = [];
           const playerMap: Record<string, string> = {}; // carId -> playerId
