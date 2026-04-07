@@ -460,19 +460,19 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           }
 
           if (lastBonus > 0 || secondToLastBonus > 0 || leaderPenalty > 0) {
-            await sendSystemMessage(room.id, `🤝 Конец этапа: Система поддержки отстающих активирована.`);
+            await sendSystemMessage(room.id, `🤝 Конец этапа. Спонсорская поддержка отстающих:`);
             
             if (lastBonus > 0) {
               await updatePlayerState(lastPlayer.id, { money: lastPlayer.money + lastBonus });
-              await sendSystemMessage(room.id, `💰 ${lastPlayer.username} получает +$${lastBonus.toLocaleString()} (Поддержка).`);
+              await sendSystemMessage(room.id, `💰 ${lastPlayer.username} получает спонсорскую поддержку +${lastBonus.toLocaleString()} от игры.`);
             }
             if (secondToLastBonus > 0 && secondToLast) {
               await updatePlayerState(secondToLast.id, { money: secondToLast.money + secondToLastBonus });
-              await sendSystemMessage(room.id, `💰 ${secondToLast.username} получает +$${secondToLastBonus.toLocaleString()} (Фонд лидера).`);
+              await sendSystemMessage(room.id, `💰 ${secondToLast.username} получает +${secondToLastBonus.toLocaleString()} от лидера ${leader.username}.`);
             }
             if (leaderPenalty > 0) {
               await updatePlayerState(leader.id, { money: leader.money - leaderPenalty });
-              await sendSystemMessage(room.id, `👑 ${leader.username} удерживает лидерство >= 2 этапов и отчисляет в фонд: -$${leaderPenalty.toLocaleString()}`);
+              await sendSystemMessage(room.id, `👑 ${leader.username} оказывает материальную помощь отстающим: -${leaderPenalty.toLocaleString()}`);
             }
           }
         }
