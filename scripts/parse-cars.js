@@ -141,7 +141,7 @@ for (let li = 1; li < lines.length; li++) {
       if (validClasses.includes(letter)) { carClass = letter; continue; }
     }
     for (const w of t.split(/\s+/)) {
-      if (/^\d{2}$/.test(w) && parseInt(w) >= 60) epoch = parseInt(w);
+      if (/^\d{2}$/.test(w) && (parseInt(w) >= 60 || parseInt(w) <= 20)) epoch = parseInt(w);
       else if (/^\d$/.test(w) && parseInt(w) >= 1 && parseInt(w) <= 5) page = parseInt(w);
       else if (w !== 'класс' && w !== 'класс:' && w.length > 1) cleanTags.push(w);
       // Single letter class without "класс" prefix

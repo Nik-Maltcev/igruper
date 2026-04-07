@@ -55,7 +55,7 @@ function checkSingleRequirement(car, r) {
   }
 
   // Редкость (e.g. "редкость 3", "редкость 1")
-  const rarityMatch = r.match(/редкость\s*(\d)/);
+  const rarityMatch = r.match(/[рp]едкость\s*(\d)/);
   if (rarityMatch) {
     return car.rarity === parseInt(rarityMatch[1]);
   }
