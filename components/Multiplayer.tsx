@@ -296,7 +296,81 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           }
         }
 
-        // Применяем накопленные деньги, очки и призы
+        
+        // === MAIN RACE PER-CATEGORY SIMULATION ===
+        // Process main-cat-* entries that weren't in the standard race loop
+        const allCatEntries = entries.filter(e => e.race_id.startsWith('main-cat-'));
+        if (allCatEntries.length > 0 && schedule.raceType === 'WORLD') {
+          const catGroups = {};
+          for (const e of allCatEntries) {
+            if (!catGroups[e.race_id]) catGroups[e.race_id] = [];
+            catGroups[e.race_id].push(e);
+          }
+          const rewards = getRewards(players.length);
+          const mainRewardTable = rewards.worldMain;
+          // Get track weights from 3rd race in round 3
+          const epochData = RACES_DATA.epochs.find((e) => e.year === room.current_year);
+          const roundData = epochData?.rounds.find((r) => r.round === 3);
+          const mainTrackWeights = roundData?.races?.[2]?.weights || { power: 2, torque: 2, topSpeed: 3, acceleration: 2, handling: 1, offroad: 0 };
+
+          for (let ci = 0; ci < 7; ci++) {
+            const catRaceId = `main-cat-${ci}`;
+            const catLabel = POWER_CATEGORIES[ci]?.label || `Cat ${ci}`;
+            const catEntries = catGroups[catRaceId] || [];
+
+            if (catEntries.length === 0) {
+              // Save empty result
+              await saveRaceDayResults(room.id, room.current_day, catRaceId, `Главная гонка: ${catLabel}`, [], (room.race_weather?.isRaining ? 'RAIN' : 'SUNNY'));
+              continue;
+            }
+
+            // Build cars for this category
+            const catCars = [];
+            const catPlayerMap = {};
+            for (const entry of catEntries) {
+              const player = players.find(p => p.id === entry.player_id);
+              if (!player) continue;
+              const car = player.garage.find(c => c.id === entry.car_id);
+              if (!car) continue;
+              catCars.push(car);
+              catPlayerMap[car.id] = entry.player_id;
+            }
+
+            if (catCars.length === 0) {
+              await saveRaceDayResults(room.id, room.current_day, catRaceId, `Главная гонка: ${catLabel}`, [], (room.race_weather?.isRaining ? 'RAIN' : 'SUNNY'));
+              continue;
+            }
+
+            const catResults = simulateRace(catCars, {
+              id: catRaceId, name: catRaceId,
+              image: '', description: '',
+              weights: mainTrackWeights,
+              weatherModifier: 0.3,
+            }, (room.race_weather?.isRaining ? 'RAIN' : 'SUNNY'), false, mainRewardTable);
+
+            // Save results with player names
+            const catResultsWithPlayers = catResults.map(r => {
+              const pid = catPlayerMap[r.carId];
+              const pl = pid ? players.find(p => p.id === pid) : null;
+              return { ...r, playerName: pl?.username || '' };
+            });
+            await saveRaceDayResults(room.id, room.current_day, catRaceId, `Главная гонка: ${catLabel}`, catResultsWithPlayers, (room.race_weather?.isRaining ? 'RAIN' : 'SUNNY'));
+
+            // Accumulate money/points
+            for (const result of catResults) {
+              const pid = catPlayerMap[result.carId];
+              if (!pid) continue;
+              if (!moneyAccum[pid]) moneyAccum[pid] = 0;
+              if (!pointsAccum[pid]) pointsAccum[pid] = 0;
+              moneyAccum[pid] += result.earnings;
+              pointsAccum[pid] += result.points;
+              await sendSystemMessage(room.id, `🏁 [${catLabel}] ${result.carName}: место ${result.position} — +$${result.earnings.toLocaleString()} +${result.points}оч.`);
+            }
+          }
+        }
+        // === END MAIN RACE ===
+
+// Применяем накопленные деньги, очки и призы
         for (const p of players) {
           const extraMoney = moneyAccum[p.id] || 0;
           const extraPoints = pointsAccum[p.id] || 0;

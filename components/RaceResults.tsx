@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../services/supabase';
-import { fetchRaceDayResults } from '../services/multiplayer';
+import { fetchRaceDayResults, POWER_CATEGORIES } from '../services/multiplayer';
 import { Car, RaceDayResult } from '../types';
 
 interface RaceResultsProps {
@@ -208,6 +208,9 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                     <div className="animate-fade-in">
                         <h3 className="text-sm mb-4 text-center text-[#00ffaa]">РЕЗУЛЬТАТЫ ЗАЕЗДА</h3>
                         <div className="flex flex-col gap-2">
+                            {currentRace.results.length === 0 && currentRace.race_id?.startsWith('main-cat-') ? (
+                                <div className="text-center py-4 text-[10px] text-[#555]">Нет участников в этой категории мощности</div>
+                            ) : null}
                             {currentRace.results.sort((a, b) => a.position - b.position).map((r, idx) => (
                                 <div key={r.carId} className={`flex justify-between items-center p-2 border ${idx === 0 ? 'border-[#ffdd00] bg-[#332200]' : idx === 1 ? 'border-[#aaaaaa] bg-[#222222]' : idx === 2 ? 'border-[#cd7f32] bg-[#331a00]' : 'border-[#333] bg-[#111]'}`}>
                                     <div className="flex items-center gap-3">

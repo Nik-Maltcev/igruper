@@ -301,6 +301,64 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
 
     return (
       <div className="mt-2">
+
+        {pickingRaceId === 'main-categories' && isWorldSeries && raceIndex === 2 ? (
+          <div className="flex flex-col gap-2">
+            <div className="text-[8px] text-[#ffdd00] mb-1">Выберите категорию мощности:</div>
+            {POWER_CATEGORIES.map((cat, ci) => {
+              const catRaceId = `main-cat-${ci}`;
+              const catEntry = entries.find(e => e.race_id === catRaceId && e.player_id === playerId);
+              const catCar = catEntry ? cars.find(c => c.id === catEntry.car_id) : null;
+              const matchingCars = cars.filter(c => {
+                const eff = getEffectiveStats(c);
+                return eff.power >= cat.min && eff.power <= cat.max && checkRequirement(c, race.requirement);
+              });
+              return (
+                <div key={ci} className="border border-[#333] p-2 bg-[#0a0a14]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[8px] text-[#ffdd00]">{cat.label}</span>
+                    {catEntry && catCar ? (
+                      <div className="flex items-center gap-1">
+                        <span className="text-[7px] text-[#00ff00]">✔ {catCar.name}</span>
+                        <button onClick={async () => {
+                          await supabase.from('race_entries').delete().eq('room_id', roomId).eq('player_id', playerId).eq('race_id', catRaceId).eq('day', currentDay);
+                          loadEntries();
+                        }} className="text-[7px] text-[#ff4444]">✕</button>
+                      </div>
+                    ) : mainRaceCategory === ci ? (
+                      <div className="flex flex-wrap gap-1">
+                        {matchingCars.length === 0 ? (
+                          <span className="text-[7px] text-[#ff4444]">Нет подходящих машин</span>
+                        ) : matchingCars.map(car => {
+                          const alreadyInOtherCat = entries.some(e => e.car_id === car.id && e.race_id.startsWith('main-cat-') && e.player_id === playerId);
+                          return (
+                            <button key={car.id} disabled={alreadyInOtherCat}
+                              onClick={async () => {
+                                if (alreadyInOtherCat) { alert('Эта машина уже заявлена в другую категорию'); return; }
+                                await submitRaceEntry(roomId, playerId, catRaceId, car.id, currentDay);
+                                loadEntries();
+                                setMainRaceCategory(null);
+                              }}
+                              className="text-[7px] px-2 py-1 border"
+                              style={{ borderColor: alreadyInOtherCat ? '#555' : '#00aa00', color: alreadyInOtherCat ? '#555' : '#00ff00', opacity: alreadyInOtherCat ? 0.5 : 1 }}>
+                              {car.name} ({getEffectiveStats(car).power}лс)
+                            </button>
+                          );
+                        })}
+                        <button onClick={() => setMainRaceCategory(null)} className="text-[7px] px-1 text-[#555]">✕</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => setMainRaceCategory(ci)} className="text-[7px] px-2 py-0.5 border border-[#444] text-[#aaa]">
+                        Выбрать ({matchingCars.length})
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            <button onClick={() => { setPickingRaceId(null); setMainRaceCategory(null); }} className="text-[7px] px-2 py-1 border border-[#333] text-[#555]">Закрыть</button>
+          </div>
+        ) : null}
         {pickingRaceId === raceId ? (
           <div className="flex flex-col gap-1">
             <div className="text-[7px] text-[#888] mb-1">
@@ -359,7 +417,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={() => { if (isWorldSeries && raceIndex === 0) { handlePaidRaceRegister(raceId); } else { setPickingRaceId(raceId); } }}
+              onClick={() => { if (isWorldSeries && raceIndex === 0) { handlePaidRaceRegister(raceId); } else if (isWorldSeries && raceIndex === 2) { setPickingRaceId('main-categories'); } else { setPickingRaceId(raceId); } }}
               className="retro-btn text-[7px] py-0.5 px-2"
               style={{ backgroundColor: '#001a00', border: '1px solid #00aa00', color: '#00aa00' }}
             >
