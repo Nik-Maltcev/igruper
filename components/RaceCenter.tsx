@@ -22,33 +22,18 @@ const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорос
 const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
 
 // Проверка требований трассы (простая эвристика по строке requirement)
-function checkRequirement(car: Car, req: string): boolean {
+function checkRequirement(car, req) {
   if (!req || req.trim() === '') return true;
-  const r = req.toLowerCase();
+  
+  // Split by + for combined requirements (e.g. "хэтчбек + США")
+  const conditions = req.split('+').map(s => s.trim().toLowerCase()).filter(Boolean);
+  
+  // ALL conditions must be met
+  return conditions.every(r => checkSingleRequirement(car, r));
+}
 
-  // Классы
-  if (r.includes('а-класс') || r.includes('а класс')) return car.carClass === 'A';
-  if (r.includes('в класс') || r.includes('в-класс') || r.includes('b класс') || r.includes('b-класс')) return car.carClass === 'B' || car.carClass === 'В';
-  if (r.includes('с класс') || r.includes('с-класс') || r.includes('c класс') || r.includes('c-класс')) return car.carClass === 'C' || car.carClass === 'С';
-
-  // Тип кузова/теги 
-  if (r.includes('хэтчбек') || r.includes('hatch')) return !!car.tags?.some(t => t.toLowerCase() === 'хэтчбек');
-  if (r.includes('купе')) return !!car.tags?.some(t => t.toLowerCase() === 'купе');
-  if (r.includes('седан')) return !!car.tags?.some(t => t.toLowerCase() === 'седан');
-  if (r.includes('внедорожник')) return !!car.tags?.some(t => t.toLowerCase() === 'внедорожник');
-  if (r.includes('muscle')) return !!car.tags?.some(t => t.toLowerCase() === 'muscle car');
-  if (r.includes('комфорт')) return !!car.tags?.some(t => t.toLowerCase() === 'комфорт');
-  if (r.includes('коллекция')) return !!car.tags?.some(t => t.toLowerCase() === 'коллекция');
-
-  // Страны
-  if (r.includes('франция')) return !!car.tags?.some(t => t.toLowerCase() === 'франция');
-  if (r.includes('сша')) return !!car.tags?.some(t => t.toLowerCase() === 'сша');
-  if (r.includes('италия')) return !!car.tags?.some(t => t.toLowerCase() === 'италия');
-  if (r.includes('германия')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
-  if (r.includes('япония')) return !!car.tags?.some(t => t.toLowerCase() === 'япония');
-  if (r.includes('ссср')) return !!car.tags?.some(t => t.toLowerCase() === 'ссср');
-
-  // Определяем фактические шины авто
+function checkSingleRequirement(car, r) {
+  // Effective tire type
   let effectiveTire = car.roadType || null;
   const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
   if (tiresPart) {
@@ -59,29 +44,103 @@ function checkRequirement(car: Car, req: string): boolean {
     else if (n.includes('универс')) effectiveTire = 'У';
   }
 
-  // Шины и дороги (р1, р2, шины внед)
-  if (r.includes('р1') || r.includes('p1')) return effectiveTire === 'У';
-  if (r.includes('р2') || r.includes('p2')) return effectiveTire === 'Г';
-  if (r.includes('р3') || r.includes('p3')) return effectiveTire === 'С';
-  if (r.includes('р4') || r.includes('p4')) return effectiveTire === 'В';
-  if (r.includes('слики')) return effectiveTire === 'С';
-  if (r.includes('шины внед') || r.includes('внедорожн')) return effectiveTire === 'В';
-  if (r.includes('шины унив') || r.includes('универс')) return effectiveTire === 'У';
-  if (r.includes('гоночных ш') || r.includes('гоночн')) return effectiveTire === 'Г';
+  // Автоспорт
+  if (r === 'автоспорт') return !!car.tags?.some(t => t.toLowerCase() === 'автоспорт');
 
-  // Лошадиные силы (120-200, до 121, 201-300)
-  const powerMatch = r.match(/(\d+)-(\d+)\s*лс/);
-  if (powerMatch) {
-    const min = parseInt(powerMatch[1]);
-    const max = parseInt(powerMatch[2]);
-    return car.stats.power >= min && car.stats.power <= max;
+  // Эпоха (e.g. "эпоха - 70-ые", "эпоха 60-ые", "эпоха -60-ые")
+  const epochMatch = r.match(/эпоха[\s-]*(?:(\d{2}))/);
+  if (epochMatch) {
+    const targetEpoch = parseInt(epochMatch[1]);
+    return car.epoch === targetEpoch;
   }
-  if (r.includes('до 121 лс') || r.includes('до 121')) return car.stats.power < 121;
 
-  // Вес/модель (1000)
-  if (r.includes('1000')) return car.name.includes('1000') || !!car.tags?.some(t => t.includes('1000'));
+  // Редкость (e.g. "редкость 3", "редкость 1")
+  const rarityMatch = r.match(/редкость\s*(\d)/);
+  if (rarityMatch) {
+    return car.rarity === parseInt(rarityMatch[1]);
+  }
 
-  // По умолчанию разрешаем если эвристика не поняла
+  // Классы (A-S)
+  const classMatch = r.match(/([a-zа-я])[-\s]*класс/) || r.match(/класс[\s:]*([a-zа-я])/);
+  if (classMatch) {
+    let letter = classMatch[1].toUpperCase();
+    if (letter === 'А') letter = 'A';
+    if (letter === 'В') letter = 'B';
+    if (letter === 'С') letter = 'C';
+    if (letter === 'Д') letter = 'D';
+    if (letter === 'Е') letter = 'E';
+    return car.carClass === letter;
+  }
+  // Also handle "1 авто X класса" patterns
+  if (r.includes('авто') && r.includes('класс')) {
+    const m = r.match(/авто\s+([a-zа-я])[-\s]*класс/);
+    if (m) {
+      let letter = m[1].toUpperCase();
+      if (letter === 'А') letter = 'A';
+      if (letter === 'В') letter = 'B';
+      if (letter === 'С') letter = 'C';
+      return car.carClass === letter;
+    }
+  }
+
+  // Тип кузова/теги
+  if (r.includes('хэтчбэк') || r.includes('hatch') || r.includes('hot hatch')) return !!car.tags?.some(t => t.toLowerCase() === 'хэтчбэк');
+  if (r.includes('купе')) return !!car.tags?.some(t => t.toLowerCase() === 'купе');
+  if (r.includes('седан')) return !!car.tags?.some(t => t.toLowerCase() === 'седан');
+  if (r.includes('внедорожник')) return !!car.tags?.some(t => t.toLowerCase() === 'внедорожник');
+  if (r.includes('muscle') || r.includes('muscle car')) return !!car.tags?.some(t => t.toLowerCase() === 'muscle car');
+  if (r.includes('комфорт')) return !!car.tags?.some(t => t.toLowerCase() === 'комфорт');
+  if (r.includes('коллекция')) return !!car.tags?.some(t => t.toLowerCase() === 'коллекция');
+  if (r.includes('widow maker')) return !!car.tags?.some(t => t.toLowerCase() === 'widow maker');
+
+  // Страны
+  if (r.includes('франция')) return !!car.tags?.some(t => t.toLowerCase() === 'франция');
+  if (r.includes('сша')) return !!car.tags?.some(t => t.toLowerCase() === 'сша');
+  if (r.includes('италия')) return !!car.tags?.some(t => t.toLowerCase() === 'италия');
+  if (r.includes('германия')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
+  if (r.includes('япония')) return !!car.tags?.some(t => t.toLowerCase() === 'япония');
+  if (r.includes('ссср')) return !!car.tags?.some(t => t.toLowerCase() === 'ссср');
+
+  // Марки авто (Porsche, Ferrari, etc.)
+  const brands = ['porsche', 'ferrari', 'lamborghini', 'bmw', 'ford', 'chevrolet', 'renault', 'citroen', 'Chevrolet'];
+  for (const brand of brands) {
+    if (r.includes(brand.toLowerCase())) return car.name.toLowerCase().includes(brand.toLowerCase());
+  }
+
+  // Шины
+  if (r.includes('слик')) return effectiveTire === 'С';
+  if (r.includes('шины внедорожн') || r === 'внедорожные шины') return effectiveTire === 'В';
+  if (r.includes('шины универсальн') || r === 'универсальные шины') return effectiveTire === 'У';
+  if (r.includes('гоночные шины') || r.includes('гоночных шин')) return effectiveTire === 'Г';
+
+  // Мощность ranges
+  const powerRange = r.match(/(\d+)[-–](\d+)\s*лс/);
+  if (powerRange) return car.stats.power >= parseInt(powerRange[1]) && car.stats.power <= parseInt(powerRange[2]);
+  if (r.includes('мощность менее 121') || r.includes('мощность до 121')) return car.stats.power < 121;
+  const powerAbove = r.match(/мощность\s*выше\s*(\d+)/);
+  if (powerAbove) return car.stats.power > parseInt(powerAbove[1]);
+  const powerBelow = r.match(/мощность\s*менее\s*(\d+)/);
+  if (powerBelow) return car.stats.power < parseInt(powerBelow[1]);
+
+  // Статы (Управляемость выше X, Проходимость выше X, Скорость выше X)
+  const handlingAbove = r.match(/управляемость\s*выше\s*(\d+)/);
+  if (handlingAbove) return car.stats.handling > parseInt(handlingAbove[1]);
+  const offroadAbove = r.match(/проходимость\s*выше\s*(\d+)/);
+  if (offroadAbove) return car.stats.offroad > parseInt(offroadAbove[1]);
+  const speedAbove = r.match(/скорость\s*выше\s*(\d+)/);
+  if (speedAbove) return car.stats.topSpeed > parseInt(speedAbove[1]);
+
+  // Оплатить 1000 - это не фильтр машин, пропускаем
+  if (r.includes('оплатить 1000')) return true;
+
+  // Полный лимит деталей
+  if (r.includes('полностью установленны') || r.includes('полным установленным лимитом')) {
+    const limits = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
+    const limit = limits[car.carClass] || 16;
+    return car.installedParts.length >= limit;
+  }
+
+  // По умолчанию разрешаем
   return true;
 }
 
