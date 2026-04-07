@@ -35,6 +35,8 @@ function checkRequirement(car, req) {
 }
 
 function checkSingleRequirement(car, r) {
+  // Normalize common Cyrillic/Latin mixups
+  r = r.replace(/^с(?=h)/i, 'c'); // сhevrolet -> chevrolet
   // Effective tire type
   let effectiveTire = car.roadType || null;
   const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
@@ -86,7 +88,7 @@ function checkSingleRequirement(car, r) {
   }
 
   // Тип кузова/теги
-  if (r.includes('хэтчбэк') || r.includes('hatch') || r.includes('hot hatch')) return !!car.tags?.some(t => t.toLowerCase() === 'хэтчбэк');
+  if ((r.includes('хэтчбэк') || r.includes('хэтчбек')) || r.includes('hatch') || r.includes('hot hatch')) return !!car.tags?.some(t => (t.toLowerCase() === 'хэтчбэк' || t.toLowerCase() === 'хэтчбек'));
   if (r.includes('купе')) return !!car.tags?.some(t => t.toLowerCase() === 'купе');
   if (r.includes('седан')) return !!car.tags?.some(t => t.toLowerCase() === 'седан');
   if (r.includes('внедорожник')) return !!car.tags?.some(t => t.toLowerCase() === 'внедорожник');
@@ -116,9 +118,11 @@ function checkSingleRequirement(car, r) {
   if (r.includes('гоночные шины') || r.includes('гоночных шин')) return effectiveTire === 'Г';
 
   // Мощность ranges
-  const powerRange = r.match(/(\d+)[-–](\d+)\s*лс/);
+  const powerRange = r.match(/(\d+)[-–](\d+)\s*л[сc]/);
   if (powerRange) return car.stats.power >= parseInt(powerRange[1]) && car.stats.power <= parseInt(powerRange[2]);
-  if (r.includes('мощность менее 121') || r.includes('мощность до 121')) return car.stats.power < 121;
+  // General "мощность до X" and "мощность менее X" patterns
+  const powerTo = r.match(/мощность\s*до\s*(\d+)/);
+  if (powerTo) return car.stats.power <= parseInt(powerTo[1]);
   const powerAbove = r.match(/мощность\s*выше\s*(\d+)/);
   if (powerAbove) return car.stats.power > parseInt(powerAbove[1]);
   const powerBelow = r.match(/мощность\s*менее\s*(\d+)/);
@@ -141,6 +145,9 @@ function checkSingleRequirement(car, r) {
     const limit = limits[car.carClass] || 16;
     return car.installedParts.length >= limit;
   }
+
+  // Немецкий = Германия
+  if (r.includes('нем ') || r.includes('немецк')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
 
   // По умолчанию разрешаем
   return true;
