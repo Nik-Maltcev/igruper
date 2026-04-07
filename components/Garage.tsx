@@ -115,7 +115,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                 return (
                   <div key={`${car.id}-${idx}`}
                     className="pixel-card p-0 flex flex-col overflow-hidden"
-                    style={{ borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '4px' }}>
+                    style={{ borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '8px' }}>
 
                     {/* Верхняя часть: имя+теги | картинка | статы */}
                     <div className="flex items-stretch" style={{ minHeight: '168px' }}>
