@@ -252,6 +252,25 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             const pl = pid ? players.find(p => p.id === pid) : null;
             return { ...r, playerName: pl?.username || '' };
           });
+          // Генерируем призы из Bonus Track (World Series Race 2)
+          if (worldRaceIndex === 1) {
+            const prizeMap = generatePrizesForRace(results, players.length, room.current_year);
+            for (const [carId, prizes] of prizeMap) {
+              const pid = playerMap[carId];
+              if (!pid) continue;
+              if (!prizesAccum[pid]) prizesAccum[pid] = [];
+              prizesAccum[pid].push(...prizes);
+              for (const prize of prizes) {
+                const pName = players.find(p => p.id === pid)?.username || '';
+                if ('type' in prize && prize.type === 'discount') {
+                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name}`);
+                } else {
+                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name} (тир ${prize.tier || '?'})`);
+                }
+              }
+            }
+          }
+
           // Add prizes to Bonus Track results for display
           if (worldRaceIndex === 1) {
             const resultsWithPrizes = resultsWithPlayers.map(r => {
@@ -276,24 +295,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               `🏁 ${result.carName}: место ${result.position} — +${result.earnings.toLocaleString()} +${result.points}оч.`);
           }
 
-          // Генерируем призы из Bonus Track (World Series Race 2)
-          if (worldRaceIndex === 1) {
-            const prizeMap = generatePrizesForRace(results, players.length, room.current_year);
-            for (const [carId, prizes] of prizeMap) {
-              const pid = playerMap[carId];
-              if (!pid) continue;
-              if (!prizesAccum[pid]) prizesAccum[pid] = [];
-              prizesAccum[pid].push(...prizes);
-              for (const prize of prizes) {
-                const pName = players.find(p => p.id === pid)?.username || '';
-                if ('type' in prize && prize.type === 'discount') {
-                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name}`);
-                } else {
-                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name} (тир ${prize.tier || '?'})`);
-                }
-              }
-            }
-          }
+          
         }
 
         
@@ -370,8 +372,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         }
         // === END MAIN RACE ===
 
-// Применяем накопленные деньги, очки и призы
-        for (const p of players) {
+// Refetch fresh player data to avoid stale closure
+        const freshPlayers = await fetchPlayers(room.id);
+        // Применяем накопленные деньги, очки и призы
+        for (const p of freshPlayers) {
           const extraMoney = moneyAccum[p.id] || 0;
           const extraPoints = pointsAccum[p.id] || 0;
           const newPrizes = prizesAccum[p.id] || [];
@@ -518,7 +522,9 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         nextYear += 2;
 
         // --- Система поддержки отстающих (Catch-up) ---
-        const sortedPlayers = [...players].sort((a, b) => b.points - a.points);
+        // Refetch for catch-up
+        const catchupPlayers = await fetchPlayers(room.id);
+        const sortedPlayers = [...catchupPlayers].sort((a, b) => b.points - a.points);
         if (sortedPlayers.length > 0) {
           const leader = sortedPlayers[0];
           const lastPlayer = sortedPlayers[sortedPlayers.length - 1];
@@ -612,7 +618,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     const checkPhase = setInterval(async () => {
       const now = new Date();
       const todayStr = now.toDateString();
-      if (now.getHours() === 22 && now.getMinutes() === 0) {
+      if (now.getHours() === 22 && now.getMinutes() <= 5) {
         // Убедимся, что мы не запускали перевод времени сегодня
         if (lastAutoAdvanceDate.current !== todayStr) {
           lastAutoAdvanceDate.current = todayStr;
@@ -802,7 +808,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             {room.status === 'PLAYING' && (
               <>
                 <div className="pixel-card p-2 bg-[#101026]">
-                  <div>День: <b>{room.current_day}</b> / {WEEK_SCHEDULE.length}</div>
+                  <div>День: <b>{room.current_day}</b></div>
                   <div>Эпоха: <b>{room.current_year}</b></div>
                   <div>Фаза: <b>{room.phase}</b></div>
                   {currentSchedule && <div>Сегодня: <b>{currentSchedule.label}</b> ({currentSchedule.activity})</div>}

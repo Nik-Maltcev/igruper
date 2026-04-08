@@ -247,7 +247,11 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
                     onBuyCar(car);
                   }
                 }}
-                  disabled={money < car.price || soldOut}
+                  disabled={(() => {
+                    const disc = playerStorage?.filter((item) => item.type === 'discount' && item.dealer === selectedDealer) || [];
+                    const effectivePrice = disc.length > 0 ? Math.round(car.price * 0.85) : car.price;
+                    return money < effectivePrice || soldOut;
+                  })()}
                   className="retro-btn text-[8px] py-1 px-3"
                   style={{
                     backgroundColor: soldOut ? '#1a1a1a' : money >= car.price ? '#003300' : '#1a1a1a',

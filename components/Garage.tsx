@@ -331,11 +331,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                             {targetCar.installedParts.length >= partLimit ? 'Лимит' : 'Слот занят'}
                           </span>
                         )}
-                        <button className="retro-btn text-[8px] py-1 px-3"
-                          style={{ backgroundColor: '#1a1a2e', border: '2px solid #ffaa00', color: '#ffaa00' }}
-                          title="Выставить на аукцион (скоро)">
-                          🏷️ АУКЦИОН
-                        </button>
+                        
                       </div>
                     </div>
                   );

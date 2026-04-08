@@ -173,6 +173,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const [allPlayers, setAllPlayers] = useState<any[]>([]);
 
   const [showPaidConfirm, setShowPaidConfirm] = useState(false);
+  const [paidEntryTime, setPaidEntryTime] = useState<number | null>(null);
   const [paidRaceId, setPaidRaceId] = useState(null);
   const [mainRaceCategory, setMainRaceCategory] = useState(null);
   const availableEpochs = useMemo(() => {
@@ -290,10 +291,21 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
           <div className="flex items-center gap-1 bg-[#002200] border border-[#00aa00] px-2 py-1">
             <span className="text-[8px] text-[#00ff00]">✔ {myCar.name}</span>
             <button
-              onClick={() => handleEnterCar(raceId, '')}
+              onClick={async () => {
+                // For paid race (World Series Race 1), refund within 5 minutes
+                if (isWorldSeries && raceIndex === 0 && paidEntryTime && (Date.now() - paidEntryTime) < 300000) {
+                  if (onMoneyChange) await onMoneyChange(1000);
+                  setPaidEntryTime(null);
+                }
+                handleEnterCar(raceId, '');
+              }}
               className="text-[7px] text-[#ff4444] ml-1 hover:text-[#ff6666]"
               title="Отменить заявку"
-            >✕</button>
+            >
+              {isWorldSeries && raceIndex === 0 && paidEntryTime && (Date.now() - paidEntryTime) < 300000
+                ? `✕ Возврат (${Math.ceil((300000 - (Date.now() - paidEntryTime)) / 60000)} мин)`
+                : '✕'}
+            </button>
           </div>
           {otherEntries.length > 0 && (
             <div className="mt-1">
@@ -454,6 +466,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     }
     if (window.confirm('Готовы заплатить 1000 за участие в Платной гонке?')) {
       if (onMoneyChange) await onMoneyChange(-1000);
+      setPaidEntryTime(Date.now());
       setPickingRaceId(raceId);
     }
   };

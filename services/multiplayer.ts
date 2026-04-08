@@ -235,6 +235,11 @@ export async function buyCar(player: RoomPlayer, car: Car, roomId: string, curre
   });
 
   await logCarPurchase(roomId, player.id, car.id);
+  // Record dealer visit
+  if (car.dealer) {
+    const sv = { ...player.shop_visits, [`DEALER_${car.dealer}`]: 'visited' };
+    await supabase.from('room_players').update({ shop_visits: sv }).eq('id', player.id);
+  }
   return {};
 }
 
