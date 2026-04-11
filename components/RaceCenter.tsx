@@ -296,12 +296,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
             >✕</button>
           </div>
           {otherEntries.length > 0 && (
-            <div className="mt-1">
-              <div className="text-[7px] text-[#888] mb-0.5">Стартовая решётка:</div>
-              {otherEntries.map(e => (
-                <div key={e.id} className="text-[7px] text-[#aaa]">• {getEntryLabel(e)}</div>
-              ))}
-            </div>
+            <span className="text-[7px] text-[#888] ml-2">Записано: {otherEntries.length + 1}</span>
           )}
         </div>
       );
@@ -432,12 +427,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
               🏎 ЗАПИСАТЬСЯ
             </button>
             {otherEntries.length > 0 && (
-              <div className="mt-1">
-                <div className="text-[7px] text-[#888] mb-0.5">Стартовая решётка:</div>
-                {otherEntries.map(e => (
-                  <div key={e.id} className="text-[7px] text-[#aaa]">• {getEntryLabel(e)}</div>
-                ))}
-              </div>
+              <span className="text-[7px] text-[#888] ml-2">Записано: {otherEntries.length}</span>
             )}
           </div>
         )}
