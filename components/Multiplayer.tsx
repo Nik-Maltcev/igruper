@@ -252,7 +252,9 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           const resultsWithPlayers = results.map(r => {
             const pid = playerMap[r.carId];
             const pl = pid ? players.find(p => p.id === pid) : null;
-            return { ...r, playerName: pl?.username || '' };
+            const car = pl?.garage?.find(c => c.id === r.carId);
+            const stats = car ? getEffectiveStats(car) : null;
+            return { ...r, playerName: pl?.username || '', playerPoints: pl?.points || 0, carStats: stats };
           });
           // Генерируем призы из Bonus Track (World Series Race 2)
           if (worldRaceIndex === 1) {
@@ -356,7 +358,9 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             const catResultsWithPlayers = catResults.map(r => {
               const pid = catPlayerMap[r.carId];
               const pl = pid ? players.find(p => p.id === pid) : null;
-              return { ...r, playerName: pl?.username || '' };
+              const car = pl?.garage?.find(c => c.id === r.carId);
+            const stats = car ? getEffectiveStats(car) : null;
+            return { ...r, playerName: pl?.username || '', playerPoints: pl?.points || 0, carStats: stats };
             });
             await saveRaceDayResults(room.id, room.current_day, catRaceId, `Главная гонка: ${catLabel}`, catResultsWithPlayers, (room.race_weather?.isRaining ? 'RAIN' : 'SUNNY'));
 

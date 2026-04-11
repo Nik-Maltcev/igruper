@@ -116,13 +116,18 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                             <table className="w-full text-[10px] text-left border-collapse">
                                 <thead>
                                     <tr className="border-b border-[#333] text-[#aaa]">
-                                        <th className="p-2">Место на старте</th>
-                                        <th className="p-2">Машина</th>
-                                        <th className="p-2 text-center text-[#44ff44]">% к победе</th>
+                                        <th className="p-2">#</th>
+                                        <th className="p-2">Игрок / Машина</th>
+                                        <th className="p-2 text-center">Мощн.</th>
+                                        <th className="p-2 text-center">Кр.мом.</th>
+                                        <th className="p-2 text-center">Скор.</th>
+                                        <th className="p-2 text-center">Разг.</th>
+                                        <th className="p-2 text-center">Упр.</th>
+                                        <th className="p-2 text-center">Прох.</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {currentRace.results.map((r, i) => (
+                                    {[...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0)).map((r, i) => (
                                         <tr key={r.carId} className="border-b border-[#222]">
                                             <td className="p-2 text-[#fff]">#{i + 1}</td>
                                             <td className="p-2">
@@ -130,9 +135,12 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                                 {r.playerName && <span className="text-[#555] mx-1">—</span>}
                                                 <span className="text-[#aaa]">{r.carName}</span>
                                             </td>
-                                            <td className="p-2 text-center text-[#44ff44]">
-                                                —
-                                            </td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.power || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.torque || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.topSpeed || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.acceleration?.toFixed(1) || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.handling || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.offroad || '—'}</td>
                                         </tr>
                                     ))}
                                 </tbody>
