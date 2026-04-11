@@ -505,6 +505,45 @@ if (!targetRace) {
           </div>
         ))}
       </div>
+    
+      {/* ТУРНИР */}
+      {tournamentState && tournamentState.tournamentName && (
+        <div className="pixel-card p-4 mt-4 border-[#aa44ff]">
+          <h3 className="text-sm text-[#aa44ff] mb-2">🏆 ТУРНИР: {tournamentState.tournamentName}</h3>
+          <div className="text-[8px] text-[#aaa] mb-2">
+            Участок {tournamentState.completedSections + 1} из 3 | Требование: <span className="text-[#ffaa00]">АВТОСПОРТ</span>
+          </div>
+          {tournamentState.entries?.some(e => e.playerId === playerId) ? (
+            <div className="text-[8px] text-[#00ff00]">✔ Вы уже записаны на турнир</div>
+          ) : tournamentState.completedSections > 0 ? (
+            <div className="text-[8px] text-[#ff4444]">Турнир уже начался, запись закрыта</div>
+          ) : (
+            <div>
+              <div className="text-[8px] text-[#888] mb-1">Выберите машину с меткой АВТОСПОРТ:</div>
+              <div className="flex flex-wrap gap-1">
+                {cars.filter(c => c.tags?.some(t => t.toLowerCase() === 'автоспорт') && !c.lockedForTournament).length === 0 ? (
+                  <span className="text-[7px] text-[#ff4444]">Нет подходящих машин</span>
+                ) : cars.filter(c => c.tags?.some(t => t.toLowerCase() === 'автоспорт') && !c.lockedForTournament).map(car => (
+                  <button key={car.id}
+                    onClick={async () => {
+                      if (!roomId || !playerId) return;
+                      const { data: roomData } = await supabase.from('rooms').select('*').eq('id', roomId).single();
+                      if (!roomData) return;
+                      const player = (await fetchPlayers(roomId)).find(p => p.id === playerId);
+                      if (!player) return;
+                      const result = await joinTournament(player, car.id, roomData);
+                      if (result.error) { alert(result.error); return; }
+                      alert('Машина отправлена на турнир!');
+                    }}
+                    className="text-[7px] px-2 py-1 border border-[#aa44ff] text-[#aa44ff] hover:bg-[#1a0033]">
+                    {car.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -552,48 +591,13 @@ const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race
         </div>
       )}
 
-      {/* ТУРНИР */}
-      {tournamentState && tournamentState.tournamentName && (
-        <div className="pixel-card p-4 mt-4 border-[#aa44ff]">
-          <h3 className="text-sm text-[#aa44ff] mb-2">🏆 ТУРНИР: {tournamentState.tournamentName}</h3>
-          <div className="text-[8px] text-[#aaa] mb-2">
-            Участок {tournamentState.completedSections + 1} из 3 | Требование: <span className="text-[#ffaa00]">АВТОСПОРТ</span>
-          </div>
-          {tournamentState.entries?.some(e => e.playerId === playerId) ? (
-            <div className="text-[8px] text-[#00ff00]">✔ Вы уже записаны на турнир</div>
-          ) : tournamentState.completedSections > 0 ? (
-            <div className="text-[8px] text-[#ff4444]">Турнир уже начался, запись закрыта</div>
-          ) : (
-            <div>
-              <div className="text-[8px] text-[#888] mb-1">Выберите машину с меткой АВТОСПОРТ:</div>
-              <div className="flex flex-wrap gap-1">
-                {cars.filter(c => c.tags?.some(t => t.toLowerCase() === 'автоспорт') && !c.lockedForTournament).length === 0 ? (
-                  <span className="text-[7px] text-[#ff4444]">Нет подходящих машин</span>
-                ) : cars.filter(c => c.tags?.some(t => t.toLowerCase() === 'автоспорт') && !c.lockedForTournament).map(car => (
-                  <button key={car.id}
-                    onClick={async () => {
-                      if (!roomId || !playerId) return;
-                      const { data: roomData } = await supabase.from('rooms').select('*').eq('id', roomId).single();
-                      if (!roomData) return;
-                      const player = (await fetchPlayers(roomId)).find(p => p.id === playerId);
-                      if (!player) return;
-                      const result = await joinTournament(player, car.id, roomData);
-                      if (result.error) { alert(result.error); return; }
-                      alert('Машина отправлена на турнир!');
-                    }}
-                    className="text-[7px] px-2 py-1 border border-[#aa44ff] text-[#aa44ff] hover:bg-[#1a0033]">
-                    {car.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      
 
     
       
-</div>
+
+      
+    </div>
   );
 }
 
