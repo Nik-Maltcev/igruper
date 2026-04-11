@@ -3,6 +3,18 @@ import { SHOPS } from '../constants';
 import { Car, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 
+
+function getCarClass(car) {
+  if (car.carClass) return car.carClass;
+  if (car.originalId) {
+    const orig = AVAILABLE_CARS.find(c => c.id === car.originalId);
+    if (orig?.carClass) return orig.carClass;
+  }
+  // Try to find by name
+  const byName = AVAILABLE_CARS.find(c => c.name === car.name);
+  if (byName?.carClass) return byName.carClass;
+  return 'A';
+}
 interface MarketplaceProps {
   money: number;
   gameYear: number;
@@ -106,7 +118,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
                   <div className="flex-grow">
                     <div className="text-[9px] text-white">{car.name}</div>
                     <div className="text-[7px] text-[#555]">
-                      {stats.power} лс · {stats.topSpeed} км/ч · {car.installedParts.length}/{CLASS_PART_LIMITS[car.carClass || 'A'] || 16} дет.
+                      {stats.power} лс · {stats.topSpeed} км/ч · {car.installedParts.length}/{CLASS_PART_LIMITS[getCarClass(car)] || 16} дет.
                     </div>
                     {visited && <div className="text-[7px] text-[#ffaa00]">Сегодня: {visited}</div>}
                   </div>

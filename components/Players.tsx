@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, RoomPlayer } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 
+
+function getCarClass(car) {
+  if (car.carClass) return car.carClass;
+  if (car.originalId) {
+    const orig = AVAILABLE_CARS.find(c => c.id === car.originalId);
+    if (orig?.carClass) return orig.carClass;
+  }
+  // Try to find by name
+  const byName = AVAILABLE_CARS.find(c => c.name === car.name);
+  if (byName?.carClass) return byName.carClass;
+  return 'A';
+}
 interface PlayersProps {
   roomId: string;
   onBack: () => void;
@@ -72,12 +85,12 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                   p.garage.map((car: Car, idx: number) => {
                     const effective = getEffectiveStats(car);
                     const co = car.coefficients || {} as Partial<CarStats>;
-                    const partLimit = CLASS_PART_LIMITS[car.carClass || 'A'] || 16;
+                    const partLimit = CLASS_PART_LIMITS[getCarClass(car)] || 16;
 
                     return (
                       <div key={`${car.id}-${idx}`}
                         className="pixel-card p-0 flex flex-col overflow-hidden"
-                        style={{ borderColor: CLASS_COLORS[car.carClass || ''] || '#333', borderWidth: '8px' }}>
+                        style={{ borderColor: CLASS_COLORS[getCarClass(car) || ''] || '#333', borderWidth: '8px' }}>
 
                         {/* Верхняя часть: имя+теги | картинка | статы */}
                         <div className="flex items-stretch" style={{ minHeight: '168px' }}>
