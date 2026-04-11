@@ -1,4 +1,5 @@
-# Implementation Plan: World Series
+Да я как пример привёл цифру наобум😅
+Не помню уж все года. Просто сам факт, что пишут, что начинается то турнир, а его нетъясн# Implementation Plan: World Series
 
 ## Overview
 

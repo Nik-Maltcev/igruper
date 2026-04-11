@@ -551,7 +551,7 @@ const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race
           {entryButton}
         </div>
       )}
-    
+
       {/* ТУРНИР */}
       {tournamentState && tournamentState.tournamentName && (
         <div className="pixel-card p-4 mt-4 border-[#aa44ff]">
@@ -590,6 +590,9 @@ const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race
           )}
         </div>
       )}
+
+    
+      
 </div>
   );
 }
