@@ -8,7 +8,7 @@ import {
   fetchRaceEntries, updatePlayerState, saveRaceDayResults,
   leaveRoom as apiLeaveRoom, POWER_CATEGORIES
 } from '../services/multiplayer';
-import { simulateRace } from '../services/gameEngine';
+import { simulateRace, getEffectiveStats } from '../services/gameEngine';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
 import { generatePrizesForRace } from '../services/prizeService';
 import { signIn, signUp, getUserName } from '../services/auth';
