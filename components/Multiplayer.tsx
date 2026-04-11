@@ -159,6 +159,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         });
 
         for (const [raceId, raceEntries] of sortedRaceEntries) {
+          // Skip main-cat entries - they're handled separately
+          if (raceId.startsWith('main-cat-')) continue;
           // Собираем машины игроков
           const raceCars: Car[] = [];
           const playerMap: Record<string, string> = {}; // carId -> playerId
