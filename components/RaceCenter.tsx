@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Car, RaceResult, RaceEntry } from '../types';
-import { RACES_DATA } from '../constants';
+import { RACES_DATA, TOURNAMENTS_DATA } from '../constants';
 import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES, joinTournament } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 import { supabase } from '../services/supabase';
@@ -314,7 +314,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
               const catCar = catEntry ? cars.find(c => c.id === catEntry.car_id) : null;
               const matchingCars = cars.filter(c => {
                 const eff = getEffectiveStats(c);
-                return eff.power >= cat.min && eff.power <= cat.max && checkRequirement(c, race.requirement);
+                return eff.power >= cat.min && eff.power <= cat.max && checkRequirement(c, race.requirement) && !c.lockedForTournament;
               });
               return (
                 <div key={ci} className="border border-[#333] p-2 bg-[#0a0a14]">
@@ -367,11 +367,11 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
             <div className="text-[7px] text-[#888] mb-1">
               Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>:
             </div>
-            {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт'))).length === 0 ? (
+            {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт')) && !c.lockedForTournament).length === 0 ? (
               <span className="text-[7px] text-[#ff4444]">Нет подходящих машин в гараже</span>
             ) : (
               <div className="flex flex-wrap gap-1">
-                {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт'))).map(car => {
+                {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт')) && !c.lockedForTournament).map(car => {
                   const s = getEffectiveStats(car);
 
                   let effectiveTire = car.roadType || null;
@@ -497,17 +497,78 @@ if (!targetRace) {
       </div>
     
       {/* ТУРНИР */}
-      {tournamentState && tournamentState.tournamentName && (
-        <div className="pixel-card p-4 mt-4 border-[#aa44ff]">
+      {tournamentState && tournamentState.tournamentName && (() => {
+        const tournDef = TOURNAMENTS_DATA.find(t => t.name === tournamentState.tournamentName);
+        const isRegistered = tournamentState.entries?.some((e: any) => e.playerId === playerId);
+        const registrationOpen = tournamentState.completedSections === 0;
+        return (
+        <div className="pixel-card p-4 mt-4 border-[#aa44ff]" style={{ borderWidth: '3px' }}>
           <h3 className="text-sm text-[#aa44ff] mb-2">🏆 ТУРНИР: {tournamentState.tournamentName}</h3>
           <div className="text-[8px] text-[#aaa] mb-2">
-            Участок {tournamentState.completedSections + 1} из 3 | Требование: <span className="text-[#ffaa00]">АВТОСПОРТ</span>
+            Участок {Math.min(tournamentState.completedSections + 1, 3)} из 3 | Требование: <span className="text-[#ffaa00]">АВТОСПОРТ</span>
           </div>
-          {tournamentState.entries?.some(e => e.playerId === playerId) ? (
+          <div className="text-[7px] text-[#888] mb-3">
+            Машина отправляется на все 3 участка и не участвует в обычных гонках до субботы. Награды — после финала в субботу.
+          </div>
+
+          {/* Таблица участков */}
+          {tournDef && (
+            <div className="mb-3 overflow-x-auto">
+              <table className="w-full text-center" style={{ borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th className="text-[7px] text-[#aa44ff] px-2 py-1 text-left border-b border-[#333]">Участок</th>
+                    {['Мощн.', 'Кр.мом.', 'Скор.', 'Разг.', 'Упр.', 'Прох.'].map((h, i) => (
+                      <th key={i} className="text-[7px] text-[#ddd] px-1 py-1 border-b border-[#333] font-normal">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {tournDef.sections.map((sec, si) => {
+                    const dayLabel = si === 0 ? 'Вт' : si === 1 ? 'Чт' : 'Сб';
+                    const done = si < tournamentState.completedSections;
+                    const active = si === tournamentState.completedSections;
+                    return (
+                      <tr key={si} style={{ opacity: done ? 0.5 : 1, backgroundColor: active ? '#1a0033' : 'transparent' }}>
+                        <td className="text-[8px] text-left px-2 py-1 border-b border-[#222]">
+                          <span className="text-[#aa44ff]">[{dayLabel}]</span> {sec.name}
+                          {done && <span className="text-[#00ff00] ml-1">✔</span>}
+                          {active && <span className="text-[#ffdd00] ml-1">◀</span>}
+                        </td>
+                        {(['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const).map((k, ki) => (
+                          <td key={ki} className="text-[9px] px-1 py-1 border-b border-[#222]" style={{ color: weightColor(Math.round(sec.weights[k] * 15)) }}>
+                            {Math.round(sec.weights[k] * 15)}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Текущие результаты турнира */}
+          {tournamentState.completedSections > 0 && tournamentState.entries?.length > 0 && (
+            <div className="mb-3 bg-[#0a0a14] border border-[#333] p-2">
+              <div className="text-[7px] text-[#aa44ff] mb-1">ПРОМЕЖУТОЧНЫЕ РЕЗУЛЬТАТЫ:</div>
+              {[...tournamentState.entries].sort((a: any, b: any) => a.totalTime - b.totalTime).map((entry: any, i: number) => {
+                const p = allPlayers.find((pl: any) => pl.id === entry.playerId);
+                return (
+                  <div key={i} className="flex justify-between text-[8px] py-0.5">
+                    <span className="text-[#ddd]">#{i + 1} {p?.username || 'Игрок'}</span>
+                    <span className="text-[#aaa]">{entry.totalTime.toFixed(2)}с ({entry.sectionTimes.filter((t: number) => t > 0).length}/3 участков)</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {isRegistered ? (
             <div className="text-[8px] text-[#00ff00]">✔ Вы уже записаны на турнир</div>
-          ) : tournamentState.completedSections > 0 ? (
+          ) : !registrationOpen ? (
             <div className="text-[8px] text-[#ff4444]">Турнир уже начался, запись закрыта</div>
-          ) : (
+          ) : phase === 'RACE_DAY' ? (
             <div>
               <div className="text-[8px] text-[#888] mb-1">Выберите машину с меткой АВТОСПОРТ:</div>
               <div className="flex flex-wrap gap-1">
@@ -523,17 +584,20 @@ if (!targetRace) {
                       if (!player) return;
                       const result = await joinTournament(player, car.id, roomData);
                       if (result.error) { alert(result.error); return; }
-                      alert('Машина отправлена на турнир!');
+                      alert('Машина отправлена на турнир! Она будет скрыта из гаража до субботы.');
                     }}
                     className="text-[7px] px-2 py-1 border border-[#aa44ff] text-[#aa44ff] hover:bg-[#1a0033]">
-                    {car.name}
+                    {car.name} ({getEffectiveStats(car).power}лс)
                   </button>
                 ))}
               </div>
             </div>
+          ) : (
+            <div className="text-[8px] text-[#888]">Запись на турнир доступна в гоночный день (вторник)</div>
           )}
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

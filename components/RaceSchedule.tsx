@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { RACES_DATA } from '../constants';
+import { RACES_DATA, TOURNAMENTS_DATA } from '../constants';
 
 interface RaceScheduleProps {
   gameYear: number;
@@ -29,6 +29,10 @@ const RaceSchedule: React.FC<RaceScheduleProps> = ({ gameYear, onBack }) => {
     // Находим эпоху для текущего года (ближайшую <= gameYear)
     const sorted = epochs.filter((e: any) => e.year <= gameYear).sort((a: any, b: any) => b.year - a.year);
     return sorted[0] || null;
+  }, [gameYear]);
+
+  const currentTournament = useMemo(() => {
+    return TOURNAMENTS_DATA.find(t => t.years.includes(gameYear)) || null;
   }, [gameYear]);
 
   if (!epoch) {
@@ -113,6 +117,59 @@ const RaceSchedule: React.FC<RaceScheduleProps> = ({ gameYear, onBack }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Турнир текущего года */}
+      {currentTournament && (
+        <div className="pixel-card p-0 overflow-hidden mt-4" style={{borderWidth:'3px', borderColor: '#aa44ff'}}>
+          <table className="w-full" style={{borderCollapse:'collapse'}}>
+            <thead>
+              <tr className="bg-[#1a0033]">
+                <th className="text-[9px] text-white px-3 py-2 text-left border-b-2 border-[#333] min-w-[140px]">Участок</th>
+                {STAT_HEADERS.map((h, i) => (
+                  <th key={i} className="text-[8px] text-[#ddd] px-2 py-2 text-center border-b-2 border-[#333] font-normal">{h}</th>
+                ))}
+                <th className="text-[9px] text-white px-3 py-2 text-left border-b-2 border-[#333]">Требование</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan={8} className="text-[10px] px-3 py-1.5 font-bold"
+                  style={{backgroundColor:'#aa44ff', color:'#000'}}>
+                  🏆 ТУРНИР: {currentTournament.name} ({gameYear})
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={8} className="text-[8px] px-3 py-1"
+                  style={{backgroundColor:'#1a0033', color:'#aa44ff'}}>
+                  Вторник — участок 1 · Четверг — участок 2 · Суббота — участок 3 (финал + награды)
+                </td>
+              </tr>
+              {currentTournament.sections.map((section, si) => {
+                const dayLabel = si === 0 ? 'Вт' : si === 1 ? 'Чт' : 'Сб';
+                return (
+                  <tr key={si} className="hover:bg-[#111] transition-colors"
+                    style={{borderBottom: '1px solid #1a1a2e'}}>
+                    <td className="text-[9px] text-white px-3 py-1.5 border-r border-[#222]">
+                      <span className="text-[#aa44ff]">[{dayLabel}]</span> {section.name}
+                    </td>
+                    {STAT_KEYS.map((k, ki) => {
+                      const rawWeight = section.weights[k];
+                      const displayWeight = Math.round(rawWeight * 15);
+                      return (
+                        <td key={ki} className="text-[10px] text-center px-2 py-1.5 border-r border-[#1a1a2e]"
+                          style={{color: weightColor(displayWeight)}}>
+                          {displayWeight}
+                        </td>
+                      );
+                    })}
+                    <td className="text-[8px] text-[#ffaa00] px-3 py-1.5">АВТОСПОРТ</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
