@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SHOPS } from '../constants';
+import { SHOPS, AVAILABLE_CARS } from '../constants';
 import { Car, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 
