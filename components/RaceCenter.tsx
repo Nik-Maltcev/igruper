@@ -38,6 +38,8 @@ function checkRequirement(car, req) {
 function checkSingleRequirement(car, r) {
   // Normalize common Cyrillic/Latin mixups
   r = r.replace(/^с(?=h)/i, 'c'); // сhevrolet -> chevrolet
+  // Effective stats (with installed parts)
+  const effStats = getEffectiveStats(car);
   // Effective tire type
   let effectiveTire = car.roadType || null;
   const tiresPart = car.installedParts?.find(p => p.slot === 'tires');
@@ -120,22 +122,22 @@ function checkSingleRequirement(car, r) {
 
   // Мощность ranges
   const powerRange = r.match(/(\d+)[-–](\d+)\s*л[сc]/);
-  if (powerRange) return car.stats.power >= parseInt(powerRange[1]) && car.stats.power <= parseInt(powerRange[2]);
+  if (powerRange) return effStats.power >= parseInt(powerRange[1]) && effStats.power <= parseInt(powerRange[2]);
   // General "мощность до X" and "мощность менее X" patterns
   const powerTo = r.match(/мощность\s*до\s*(\d+)/);
-  if (powerTo) return car.stats.power <= parseInt(powerTo[1]);
+  if (powerTo) return effStats.power <= parseInt(powerTo[1]);
   const powerAbove = r.match(/мощность\s*выше\s*(\d+)/);
-  if (powerAbove) return car.stats.power > parseInt(powerAbove[1]);
+  if (powerAbove) return effStats.power > parseInt(powerAbove[1]);
   const powerBelow = r.match(/мощность\s*менее\s*(\d+)/);
-  if (powerBelow) return car.stats.power < parseInt(powerBelow[1]);
+  if (powerBelow) return effStats.power < parseInt(powerBelow[1]);
 
   // Статы (Управляемость выше X, Проходимость выше X, Скорость выше X)
   const handlingAbove = r.match(/управляемость\s*выше\s*(\d+)/);
-  if (handlingAbove) return car.stats.handling > parseInt(handlingAbove[1]);
+  if (handlingAbove) return effStats.handling > parseInt(handlingAbove[1]);
   const offroadAbove = r.match(/проходимость\s*выше\s*(\d+)/);
-  if (offroadAbove) return car.stats.offroad > parseInt(offroadAbove[1]);
+  if (offroadAbove) return effStats.offroad > parseInt(offroadAbove[1]);
   const speedAbove = r.match(/скорость\s*выше\s*(\d+)/);
-  if (speedAbove) return car.stats.topSpeed > parseInt(speedAbove[1]);
+  if (speedAbove) return effStats.topSpeed > parseInt(speedAbove[1]);
 
   // Оплатить 1000 - это не фильтр машин, пропускаем
   if (r.includes('оплатить 1000')) return true;
