@@ -280,6 +280,9 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
                     </div>
                   </div>
                   <div className="flex items-center px-3 py-2 min-w-[140px]">
+                    {part.name.toLowerCase().includes('расточк') || part.slot === 'bore' ? (
+                      <span className="text-[7px] text-[#ff4444]">🔒 НЕ СНИМАЕТСЯ</span>
+                    ) : (
                     <button
                       onClick={() => {
                         if (window.confirm(`Джамшут снимет "${part.name}" и заберёт себе. Продолжить?`)) {
@@ -290,6 +293,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
                       style={{ backgroundColor: '#330000', border: '2px solid #ff8800', color: '#ff8800' }}>
                       🔨 СНЯТЬ
                     </button>
+                    )}
                   </div>
                 </div>
               );

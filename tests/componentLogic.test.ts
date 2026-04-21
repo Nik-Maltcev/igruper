@@ -680,3 +680,53 @@ describe('getAllowedDealersCount', () => {
     expect(getAllowedDealersCount(8, 8)).toBe(4);
   });
 });
+
+// ═══════════════════════════════════════════════════════
+// Расточка двигателя — non-removable parts
+// ═══════════════════════════════════════════════════════
+
+describe('Non-removable parts (Расточка двигателя)', () => {
+  function isRemovable(part: { name: string; slot?: string }): boolean {
+    return !part.name.toLowerCase().includes('расточк') && part.slot !== 'bore';
+  }
+
+  it('Расточка двигателя 1 is NOT removable', () => {
+    expect(isRemovable({ name: 'Расточка двигателя 1', slot: 'bore' })).toBe(false);
+  });
+
+  it('Расточка двигателя 2 is NOT removable', () => {
+    expect(isRemovable({ name: 'Расточка двигателя 2', slot: 'bore' })).toBe(false);
+  });
+
+  it('Расточка 3 is NOT removable', () => {
+    expect(isRemovable({ name: 'Расточка 3', slot: 'bore' })).toBe(false);
+  });
+
+  it('Расточка двигателя 4 is NOT removable', () => {
+    expect(isRemovable({ name: 'Расточка двигателя 4', slot: 'bore' })).toBe(false);
+  });
+
+  it('part with slot bore but different name is NOT removable', () => {
+    expect(isRemovable({ name: 'Some Engine Bore', slot: 'bore' })).toBe(false);
+  });
+
+  it('Турбина 1 IS removable', () => {
+    expect(isRemovable({ name: 'Турбина 1', slot: 'turbo' })).toBe(true);
+  });
+
+  it('Интеркулер 1 IS removable', () => {
+    expect(isRemovable({ name: 'Интеркулер 1', slot: 'intercooler' })).toBe(true);
+  });
+
+  it('Слики 1 IS removable', () => {
+    expect(isRemovable({ name: 'Слики 1', slot: 'tires' })).toBe(true);
+  });
+
+  it('Распредвал IS removable', () => {
+    expect(isRemovable({ name: 'Распредвал Верхний 1', slot: 'camshaft' })).toBe(true);
+  });
+
+  it('part with no slot and no расточк in name IS removable', () => {
+    expect(isRemovable({ name: 'Поршни 1' })).toBe(true);
+  });
+});
