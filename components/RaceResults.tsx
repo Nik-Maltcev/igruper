@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../services/supabase';
 import { fetchRaceDayResults, POWER_CATEGORIES } from '../services/multiplayer';
+import { RACES_DATA } from '../constants';
 import { Car, RaceDayResult } from '../types';
 
 interface RaceResultsProps {
@@ -81,6 +82,31 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
     const isLastRace = currentIdx === results.length - 1;
     const isDrag = currentRace.race_name.toLowerCase().includes('дрэг');
 
+    // Стартовая решётка — порядок по очкам (сохраняем для анимации)
+    const gridOrder = useMemo(() => {
+        if (!currentRace) return [];
+        return [...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0));
+    }, [currentRace]);
+
+    // Ищем требования трассы по имени гонки
+    const raceRequirement = useMemo(() => {
+        if (!currentRace) return '';
+        const name = currentRace.race_name;
+        for (const epoch of (RACES_DATA.epochs || [])) {
+            for (const round of (epoch.rounds || [])) {
+                const race = (round.races || []).find((r: any) => r.name === name);
+                if (race?.requirement) return race.requirement;
+                // Also check round-level requirement
+                if (race && round.requirement) return round.requirement;
+            }
+        }
+        for (const special of (RACES_DATA.specials || [])) {
+            const race = (special.races || []).find((r: any) => r.name === name);
+            if (race?.requirement) return race.requirement;
+        }
+        return '';
+    }, [currentRace]);
+
     const handleNext = () => {
         if (viewStep === 'GRID') {
             setViewStep('ANIMATION');
@@ -111,7 +137,12 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
 
                 {viewStep === 'GRID' && (
                     <div>
-                        <h3 className="text-sm mb-4 text-center text-[#ffaa00]">СТАРТОВАЯ РЕШЕТКА</h3>
+                        <h3 className="text-sm mb-2 text-center text-[#ffaa00]">СТАРТОВАЯ РЕШЕТКА</h3>
+                        {raceRequirement && (
+                            <div className="text-center mb-3 text-[9px] text-[#ffaa00] bg-[#1a1a00] border border-[#ffaa00] px-3 py-1.5">
+                                Требование: <span className="text-white font-bold">{raceRequirement}</span>
+                            </div>
+                        )}
                         <div className="overflow-x-auto">
                             <table className="w-full text-[10px] text-left border-collapse">
                                 <thead>
@@ -127,7 +158,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {[...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0)).map((r, i) => (
+                                    {gridOrder.map((r, i) => (
                                         <tr key={r.carId} className="border-b border-[#222]">
                                             <td className="p-2 text-[#fff]">#{i + 1}</td>
                                             <td className="p-2">
@@ -170,7 +201,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                             <div className="absolute right-[20px] top-[-2px] text-[7px] text-[#ffaa00]" style={{ zIndex: 11 }}>🏁</div>
 
                             <div className="flex flex-col gap-1">
-                                {currentRace.results.map((r, i) => {
+                                {gridOrder.map((r, i) => {
                                     const minTime = Math.min(...currentRace.results.map(res => res.time));
                                     const progressModifier = minTime / r.time;
                                     const currentProgress = Math.min(95, animationProgress * progressModifier * 0.95);
