@@ -79,18 +79,26 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
     }
 
     const currentRace = results[currentIdx];
+    if (!currentRace) {
+        return (
+            <div className="p-4 max-w-2xl mx-auto">
+                <div className="pixel-card p-4 text-center text-[#ffaa00]">Нет данных для этой гонки.</div>
+                <button onClick={onBack} className="mt-4 w-full retro-btn">НАЗАД</button>
+            </div>
+        );
+    }
     const isLastRace = currentIdx === results.length - 1;
-    const isDrag = currentRace.race_name.toLowerCase().includes('дрэг');
+    const isDrag = (currentRace?.race_name || '').toLowerCase().includes('дрэг');
 
     // Стартовая решётка — порядок по очкам (сохраняем для анимации)
     const gridOrder = useMemo(() => {
-        if (!currentRace) return [];
+        if (!currentRace?.results?.length) return [];
         return [...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0));
-    }, [currentRace]);
+    }, [currentIdx, results]);
 
     // Ищем требования трассы по имени гонки
     const raceRequirement = useMemo(() => {
-        if (!currentRace) return '';
+        if (!currentRace?.race_name) return '';
         const name = currentRace.race_name;
         for (const epoch of (RACES_DATA.epochs || [])) {
             for (const round of (epoch.rounds || [])) {
@@ -105,7 +113,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
             if (race?.requirement) return race.requirement;
         }
         return '';
-    }, [currentRace]);
+    }, [currentIdx, results]);
 
     const handleNext = () => {
         if (viewStep === 'GRID') {

@@ -169,9 +169,10 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
           const soldOut = remaining <= 0;
           return (
             <div key={`${car.id}-${idx}`}
-              className={`pixel-card p-0 flex items-stretch overflow-hidden ${soldOut ? 'opacity-40' : ''}`}
-              style={{minHeight: '180px', borderColor: CLASS_COLORS[car.carClass] || '#333', borderWidth: '3px'}}>
+              className={`pixel-card p-0 flex flex-col overflow-hidden ${soldOut ? 'opacity-40' : ''}`}
+              style={{borderColor: CLASS_COLORS[car.carClass] || '#333', borderWidth: '3px'}}>
 
+              <div className="flex items-stretch" style={{minHeight: '168px'}}>
               {/* Левая часть: имя + теги */}
               <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
                 <div className="text-[10px] text-white leading-tight mb-1" style={{textShadow:'1px 1px 0 #000'}}>{car.name}</div>
@@ -197,7 +198,7 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
               </div>
 
               {/* Таблица характеристик + коэффициенты */}
-              <div className="flex-grow flex flex-col justify-center border-r border-[#222]">
+              <div className="flex-grow flex flex-col justify-center">
                 <table className="w-full text-center" style={{borderCollapse:'collapse'}}>
                   {/* Заголовки */}
                   <thead>
@@ -228,10 +229,11 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
                   </tbody>
                 </table>
               </div>
+              </div>
 
-              {/* Правая часть: цена + кнопка */}
-              <div className="flex flex-col justify-center items-center px-4 py-2 min-w-[140px]">
-                <div className="text-[11px] text-[#00ff00] mb-2">${car.price.toLocaleString()}</div>
+              {/* Нижняя часть: цена + кнопка */}
+              <div className="border-t border-[#333] px-4 py-1.5 flex items-center justify-between">
+                <div className="text-[11px] text-[#00ff00]">${car.price.toLocaleString()}</div>
                 <button onClick={() => {
                   const discounts = playerStorage.filter((item: any) => item.type === 'discount' && item.dealer === selectedDealer);
                   if (discounts.length > 0) {
