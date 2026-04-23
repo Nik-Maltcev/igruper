@@ -304,7 +304,8 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                   const targetCar = cars.find(c => c.id === installCarId);
                   const partLimit = targetCar ? (CLASS_PART_LIMITS[targetCar.carClass || 'A'] || 16) : 0;
                   const canInstall = targetCar && targetCar.installedParts.length < partLimit
-                    && (!part.slot || !targetCar.installedParts.some(p => p.slot === part.slot));
+                    && (!part.slot || !targetCar.installedParts.some(p => p.slot === part.slot))
+                    && !targetCar.installedParts.some(p => p.name.toLowerCase() === part.name.toLowerCase());
 
                   return (
                     <div key={si} className="pixel-card p-0 flex items-stretch overflow-hidden" style={{ borderWidth: '2px' }}>
@@ -341,7 +342,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                         )}
                         {installCarId && !canInstall && targetCar && (
                           <span className="text-[7px] text-[#ff4444]">
-                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : 'Слот занят'}
+                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : targetCar.installedParts.some(p => p.name.toLowerCase() === (part as any).name?.toLowerCase()) ? 'Уже есть' : 'Слот занят'}
                           </span>
                         )}
                         
