@@ -226,12 +226,6 @@ export async function buyPart(player: RoomPlayer, carId: string, part: Part): Pr
 export async function buyCar(player: RoomPlayer, car: Car, roomId: string, currentDay?: number): Promise<{ error?: string }> {
   if (player.money < car.price) return { error: 'Недостаточно денег' };
 
-  // Серверная проверка наличия — считаем покупки прямо из БД
-  const counts = await fetchPurchaseCounts(roomId);
-  const bought = counts[car.id] || 0;
-  const remaining = (car.quantity || 1) - bought;
-  if (remaining <= 0) return { error: 'Машина уже раскуплена' };
-
   const newCar: Car = { ...car, id: `my-${Date.now()}`, originalId: car.id, installedParts: [], ...(currentDay ? { purchaseDay: currentDay } : {}) };
   const garage = [...player.garage, newCar];
 
