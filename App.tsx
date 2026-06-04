@@ -117,7 +117,7 @@ const App = () => {
             <span className="text-[#888]">🚗 {cars.length} авто</span>
             <span className="text-[#888]">📦 {storage.length} на складе</span>
           </div>
-          <button onClick={() => navigate('MULTIPLAYER')} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← КОМНАТА</button>
+          <button onClick={() => navigate('MULTIPLAYER')} className="retro-btn text-[#fff] text-[9px] py-1.5 px-4" style={{ backgroundColor: '#1a1a2e', border: '2px solid #ffaa00', color: '#ffaa00' }}>⌂ МЕНЮ</button>
         </div>
       )}
       <main className="flex-grow relative overflow-hidden">

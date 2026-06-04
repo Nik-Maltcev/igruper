@@ -491,6 +491,23 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                     await updatePlayerState(player.id, { garage: newGarage });
                   }
                 }
+
+                // Сохраняем итоговые результаты турнира с наградами для отображения
+                const tournFinalResults = sortedEntries.map((entry, i) => {
+                  const p = players.find(pl => pl.id === entry.playerId);
+                  const car = p?.garage?.find(c => c.id === entry.carId);
+                  const rwd = rewards?.find(r => r.place === i + 1) || { money: 0, points: 0, prizes: 0 };
+                  return {
+                    carId: entry.carId,
+                    carName: car?.name || '?',
+                    playerName: p?.username || '',
+                    position: i + 1,
+                    time: entry.totalTime,
+                    earnings: rwd.money,
+                    points: rwd.points,
+                  };
+                });
+                await saveRaceDayResults(room.id, room.current_day, 'tournament-final', `🏆 ИТОГИ: ${room.tournament_state.tournamentName}`, tournFinalResults, 'SUNNY');
               }
             }
           }
