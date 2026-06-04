@@ -63,11 +63,11 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
         }
     }, [viewStep]);
 
-    // Стартовая решётка — порядок по очкам (сохраняем для анимации)
+    // Стартовая решётка — порядок по алфавиту (имя игрока)
     const currentRace = results[currentIdx] || null;
     const gridOrder = useMemo(() => {
         if (!currentRace?.results?.length) return [];
-        return [...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0));
+        return [...currentRace.results].sort((a, b) => (a.playerName || '').localeCompare(b.playerName || ''));
     }, [currentIdx, results]);
 
     // Ищем требования трассы по имени гонки
