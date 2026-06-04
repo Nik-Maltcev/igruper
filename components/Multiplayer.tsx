@@ -295,8 +295,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             if (!pointsAccum[pid]) pointsAccum[pid] = 0;
             moneyAccum[pid] += result.earnings;
             pointsAccum[pid] += result.points;
-            await sendSystemMessage(room.id,
-              `🏁 ${result.carName}: место ${result.position} — +${result.earnings.toLocaleString()} +${result.points}оч.`);
           }
 
           
@@ -372,7 +370,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               if (!pointsAccum[pid]) pointsAccum[pid] = 0;
               moneyAccum[pid] += result.earnings;
               pointsAccum[pid] += result.points;
-              await sendSystemMessage(room.id, `🏁 [${catLabel}] ${result.carName}: место ${result.position} — +$${result.earnings.toLocaleString()} +${result.points}оч.`);
             }
           }
         }
