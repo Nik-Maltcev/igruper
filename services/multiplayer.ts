@@ -249,7 +249,7 @@ export async function joinTournament(player: RoomPlayer, carId: string, room: Ro
   if (carIndex === -1) return { error: 'Машина не найдена' };
 
   const car = player.garage[carIndex];
-  if (!car.tags?.includes('АВТОСПОРТ')) return { error: 'Для турнира нужна машина с меткой АВТОСПОРТ' };
+  if (!car.tags?.some(t => t.toLowerCase() === 'автоспорт')) return { error: 'Для турнира нужна машина с меткой АВТОСПОРТ' };
   if (car.lockedForTournament) return { error: 'Машина уже отправлена на турнир' };
 
   // 1. Блокируем машину в гараже
