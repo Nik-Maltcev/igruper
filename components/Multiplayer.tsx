@@ -446,6 +446,16 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               const sectName = sectionIdx === 0 ? 'ПЕРВЫЙ УЧАСТОК' : sectionIdx === 1 ? 'ВТОРОЙ УЧАСТОК' : 'ФИНАЛЬНЫЙ УЧАСТОК';
               await sendSystemMessage(room.id, `🏆 Турнир [${room.tournament_state.tournamentName}]: Завершён ${sectName}!`);
 
+              // Сохраняем результаты участка турнира для визуализации в RaceResults
+              const tournResultsWithPlayers = tResults.map(r => {
+                const entry = room.tournament_state!.entries.find(e => e.carId === r.carId);
+                const p = entry ? players.find(pl => pl.id === entry.playerId) : null;
+                const car = p?.garage?.find(c => c.id === r.carId);
+                const updEntry = newEntries.find(e => e.carId === r.carId);
+                return { ...r, playerName: p?.username || '', carStats: null, totalTime: updEntry?.totalTime || 0 };
+              });
+              await saveRaceDayResults(room.id, room.current_day, `tournament-section-${sectionIdx}`, `🏆 ${room.tournament_state.tournamentName}: ${sectName}`, tournResultsWithPlayers, 'SUNNY');
+
               if (sectionIdx === 2) {
                 const sortedEntries = [...newEntries].sort((a,b) => a.totalTime - b.totalTime);
                 const rewards = getRewards(players.length).tournament;

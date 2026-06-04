@@ -556,9 +556,10 @@ if (!targetRace) {
               <div className="text-[7px] text-[#aa44ff] mb-1">ПРОМЕЖУТОЧНЫЕ РЕЗУЛЬТАТЫ:</div>
               {[...tournamentState.entries].sort((a: any, b: any) => a.totalTime - b.totalTime).map((entry: any, i: number) => {
                 const p = allPlayers.find((pl: any) => pl.id === entry.playerId);
+                const car = p?.garage?.find((c: any) => c.id === entry.carId);
                 return (
                   <div key={i} className="flex justify-between text-[8px] py-0.5">
-                    <span className="text-[#ddd]">#{i + 1} {p?.username || 'Игрок'}</span>
+                    <span className="text-[#ddd]">#{i + 1} {p?.username || 'Игрок'} <span className="text-[#888]">— {car?.name || '?'}</span></span>
                     <span className="text-[#aaa]">{entry.totalTime.toFixed(2)}с ({entry.sectionTimes.filter((t: number) => t > 0).length}/3 участков)</span>
                   </div>
                 );
