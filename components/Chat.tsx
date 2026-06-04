@@ -12,7 +12,7 @@ interface ChatProps {
 const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true); // Свёрнут по умолчанию
   const [unread, setUnread] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +29,6 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
       }, (payload) => {
         const msg = payload.new as ChatMessage;
         setMessages(prev => {
-          // Проверяем, есть ли оптимистичное сообщение с тем же содержанием — заменяем его реальным
           const optIdx = prev.findIndex(m =>
             m.id.startsWith('opt-') && m.player_id === msg.player_id && m.message === msg.message
           );
@@ -38,7 +37,6 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
             updated[optIdx] = msg;
             return updated;
           }
-          // Нет дубликата — просто добавляем
           return [...prev, msg];
         });
         if (collapsed) setUnread(prev => prev + 1);
@@ -56,7 +54,6 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
     const text = input.trim();
     if (!text) return;
     setInput('');
-    // Оптимистичное добавление сообщения (сразу видно отправителю)
     const optimistic: ChatMessage = {
       id: `opt-${Date.now()}`,
       room_id: roomId,
@@ -74,12 +71,13 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
     return (
       <button
         onClick={() => { setCollapsed(false); setUnread(0); }}
-        className="fixed bottom-4 right-4 z-50 px-3 py-2 text-[8px]"
+        className="fixed bottom-4 right-4 z-50 px-4 py-2.5 text-[9px]"
         style={{
           backgroundColor: '#1a1a2e',
           border: '2px solid #5555ff',
           color: '#5555ff',
           fontFamily: "'Press Start 2P', monospace",
+          boxShadow: '3px 3px 0 #000',
         }}
       >
         💬 ЧАТ {unread > 0 && <span className="text-[#ff4444] ml-1">({unread})</span>}
@@ -88,19 +86,19 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-72 flex flex-col"
-      style={{ height: '320px', backgroundColor: '#0d0d20', border: '2px solid #333', boxShadow: '4px 4px 0 #000' }}>
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col"
+      style={{ width: '380px', height: '480px', backgroundColor: '#0d0d20', border: '2px solid #5555ff', boxShadow: '4px 4px 0 #000' }}>
       {/* Header */}
-      <div className="flex justify-between items-center px-2 py-1 border-b border-[#333]"
+      <div className="flex justify-between items-center px-3 py-2 border-b border-[#333]"
         style={{ backgroundColor: '#111' }}>
-        <span className="text-[7px] text-[#5555ff]">💬 ЧАТ</span>
-        <button onClick={() => setCollapsed(true)} className="text-[8px] text-[#555] hover:text-[#aaa]">✕</button>
+        <span className="text-[9px] text-[#5555ff]">💬 ЧАТ</span>
+        <button onClick={() => setCollapsed(true)} className="text-[10px] text-[#555] hover:text-[#aaa] px-1">✕</button>
       </div>
 
       {/* Messages */}
-      <div className="flex-grow overflow-y-auto px-2 py-1" style={{ fontSize: '7px' }}>
+      <div className="flex-grow overflow-y-auto px-3 py-2" style={{ fontSize: '9px' }}>
         {messages.map((msg) => (
-          <div key={msg.id} className="mb-1">
+          <div key={msg.id} className="mb-1.5">
             {msg.type === 'system' ? (
               <div className="text-[#555] italic">⚙ {msg.message}</div>
             ) : (
@@ -124,10 +122,10 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Сообщение..."
-          className="flex-grow bg-[#111] text-[#ccc] text-[7px] px-2 py-1.5 outline-none"
+          className="flex-grow bg-[#111] text-[#ccc] text-[9px] px-3 py-2 outline-none"
           style={{ fontFamily: "'Press Start 2P', monospace" }}
         />
-        <button onClick={handleSend} className="px-2 text-[8px] text-[#5555ff] hover:text-[#7777ff]"
+        <button onClick={handleSend} className="px-3 text-[10px] text-[#5555ff] hover:text-[#7777ff]"
           style={{ backgroundColor: '#111' }}>
           ▶
         </button>
