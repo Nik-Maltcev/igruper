@@ -91,12 +91,12 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
       {/* Header */}
       <div className="flex justify-between items-center px-3 py-2 border-b border-[#333]"
         style={{ backgroundColor: '#111' }}>
-        <span className="text-[9px] text-[#5555ff]">💬 ЧАТ</span>
-        <button onClick={() => setCollapsed(true)} className="text-[10px] text-[#555] hover:text-[#aaa] px-1">✕</button>
+        <span className="text-[13px] text-[#5555ff]">💬 ЧАТ</span>
+        <button onClick={() => setCollapsed(true)} className="text-[14px] text-[#555] hover:text-[#aaa] px-1">✕</button>
       </div>
 
       {/* Messages */}
-      <div className="flex-grow overflow-y-auto px-3 py-2" style={{ fontSize: '9px' }}>
+      <div className="flex-grow overflow-y-auto px-3 py-2" style={{ fontSize: '14px' }}>
         {messages.map((msg) => (
           <div key={msg.id} className="mb-1.5">
             {msg.type === 'system' ? (
@@ -122,10 +122,10 @@ const Chat: React.FC<ChatProps> = ({ roomId, playerId, username }) => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Сообщение..."
-          className="flex-grow bg-[#111] text-[#ccc] text-[9px] px-3 py-2 outline-none"
+          className="flex-grow bg-[#111] text-[#ccc] text-[14px] px-3 py-2.5 outline-none"
           style={{ fontFamily: "'Press Start 2P', monospace" }}
         />
-        <button onClick={handleSend} className="px-3 text-[10px] text-[#5555ff] hover:text-[#7777ff]"
+        <button onClick={handleSend} className="px-3 text-[16px] text-[#5555ff] hover:text-[#7777ff]"
           style={{ backgroundColor: '#111' }}>
           ▶
         </button>

@@ -63,6 +63,31 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
         }
     }, [viewStep]);
 
+    // Стартовая решётка — порядок по очкам (сохраняем для анимации)
+    const currentRace = results[currentIdx] || null;
+    const gridOrder = useMemo(() => {
+        if (!currentRace?.results?.length) return [];
+        return [...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0));
+    }, [currentIdx, results]);
+
+    // Ищем требования трассы по имени гонки
+    const raceRequirement = useMemo(() => {
+        if (!currentRace?.race_name) return '';
+        const name = currentRace.race_name;
+        for (const epoch of (RACES_DATA.epochs || [])) {
+            for (const round of (epoch.rounds || [])) {
+                const race = (round.races || []).find((r: any) => r.name === name);
+                if (race?.requirement) return race.requirement;
+                if (race && round.requirement) return round.requirement;
+            }
+        }
+        for (const special of (RACES_DATA.specials || [])) {
+            const race = (special.races || []).find((r: any) => r.name === name);
+            if (race?.requirement) return race.requirement;
+        }
+        return '';
+    }, [currentIdx, results]);
+
     if (loading) {
         return <div className="p-4 text-center text-white">Загрузка результатов...</div>;
     }
@@ -78,7 +103,6 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
         );
     }
 
-    const currentRace = results[currentIdx];
     if (!currentRace) {
         return (
             <div className="p-4 max-w-2xl mx-auto">
@@ -88,32 +112,7 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
         );
     }
     const isLastRace = currentIdx === results.length - 1;
-    const isDrag = (currentRace?.race_name || '').toLowerCase().includes('дрэг');
-
-    // Стартовая решётка — порядок по очкам (сохраняем для анимации)
-    const gridOrder = useMemo(() => {
-        if (!currentRace?.results?.length) return [];
-        return [...currentRace.results].sort((a, b) => ((b as any).playerPoints || 0) - ((a as any).playerPoints || 0));
-    }, [currentIdx, results]);
-
-    // Ищем требования трассы по имени гонки
-    const raceRequirement = useMemo(() => {
-        if (!currentRace?.race_name) return '';
-        const name = currentRace.race_name;
-        for (const epoch of (RACES_DATA.epochs || [])) {
-            for (const round of (epoch.rounds || [])) {
-                const race = (round.races || []).find((r: any) => r.name === name);
-                if (race?.requirement) return race.requirement;
-                // Also check round-level requirement
-                if (race && round.requirement) return round.requirement;
-            }
-        }
-        for (const special of (RACES_DATA.specials || [])) {
-            const race = (special.races || []).find((r: any) => r.name === name);
-            if (race?.requirement) return race.requirement;
-        }
-        return '';
-    }, [currentIdx, results]);
+    const isDrag = (currentRace.race_name || '').toLowerCase().includes('дрэг');
 
     const handleNext = () => {
         if (viewStep === 'GRID') {
