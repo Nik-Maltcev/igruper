@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Car, RaceResult, RaceEntry } from '../types';
-import { RACES_DATA, TOURNAMENTS_DATA } from '../constants';
+import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
+import type { RewardEntry } from '../constants';
 import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES, joinTournament } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 import { supabase } from '../services/supabase';
@@ -23,6 +24,13 @@ interface RaceCenterProps {
 
 const STAT_HEADERS = ['Мощность', 'Крут.момент', 'Скорость', 'Разгон', 'Управляемость', 'Проходимость'];
 const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
+
+interface RaceRewardInfo {
+  label: string;
+  count: number;
+  table: RewardEntry[];
+  note?: string;
+}
 
 // Проверка требований трассы (простая эвристика по строке requirement)
 function checkRequirement(car, req) {
@@ -181,6 +189,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     return (RACES_DATA.epochs || []).filter((e: any) => e.year <= gameYear);
   }, [gameYear]);
 
+  const playerCount = Math.max(3, Math.min(8, allPlayers.length));
+  const rewards = useMemo(() => getRewards(allPlayers.length), [allPlayers.length]);
+
   const specials = RACES_DATA.specials || [];
   const qualification = specials.find((s: any) => s.name === 'квалификация');
 
@@ -203,6 +214,15 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const cycleDay = currentDay <= 3 ? currentDay : ((currentDay - 4) % 7) + 4;
   const isCityRace = cycleDay >= 4 && cycleDay <= 5;
   const isWorldSeries = cycleDay >= 8 && cycleDay <= 9;
+
+  const raceRewardsInfo = (raceIndex: number): RaceRewardInfo | undefined => {
+    if (cycleDay <= 2) return { label: 'КВАЛИФИКАЦИЯ — НАГРАДЫ', count: playerCount, table: rewards.qualification || rewards.city, note: 'Призовые — только деньгами, очки чемпионата не начисляются' };
+    if (cycleDay >= 4 && cycleDay <= 5) return { label: 'ГОРОДСКИЕ СОРЕВНОВАНИЯ — НАГРАДЫ', count: playerCount, table: rewards.city };
+    if (cycleDay >= 6 && cycleDay <= 7) return { label: 'НАЦИОНАЛЬНЫЕ СОРЕВНОВАНИЯ — НАГРАДЫ', count: playerCount, table: rewards.national };
+    if (raceIndex === 0) return { label: 'ПЛАТНАЯ ГОНКА — НАГРАДЫ', count: playerCount, table: rewards.worldSaturday, note: 'Взнос за участие: $1000 · очки не начисляются' };
+    if (raceIndex === 1) return { label: 'БОНУСНЫЙ ЗАЕЗД — НАГРАДЫ', count: playerCount, table: rewards.worldBonus, note: '🎁 — случайный приз: запчасть на тир выше доступных или скидка 15% в автосалоне' };
+    return { label: 'ГЛАВНАЯ ГОНКА — НАГРАДЫ', count: playerCount, table: rewards.worldMain, note: 'Гонка идёт по категориям мощности — призовые внутри вашей категории' };
+  };
   const epochData = availableEpochs.find((e: any) => e.year === gameYear);
   
   let targetRace: { title: string, titleColor: string, rounds: any[] } | null = null;
@@ -491,7 +511,7 @@ if (!targetRace) {
             )}
             <div className="flex flex-col gap-3">
               {round.races.map((race: any, rri: number) => (
-                <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} raceIndex={rri} />} />
+                <RaceCard key={rri} race={race} entryButton={<EntryButton race={race} raceIndex={rri} />} rewards={raceRewardsInfo(rri)} />
               ))}
             </div>
           </div>
@@ -512,6 +532,24 @@ if (!targetRace) {
           <div className="text-[7px] text-[#888] mb-3">
             Машина отправляется на все 3 участка и не участвует в обычных гонках до субботы. Награды — после финала в субботу.
           </div>
+
+          {rewards.tournament && rewards.tournament.length > 0 && (
+            <div className="mb-3">
+              <div className="text-[7px] text-[#ffdd00] mb-1">
+                НАГРАДЫ ТУРНИРА <span className="text-[#888]">(при {playerCount} игроках)</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {rewards.tournament.map((rw, i) => (
+                  <span key={i} className="text-[7px] px-1.5 py-0.5 border border-[#333] bg-[#111] whitespace-nowrap">
+                    <span className="text-[#ffdd00]">{rw.place}</span>
+                    <span className="text-[#888]"> место:</span>
+                    <span className="text-[#00ff00]"> ${rw.money.toLocaleString()}</span>
+                    {rw.points > 0 && <span className="text-[#00aaff]"> · {rw.points} очк.</span>}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Таблица участков */}
           {tournDef && (
@@ -606,7 +644,7 @@ if (!targetRace) {
 };
 
 // Карточка гонки
-const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race, entryButton }) => {
+const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode; rewards?: RaceRewardInfo }> = ({ race, entryButton, rewards }) => {
   return (
     <div className="pixel-card p-0 overflow-hidden" style={{ borderColor: '#555', borderWidth: '2px' }}>
       <div className="flex items-stretch" style={{ minHeight: '72px' }}>
@@ -640,7 +678,6 @@ const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race
           </table>
         </div>
       </div>
-
       {/* Кнопка записи — под таблицей */}
       {entryButton && (
         <div className="border-t border-[#1a1a2e] px-3 py-2">
@@ -648,12 +685,25 @@ const RaceCard: React.FC<{ race: any; entryButton?: React.ReactNode }> = ({ race
         </div>
       )}
 
-      
-
-    
-      
-
-      
+      {rewards && rewards.table.length > 0 && (
+        <div className="border-t border-[#1a1a2e] px-3 py-2 bg-[#0a0a14]">
+          <div className="text-[7px] text-[#ffdd00] mb-1">
+            {rewards.label} <span className="text-[#888]">(при {rewards.count} игроках)</span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {rewards.table.map((rw, i) => (
+              <span key={`${rw.place}-${i}`} className="text-[7px] px-1.5 py-0.5 border border-[#333] bg-[#111] whitespace-nowrap">
+                <span className="text-[#ffdd00]">{rw.place}</span>
+                <span className="text-[#888]"> место:</span>
+                <span className="text-[#00ff00]"> ${rw.money.toLocaleString()}</span>
+                {rw.points > 0 && <span className="text-[#00aaff]"> · {rw.points} очк.</span>}
+                {rw.prizes > 0 && <span className="text-[#aa44ff]"> · 🎁×{rw.prizes}</span>}
+              </span>
+            ))}
+          </div>
+          {rewards.note && <div className="text-[6px] text-[#888] mt-1">{rewards.note}</div>}
+        </div>
+      )}
     </div>
   );
 }
