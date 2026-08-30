@@ -129,7 +129,7 @@ const App = () => {
         {currentView === 'RULES' && <Rules onBack={() => navigate('MULTIPLAYER')} />}
         {currentView === 'SCHEDULE' && (<RaceSchedule gameYear={gameYear} onBack={() => navigate('MULTIPLAYER')} />)}
         {currentView === 'PLAYERS' && room && (<Players roomId={room.id} onBack={() => navigate('MULTIPLAYER')} />)}
-        {currentView === 'RACE_RESULTS' && room && (<RaceResults roomId={room.id} currentDay={room.current_day} onBack={() => navigate('MULTIPLAYER')} />)}
+        {currentView === 'RACE_RESULTS' && room && (<RaceResults roomId={room.id} currentDay={room.current_day} gameYear={room.current_year} onBack={() => navigate('MULTIPLAYER')} />)}
       </main>
     </div>
   );

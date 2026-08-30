@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../services/supabase';
-import { fetchRaceDayResults, POWER_CATEGORIES } from '../services/multiplayer';
+import { fetchRaceDayResults, POWER_CATEGORIES, getScheduleDay } from '../services/multiplayer';
 import { RACES_DATA } from '../constants';
 import { Car, RaceDayResult } from '../types';
 
 interface RaceResultsProps {
     roomId: string;
     currentDay: number;
+    gameYear?: number;
     onBack: () => void;
 }
 
@@ -28,7 +29,7 @@ function formatTime(seconds: number, raceName: string): string {
 // Цвета машинок по позициям
 const CAR_COLORS = ['#ffdd00', '#aaaaaa', '#cd7f32', '#4488ff', '#44ff44', '#ff8800', '#aa44ff', '#ff4444'];
 
-export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsProps) {
+export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBack }: RaceResultsProps) {
     const [results, setResults] = useState<RaceDayResult[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentIdx, setCurrentIdx] = useState(0);
@@ -70,23 +71,42 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
         return [...currentRace.results].sort((a, b) => (a.playerName || '').localeCompare(b.playerName || ''));
     }, [currentIdx, results]);
 
-    // Ищем требования трассы по имени гонки
-    const raceRequirement = useMemo(() => {
-        if (!currentRace?.race_name) return '';
-        const name = currentRace.race_name;
-        for (const epoch of (RACES_DATA.epochs || [])) {
-            for (const round of (epoch.rounds || [])) {
-                const race = (round.races || []).find((r: any) => r.name === name);
-                if (race?.requirement) return race.requirement;
-                if (race && round.requirement) return round.requirement;
-            }
+    // Требование трассы: ищем только в эпохе и раунде этого дня
+    // (имена гонок повторяются между эпохами с разными требованиями)
+    // null — баннер не показывать (спец-заезд), '' — свободная гонка
+    const raceRequirement = useMemo<string | null>(() => {
+        if (!currentRace) return null;
+        const raceId = currentRace.race_id || '';
+
+        const schedule = getScheduleDay(currentDay);
+        const roundNum = schedule.raceType === 'CITY' ? 1
+            : schedule.raceType === 'NATIONAL' ? 2
+            : schedule.raceType === 'WORLD' ? 3 : 0;
+        const epochData = roundNum
+            ? (RACES_DATA.epochs || []).find((e: any) => e.year === gameYear)
+            : null;
+        const roundData = epochData?.rounds?.find((r: any) => r.round === roundNum) || null;
+
+        if (raceId.startsWith('main-cat-')) {
+            const ci = parseInt(raceId.replace('main-cat-', ''), 10);
+            const cat = POWER_CATEGORIES[ci];
+            const underlying = roundData?.races?.[2]?.requirement || '';
+            const parts = [cat ? `мощность ${cat.label}` : '', underlying].filter(Boolean);
+            return parts.length > 0 ? parts.join(' + ') : null;
         }
-        for (const special of (RACES_DATA.specials || [])) {
-            const race = (special.races || []).find((r: any) => r.name === name);
-            if (race?.requirement) return race.requirement;
+        if (raceId.startsWith('tournament-section-')) return 'АВТОСПОРТ';
+        if (raceId === 'tournament-final') return null;
+
+        if (schedule.raceType === 'QUALIFICATION') {
+            const qual = (RACES_DATA.specials || []).find((s: any) => s.name === 'квалификация');
+            const race = (qual?.races || []).find((r: any) => r.name === currentRace.race_name);
+            return (race?.requirement || '').trim();
         }
-        return '';
-    }, [currentIdx, results]);
+        if (!roundData) return null;
+        const race = (roundData.races || []).find((r: any) => r.name === currentRace.race_name);
+        if (!race) return null;
+        return (race.requirement || roundData.requirement || '').trim();
+    }, [currentIdx, results, currentDay, gameYear]);
 
     if (loading) {
         return <div className="p-4 text-center text-white">Загрузка результатов...</div>;
@@ -145,11 +165,15 @@ export default function RaceResults({ roomId, currentDay, onBack }: RaceResultsP
                 {viewStep === 'GRID' && (
                     <div>
                         <h3 className="text-sm mb-2 text-center text-[#ffaa00]">СТАРТОВАЯ РЕШЕТКА</h3>
-                        {raceRequirement && (
+                        {raceRequirement !== null && (raceRequirement ? (
                             <div className="text-center mb-3 text-[9px] text-[#ffaa00] bg-[#1a1a00] border border-[#ffaa00] px-3 py-1.5">
                                 Требование: <span className="text-white font-bold">{raceRequirement}</span>
                             </div>
-                        )}
+                        ) : (
+                            <div className="text-center mb-3 text-[9px] text-[#00ff88] bg-[#001a00] border border-[#00aa55] px-3 py-1.5">
+                                <span className="font-bold">СВОБОДНАЯ ГОНКА</span> — без требований к машине
+                            </div>
+                        ))}
                         <div className="overflow-x-auto">
                             <table className="w-full text-[10px] text-left border-collapse">
                                 <thead>
