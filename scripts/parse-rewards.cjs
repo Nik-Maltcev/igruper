@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-// Парсим nagrady.csv — призы по количеству игроков
-const csv = fs.readFileSync('nagrady.csv', 'utf-8');
+// Парсим rewards-fresh.csv — призы по количеству игроков
+const csv = fs.readFileSync('rewards-fresh.csv', 'utf-8');
 const lines = csv.split('\n').map(l => l.trim()).filter(Boolean);
 
 // Парсим строку вида "1- 3500,  6 баллов" → { place: 1, money: 3500, points: 6 }
@@ -62,6 +62,19 @@ function parseRewardLine(str) {
   return { place, money, points, prizes };
 }
 
+function splitCsvLine(line) {
+  const parts = [];
+  let current = '';
+  let inQuotes = false;
+  for (const ch of line) {
+    if (ch === '"') { inQuotes = !inQuotes; continue; }
+    if (ch === ',' && !inQuotes) { parts.push(current.trim()); current = ''; continue; }
+    current += ch;
+  }
+  parts.push(current.trim());
+  return parts;
+}
+
 // Парсим CSV по столбцам (3-8 игроков)
 const playerCounts = [3, 4, 5, 6, 7, 8];
 const result = {};
@@ -71,7 +84,7 @@ for (let col = 0; col < 6; col++) {
   const rewards = {
     city: [],
     national: [],
-    worldSaturday: [],   // субботняя гонка
+    worldSaturday: [],   // платная субботняя гонка
     worldBonus: [],      // бонусный заезд
     worldMain: [],       // главная гонка
     tournament: [],      // итоговый турнир
@@ -82,25 +95,14 @@ for (let col = 0; col < 6; col++) {
 
   // Собираем все значения этого столбца
   for (let row = 2; row < lines.length; row++) {
-    // Парсим CSV строку
-    const parts = [];
-    let current = '';
-    let inQuotes = false;
-    for (const ch of lines[row]) {
-      if (ch === '"') { inQuotes = !inQuotes; continue; }
-      if (ch === ',' && !inQuotes) { parts.push(current.trim()); current = ''; continue; }
-      current += ch;
-    }
-    parts.push(current.trim());
-
-    const cell = (parts[col] || '').trim();
+    const cell = (splitCsvLine(lines[row])[col] || '').trim();
     if (!cell) continue;
 
     // Определяем секцию
     if (/City Challenge/i.test(cell)) { currentSection = 'city'; continue; }
     if (/National Tournament/i.test(cell)) { currentSection = 'national'; continue; }
     if (/World series/i.test(cell)) { currentSection = 'worldSaturday'; continue; }
-    if (/Субботн/i.test(cell)) {
+    if (/Платная гонка/i.test(cell) || /Субботн/i.test(cell)) {
       currentSection = 'worldSaturday';
       const feeMatch = cell.match(/оплатить\s*(\d+)/i);
       if (feeMatch) entryFee = parseInt(feeMatch[1]);
@@ -117,6 +119,16 @@ for (let col = 0; col < 6; col++) {
     }
   }
 
+  // Квалификация — отдельный блок справа (колонки 7-12)
+  const qualification = [];
+  for (let row = 0; row < lines.length; row++) {
+    const cell = (splitCsvLine(lines[row])[7 + col] || '').trim();
+    if (!cell) continue;
+    const reward = parseRewardLine(cell);
+    if (reward) qualification.push(reward);
+  }
+  if (qualification.length > 0) rewards.qualification = qualification;
+
   rewards.worldSaturdayEntryFee = entryFee;
   result[pc] = rewards;
 }
@@ -124,5 +136,5 @@ for (let col = 0; col < 6; col++) {
 fs.writeFileSync('rewards_data.json', JSON.stringify(result, null, 2), 'utf-8');
 console.log('Parsed rewards for player counts:', Object.keys(result).join(', '));
 for (const [pc, r] of Object.entries(result)) {
-  console.log(`  ${pc} players: city=${r.city.length}, national=${r.national.length}, worldSat=${r.worldSaturday.length}, worldBonus=${r.worldBonus.length}, worldMain=${r.worldMain.length}, tournament=${r.tournament.length}`);
+  console.log(`  ${pc} players: city=${r.city.length}, national=${r.national.length}, worldSat=${r.worldSaturday.length}, worldBonus=${r.worldBonus.length}, worldMain=${r.worldMain.length}, tournament=${r.tournament.length}, qualification=${(r.qualification || []).length}`);
 }

@@ -141,12 +141,12 @@ const Rules: React.FC<RulesProps> = ({ onBack }) => {
                     <div>
                       <p className="text-[#44ff44] mb-1">NT:</p>
                       <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 10000 · 15б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 8000 · 12б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 6500 · 10б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 5200 · 7б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 4100 · 5б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 3300 · 3б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">1: 5000 · 8б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">2: 4400 · 6б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">3: 3500 · 4б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">4: 2500 · 2б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">5: 1500 · 1б</span>
+                        <span className="bg-[#111] border border-[#222] p-1">6: 1300 · 1б</span>
                       </div>
                     </div>
                     <div>

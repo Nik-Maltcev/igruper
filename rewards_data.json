@@ -23,20 +23,20 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
+        "money": 5000,
+        "points": 5,
         "prizes": 0
       },
       {
         "place": 2,
-        "money": 7000,
-        "points": 10,
+        "money": 3000,
+        "points": 3,
         "prizes": 0
       },
       {
         "place": 3,
-        "money": 4500,
-        "points": 5,
+        "money": 1500,
+        "points": 1,
         "prizes": 0
       }
     ],
@@ -157,26 +157,26 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
-        "prizes": 0
-      },
-      {
-        "place": 2,
-        "money": 8000,
-        "points": 11,
-        "prizes": 0
-      },
-      {
-        "place": 3,
-        "money": 6600,
+        "money": 5000,
         "points": 7,
         "prizes": 0
       },
       {
-        "place": 4,
-        "money": 4000,
+        "place": 2,
+        "money": 3800,
         "points": 5,
+        "prizes": 0
+      },
+      {
+        "place": 3,
+        "money": 2700,
+        "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 4,
+        "money": 1500,
+        "points": 1,
         "prizes": 0
       }
     ],
@@ -328,32 +328,32 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
+        "money": 5000,
+        "points": 8,
         "prizes": 0
       },
       {
         "place": 2,
-        "money": 8000,
-        "points": 12,
+        "money": 4400,
+        "points": 6,
         "prizes": 0
       },
       {
         "place": 3,
-        "money": 6500,
-        "points": 10,
+        "money": 3500,
+        "points": 4,
         "prizes": 0
       },
       {
         "place": 4,
-        "money": 5000,
-        "points": 7,
+        "money": 2500,
+        "points": 2,
         "prizes": 0
       },
       {
         "place": 5,
-        "money": 3800,
-        "points": 4,
+        "money": 1500,
+        "points": 1,
         "prizes": 0
       }
     ],
@@ -536,38 +536,38 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
+        "money": 5000,
+        "points": 8,
         "prizes": 0
       },
       {
         "place": 2,
-        "money": 8000,
-        "points": 12,
+        "money": 4400,
+        "points": 6,
         "prizes": 0
       },
       {
         "place": 3,
-        "money": 6500,
-        "points": 10,
+        "money": 3600,
+        "points": 4,
         "prizes": 0
       },
       {
         "place": 4,
-        "money": 5200,
-        "points": 7,
+        "money": 2700,
+        "points": 2,
         "prizes": 0
       },
       {
         "place": 5,
-        "money": 4100,
-        "points": 5,
+        "money": 2000,
+        "points": 1,
         "prizes": 0
       },
       {
         "place": 6,
-        "money": 3300,
-        "points": 3,
+        "money": 1300,
+        "points": 1,
         "prizes": 0
       }
     ],
@@ -781,44 +781,44 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
+        "money": 5000,
+        "points": 9,
         "prizes": 0
       },
       {
         "place": 2,
-        "money": 8000,
-        "points": 13,
+        "money": 4200,
+        "points": 7,
         "prizes": 0
       },
       {
         "place": 3,
-        "money": 6500,
-        "points": 11,
-        "prizes": 0
-      },
-      {
-        "place": 4,
-        "money": 5200,
-        "points": 8,
-        "prizes": 0
-      },
-      {
-        "place": 5,
-        "money": 4500,
+        "money": 3600,
         "points": 5,
         "prizes": 0
       },
       {
-        "place": 6,
-        "money": 3800,
+        "place": 4,
+        "money": 3000,
         "points": 4,
         "prizes": 0
       },
       {
-        "place": 7,
-        "money": 3000,
+        "place": 5,
+        "money": 2500,
         "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 6,
+        "money": 1800,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 1200,
+        "points": 1,
         "prizes": 0
       }
     ],
@@ -1063,50 +1063,50 @@
     "national": [
       {
         "place": 1,
-        "money": 10000,
-        "points": 15,
+        "money": 5000,
+        "points": 10,
         "prizes": 0
       },
       {
         "place": 2,
-        "money": 8200,
-        "points": 13,
-        "prizes": 0
-      },
-      {
-        "place": 3,
-        "money": 7000,
-        "points": 11,
-        "prizes": 0
-      },
-      {
-        "place": 4,
-        "money": 5500,
+        "money": 4000,
         "points": 8,
         "prizes": 0
       },
       {
-        "place": 5,
-        "money": 4700,
-        "points": 7,
+        "place": 3,
+        "money": 3500,
+        "points": 6,
         "prizes": 0
       },
       {
-        "place": 6,
-        "money": 4300,
+        "place": 4,
+        "money": 3000,
         "points": 5,
         "prizes": 0
       },
       {
-        "place": 7,
-        "money": 3800,
+        "place": 5,
+        "money": 2500,
         "points": 4,
         "prizes": 0
       },
       {
-        "place": 8,
-        "money": 3000,
+        "place": 6,
+        "money": 2000,
         "points": 3,
+        "prizes": 0
+      },
+      {
+        "place": 7,
+        "money": 1500,
+        "points": 2,
+        "prizes": 0
+      },
+      {
+        "place": 8,
+        "money": 1000,
+        "points": 1,
         "prizes": 0
       }
     ],
