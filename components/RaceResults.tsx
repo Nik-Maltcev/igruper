@@ -29,6 +29,26 @@ function formatTime(seconds: number, raceName: string): string {
 // Цвета машинок по позициям
 const CAR_COLORS = ['#ffdd00', '#aaaaaa', '#cd7f32', '#4488ff', '#44ff44', '#ff8800', '#aa44ff', '#ff4444'];
 
+// Порядок показа заездов субботы (Мировая серия): платная → бонусная → главная по категориям мощности
+function orderDayResults(races: any[], currentDay: number, gameYear: number): any[] {
+    const schedule = getScheduleDay(currentDay);
+    if (schedule.raceType !== 'WORLD') return races;
+    const epochData = (RACES_DATA.epochs || []).find((e: any) => e.year === gameYear);
+    const roundData = epochData?.rounds?.find((r: any) => r.round === 3);
+    const paidName = roundData?.races?.[0]?.name;
+    const bonusName = roundData?.races?.[1]?.name;
+    const orderKey = (r: any): number => {
+        const rid = r.race_id || '';
+        if (paidName && rid === paidName) return 0;
+        if (bonusName && rid === bonusName) return 1;
+        if (rid.startsWith('main-cat-')) return 2 + (parseInt(rid.slice('main-cat-'.length), 10) || 0);
+        if (rid.startsWith('tournament-section-')) return 100 + (parseInt(rid.slice('tournament-section-'.length), 10) || 0);
+        if (rid === 'tournament-final') return 200;
+        return 300;
+    };
+    return [...races].sort((a, b) => orderKey(a) - orderKey(b));
+}
+
 export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBack }: RaceResultsProps) {
     const [results, setResults] = useState<RaceDayResult[]>([]);
     const [loading, setLoading] = useState(true);
@@ -40,11 +60,11 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
         async function load() {
             setLoading(true);
             const data = await fetchRaceDayResults(roomId, currentDay);
-            setResults((data || []).filter((r: any) => (r.results?.length || 0) > 0));
+            setResults(orderDayResults((data || []).filter((r: any) => (r.results?.length || 0) > 0), currentDay, gameYear));
             setLoading(false);
         }
         load();
-    }, [roomId, currentDay]);
+    }, [roomId, currentDay, gameYear]);
 
     useEffect(() => {
         if (viewStep === 'ANIMATION') {

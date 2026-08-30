@@ -440,7 +440,8 @@ export async function fetchRaceDayResults(roomId: string, day: number): Promise<
     .from('race_day_results')
     .select('*')
     .eq('room_id', roomId)
-    .eq('day', day);
+    .eq('day', day)
+    .order('created_at', { ascending: true });
   return data || [];
 }
 
