@@ -552,7 +552,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         nextYear += 2;
 
         // --- Система поддержки отстающих (Catch-up) ---
-        // Refetch for catch-up
         const catchupPlayers = await fetchPlayers(room.id);
         const sortedPlayers = [...catchupPlayers].sort((a, b) => b.points - a.points);
         if (sortedPlayers.length > 0) {
@@ -560,7 +559,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           const lastPlayer = sortedPlayers[sortedPlayers.length - 1];
           const secondToLast = sortedPlayers.length >= 2 ? sortedPlayers[sortedPlayers.length - 2] : null;
 
-          // Обновляем статистику лидерства
           if (room.leader_id === leader.id) {
             newLeaderStreak += 1;
           } else {
@@ -568,35 +566,37 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             newLeaderStreak = 1;
           }
 
-          let lastBonus = 7000;
-          let secondToLastBonus = 0;
-          let leaderPenalty = 0;
+          const sponsorBonus = 10000;
+          const leaderTax = newLeaderStreak >= 2 && sortedPlayers.length >= 2;
+          const validSecondLast = !!secondToLast && secondToLast.id !== lastPlayer.id && secondToLast.id !== leader.id;
+          const leaderToLast = leaderTax ? 4000 : 0;
+          const leaderToSecondLast = (leaderTax && validSecondLast) ? 2500 : 0;
+          const leaderPays = leaderToLast + leaderToSecondLast;
 
-          // Если лидер удерживает место >= 2 этапов подряд, он платит налог
-          if (newLeaderStreak >= 2 && sortedPlayers.length >= 2) {
-            leaderPenalty = 6500;
-            lastBonus += 4000;
-            if (secondToLast && secondToLast.id !== lastPlayer.id) {
-              secondToLastBonus += 2500;
-            }
+          await updatePlayerState(lastPlayer.id, { money: lastPlayer.money + sponsorBonus + leaderToLast });
+          if (leaderToSecondLast > 0 && secondToLast) {
+            await updatePlayerState(secondToLast.id, { money: secondToLast.money + leaderToSecondLast });
+          }
+          if (leaderPays > 0) {
+            await updatePlayerState(leader.id, { money: leader.money - leaderPays });
           }
 
-          if (lastBonus > 0 || secondToLastBonus > 0 || leaderPenalty > 0) {
-            await sendSystemMessage(room.id, `🤝 Конец этапа. Спонсорская поддержка отстающих:`);
-            
-            if (lastBonus > 0) {
-              await updatePlayerState(lastPlayer.id, { money: lastPlayer.money + lastBonus });
-              await sendSystemMessage(room.id, `💰 ${lastPlayer.username} получает спонсорскую поддержку +${lastBonus.toLocaleString()} от игры.`);
-            }
-            if (secondToLastBonus > 0 && secondToLast) {
-              await updatePlayerState(secondToLast.id, { money: secondToLast.money + secondToLastBonus });
-              await sendSystemMessage(room.id, `💰 ${secondToLast.username} получает +${secondToLastBonus.toLocaleString()} от лидера ${leader.username}.`);
-            }
-            if (leaderPenalty > 0) {
-              await updatePlayerState(leader.id, { money: leader.money - leaderPenalty });
-              await sendSystemMessage(room.id, `👑 ${leader.username} оказывает материальную помощь отстающим: -${leaderPenalty.toLocaleString()}`);
-            }
+          await sendSystemMessage(room.id, `🤝 Конец этапа. Поддержка отстающих:`);
+          await sendSystemMessage(room.id, `💰 Отстающий игрок ${lastPlayer.username} получает от спонсоров $${sponsorBonus.toLocaleString()}`);
+          if (leaderTax) {
+            await sendSystemMessage(room.id, `👑 Лидирующий игрок ${leader.username} (${newLeaderStreak} этапа подряд) выделяет последнему игроку ${lastPlayer.username} $${leaderToLast.toLocaleString()}${leaderToSecondLast > 0 ? ` и предпоследнему игроку ${secondToLast?.username} $${leaderToSecondLast.toLocaleString()}` : ''}`);
           }
+
+          await saveRaceDayResults(room.id, nextDay, 'catchup-support', '🤝 ПОДДЕРЖКА ОТСТАЮЩИХ', [{
+            lastPlayer: lastPlayer.username,
+            sponsorBonus,
+            leaderTax,
+            leader: leader.username,
+            leaderStreak: newLeaderStreak,
+            leaderToLast,
+            leaderToSecondLast,
+            secondLastPlayer: validSecondLast ? (secondToLast?.username || '') : '',
+          }], 'SUNNY');
         }
 
         // --- Установка турнира на новый год ---

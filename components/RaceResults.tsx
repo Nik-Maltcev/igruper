@@ -151,6 +151,38 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
             </div>
         );
     }
+
+    if ((currentRace.race_id || '') === 'catchup-support') {
+        const d: any = currentRace.results[0] || {};
+        return (
+            <div className="p-4 max-w-2xl mx-auto text-white">
+                <div className="mb-4">
+                    <h2 className="text-xl retro-title text-[#ffaa00]">🤝 ПОДДЕРЖКА ОТСТАЮЩИХ</h2>
+                    <div className="text-[10px] text-[#aaa]">Конец этапа — спонсорская поддержка начислена</div>
+                </div>
+                <div className="pixel-card p-4 bg-[#0a0a14] border-[#333]">
+                    <table className="w-full text-[10px]" style={{ borderCollapse: 'collapse' }}>
+                        <tbody>
+                            <tr className="border-b border-[#333]">
+                                <td className="p-2 leading-relaxed">
+                                    💰 Отстающий игрок <span className="text-[#44ff44] font-bold">{d.lastPlayer}</span> получает от спонсоров <span className="text-[#00ff00] font-bold">${(d.sponsorBonus || 0).toLocaleString()}</span>
+                                </td>
+                            </tr>
+                            {d.leaderTax && (
+                                <tr>
+                                    <td className="p-2 leading-relaxed">
+                                        👑 Лидирующий игрок <span className="text-[#ffdd00] font-bold">{d.leader}</span>{d.leaderStreak ? <> ({d.leaderStreak} этапа подряд)</> : null} выделяет последнему игроку <span className="text-[#44ff44] font-bold">{d.lastPlayer}</span> <span className="text-[#00ff00] font-bold">${(d.leaderToLast || 0).toLocaleString()}</span>
+                                        {(d.leaderToSecondLast || 0) > 0 && <> и предпоследнему игроку <span className="text-[#44ff44] font-bold">{d.secondLastPlayer}</span> <span className="text-[#00ff00] font-bold">${(d.leaderToSecondLast || 0).toLocaleString()}</span></>}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+                <button onClick={onBack} className="mt-4 w-full retro-btn py-3 text-[14px]">ГОТОВО</button>
+            </div>
+        );
+    }
     const isLastRace = currentIdx === results.length - 1;
     const isDrag = (currentRace.race_name || '').toLowerCase().includes('дрэг');
 
