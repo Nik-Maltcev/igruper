@@ -80,6 +80,9 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
   const [tab, setTab] = useState<GarageTab>('cars');
   const [installCarId, setInstallCarId] = useState<string | null>(null);
 
+  const visibleCars = cars.filter(c => !c.lockedForTournament);
+  const onTournamentCount = cars.length - visibleCars.length;
+
   return (
     <div className="p-3 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-3">
@@ -98,7 +101,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
             border: `2px solid ${tab === 'cars' ? '#5555ff' : '#333'}`,
             color: tab === 'cars' ? '#fff' : '#666',
           }}>
-          🚗 МАШИНЫ ({cars.length})
+          🚗 МАШИНЫ ({visibleCars.length})
         </button>
         <button onClick={() => { setTab('storage'); setInstallCarId(null); }}
           className="retro-btn text-[9px] py-1 px-4"
@@ -111,17 +114,23 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
         </button>
       </div>
 
+      {onTournamentCount > 0 && (
+        <div className="mb-3 px-3 py-1.5 bg-[#1a0033] border border-[#aa44ff] text-[8px] text-[#aa44ff]">
+          🏁 {onTournamentCount} авто уехали на турнир — недоступны до субботы
+        </div>
+      )}
+
       {/* === ВКЛАДКА: МАШИНЫ === */}
       {tab === 'cars' && (
         <>
-          {cars.length === 0 ? (
+          {visibleCars.length === 0 ? (
             <div className="text-center py-16 pixel-card p-8">
-              <p className="text-[10px] text-[#666] mb-2">ГАРАЖ ПУСТ</p>
-              <p className="text-[8px] text-[#444]">КУПИТЕ АВТО В САЛОНЕ</p>
+              <p className="text-[10px] text-[#666] mb-2">{cars.length > 0 ? 'ВСЕ МАШИНЫ НА ТУРНИРЕ' : 'ГАРАЖ ПУСТ'}</p>
+              <p className="text-[8px] text-[#444]">{cars.length > 0 ? 'ВЕРНУТСЯ В СУББОТУ ВЕЧЕРОМ' : 'КУПИТЕ АВТО В САЛОНЕ'}</p>
             </div>
           ) : (
             <div className="flex flex-col gap-3 pb-20">
-              {cars.map((car, idx) => {
+              {visibleCars.map((car, idx) => {
                 const effective = getEffectiveStats(car);
                 const co = car.coefficients || {} as Partial<CarStats>;
                 const partLimit = CLASS_PART_LIMITS[getCarClass(car)] || 16;
@@ -279,11 +288,11 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
           ) : (
             <>
               {/* Выбор машины для установки */}
-              {cars.length > 0 && (
+              {visibleCars.length > 0 && (
                 <div className="mb-3 pixel-card p-2">
                   <div className="text-[8px] text-[#555] mb-1">УСТАНОВИТЬ НА:</div>
                   <div className="flex flex-wrap gap-2">
-                    {cars.map(car => (
+                    {visibleCars.map(car => (
                       <button key={car.id} onClick={() => setInstallCarId(installCarId === car.id ? null : car.id)}
                         className="text-[8px] px-2 py-1 border"
                         style={{

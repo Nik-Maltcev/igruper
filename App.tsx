@@ -114,7 +114,7 @@ const App = () => {
             <span className="text-[#00aaff]">ЭПОХА: {gameYear}</span>
             <span className="text-[#00ff00]">💰 ${money.toLocaleString()}</span>
             <span className="text-[#ffaa00]">🏆 {player?.points || 0} очков</span>
-            <span className="text-[#888]">🚗 {cars.length} авто</span>
+            <span className="text-[#888]">🚗 {cars.filter(c => !c.lockedForTournament).length} авто</span>
             <span className="text-[#888]">📦 {storage.length} на складе</span>
           </div>
           <button onClick={() => navigate('MULTIPLAYER')} className="retro-btn text-[#fff] text-[9px] py-1.5 px-4" style={{ backgroundColor: '#1a1a2e', border: '2px solid #ffaa00', color: '#ffaa00' }}>⌂ МЕНЮ</button>

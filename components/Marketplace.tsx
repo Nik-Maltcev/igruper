@@ -37,7 +37,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
   const unlockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear <= gameYear), [gameYear]);
   const lockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear > gameYear).sort((a, b) => a.unlockYear - b.unlockYear), [gameYear]);
 
-  const selectedCar = useMemo(() => cars.find(c => c.id === selectedCarId) || null, [cars, selectedCarId]);
+  const availableCars = useMemo(() => cars.filter(c => !c.lockedForTournament), [cars]);
+  const selectedCar = useMemo(() => availableCars.find(c => c.id === selectedCarId) || null, [availableCars, selectedCarId]);
   const ownedPartIds = useMemo(() => {
     if (!selectedCar) return new Set<string>();
     return new Set(selectedCar.installedParts.map(p => p.id));
@@ -90,7 +91,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
   };
 
   // ШАГ 1: Выбор машины
-  if (!selectedCarId) {
+  if (!selectedCarId || !selectedCar) {
     return (
       <div className="p-3 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-4">
@@ -104,14 +105,14 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
 
         <div className="text-[8px] text-[#555] mb-3">ВЫБЕРИТЕ МАШИНУ ДЛЯ ЗАКУПКИ:</div>
 
-        {cars.length === 0 ? (
+        {availableCars.length === 0 ? (
           <div className="pixel-card p-8 text-center">
-            <div className="text-[10px] text-[#666]">НЕТ МАШИН</div>
-            <div className="text-[8px] text-[#444] mt-1">КУПИТЕ АВТО В САЛОНЕ</div>
+            <div className="text-[10px] text-[#666]">{cars.length > 0 ? 'ВСЕ МАШИНЫ НА ТУРНИРЕ' : 'НЕТ МАШИН'}</div>
+            <div className="text-[8px] text-[#444] mt-1">{cars.length > 0 ? 'ВЕРНУТСЯ В СУББОТУ ВЕЧЕРОМ' : 'КУПИТЕ АВТО В САЛОНЕ'}</div>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            {cars.map(car => {
+            {availableCars.map(car => {
               const stats = getEffectiveStats(car);
               const visited = shopVisits[car.id];
               return (
