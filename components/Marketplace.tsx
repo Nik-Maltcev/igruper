@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { SHOPS, AVAILABLE_CARS } from '../constants';
 import { Car, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
+import { getPartBaseName } from '../services/prizeService';
 
 
 function getCarClass(car) {
@@ -44,10 +45,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
     return new Set(selectedCar.installedParts.map(p => p.id));
   }, [selectedCar]);
 
-  // Проверка по имени — ловит и призовые детали с другим id
+  // Проверка по базовому имени (без тира) — ловит призовые детали и другие тиры
   const ownedPartNames = useMemo(() => {
     if (!selectedCar) return new Set<string>();
-    return new Set(selectedCar.installedParts.map(p => p.name.toLowerCase()));
+    return new Set(selectedCar.installedParts.map(p => getPartBaseName(p.name)));
   }, [selectedCar]);
 
   const visitedBrand = selectedCarId ? shopVisits[selectedCarId] : undefined;
@@ -336,7 +337,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
 
       <div className="flex flex-col gap-2 pb-20">
         {currentShop.parts.map((part) => {
-          const owned = ownedPartIds.has(part.id) || ownedPartNames.has(part.name.toLowerCase());
+          const owned = ownedPartIds.has(part.id) || ownedPartNames.has(getPartBaseName(part.name));
           const canAfford = money >= part.price;
           const { blocked, reason } = getPartStatus(part);
           const disabled = owned || blocked || !canAfford;

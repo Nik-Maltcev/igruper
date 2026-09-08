@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry, PrizeDiscount } from '../types';
 import { AVAILABLE_CARS } from '../constants';
+import { getPartBaseName } from './prizeService';
 
 // --- Генерация кода комнаты ---
 export function generateRoomCode(): string {
@@ -208,6 +209,11 @@ export async function buyPart(player: RoomPlayer, carId: string, part: Part): Pr
   const carIdx = garage.findIndex(c => c.id === carId);
   if (carIdx === -1) return { error: 'Машина не найдена' };
 
+  const partBase = getPartBaseName(part.name);
+  if (garage[carIdx].installedParts.some(p => getPartBaseName(p.name) === partBase)) {
+    return { error: 'Такая деталь уже установлена на эту машину' };
+  }
+
   const car = { ...garage[carIdx], installedParts: [...garage[carIdx].installedParts, part] };
   garage[carIdx] = car;
 
@@ -314,11 +320,14 @@ export async function installFromStorage(player: RoomPlayer, carId: string, stor
   const part = storage[storageIndex];
   if (!part) return;
 
-  storage.splice(storageIndex, 1);
-
   const garage = [...player.garage];
   const carIdx = garage.findIndex(c => c.id === carId);
   if (carIdx === -1) return;
+
+  const partBase = getPartBaseName(part.name);
+  if (garage[carIdx].installedParts.some(p => getPartBaseName(p.name) === partBase)) return;
+
+  storage.splice(storageIndex, 1);
 
   const car = { ...garage[carIdx], installedParts: [...garage[carIdx].installedParts, part] };
   garage[carIdx] = car;

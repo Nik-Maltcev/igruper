@@ -17,7 +17,7 @@ function getUnlockedParts(currentYear: number): Part[] {
 }
 
 // Get the base name of a part (strip tier number suffix)
-function getPartBaseName(name: string): string {
+export function getPartBaseName(name: string): string {
   return name.replace(/\s*\d+\s*$/, '').trim().toLowerCase();
 }
 

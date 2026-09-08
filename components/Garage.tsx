@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, Part, PrizeDiscount } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
+import { getPartBaseName } from '../services/prizeService';
 
 
 function getCarClass(car) {
@@ -314,7 +315,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                   const partLimit = targetCar ? (CLASS_PART_LIMITS[targetCar.carClass || 'A'] || 16) : 0;
                   const canInstall = targetCar && targetCar.installedParts.length < partLimit
                     && (!part.slot || !targetCar.installedParts.some(p => p.slot === part.slot))
-                    && !targetCar.installedParts.some(p => p.name.toLowerCase() === part.name.toLowerCase());
+                    && !targetCar.installedParts.some(p => getPartBaseName(p.name) === getPartBaseName(part.name));
 
                   return (
                     <div key={si} className="pixel-card p-0 flex items-stretch overflow-hidden" style={{ borderWidth: '2px' }}>
@@ -351,7 +352,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                         )}
                         {installCarId && !canInstall && targetCar && (
                           <span className="text-[7px] text-[#ff4444]">
-                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : targetCar.installedParts.some(p => p.name.toLowerCase() === (part as any).name?.toLowerCase()) ? 'Уже есть' : 'Слот занят'}
+                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : targetCar.installedParts.some(p => getPartBaseName(p.name) === getPartBaseName(part.name)) ? 'Уже есть' : 'Слот занят'}
                           </span>
                         )}
                         
