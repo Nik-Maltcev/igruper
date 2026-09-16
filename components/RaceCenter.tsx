@@ -32,19 +32,23 @@ interface RaceRewardInfo {
   note?: string;
 }
 
-// Проверка требований трассы (простая эвристика по строке requirement)
+// Проверка требований трассы (эвристика по строке requirement)
+// Операторы: "+" и пробел между условиями — И (все должны выполняться).
+// Отдельные слова "или" и "и" — ИЛИ: перечисление допустимых вариантов
+// (напр. "седан или хэтчбек", "США и Франция", "эпоха 60-ых или 70-ых").
+// ИЛИ связывает слабее И: "купе + эпоха 80ых или 90-ых" = купе И (80 ИЛИ 90)
 function checkRequirement(car, req) {
   if (!req || req.trim() === '') return true;
-  
-  // Split by + for combined requirements (e.g. "хэтчбек + США")
-  const conditions = req.split('+').map(s => s.trim().toLowerCase()).filter(Boolean);
-  
-  // ALL conditions must be met
-  return conditions.every(r => checkSingleRequirement(car, r));
+
+  const andTerms = req.toLowerCase().split(/\s*\+\s*/).map(s => s.trim()).filter(Boolean);
+  return andTerms.every(term =>
+    term.split(/\s+(?:или|и)\s+/).some(alt => checkSingleRequirement(car, alt))
+  );
 }
 
-function checkSingleRequirement(car, r) {
+function checkSingleRequirement(car, r0) {
   // Normalize common Cyrillic/Latin mixups
+  let r = r0.trim().toLowerCase();
   r = r.replace(/^с(?=h)/i, 'c'); // сhevrolet -> chevrolet
   // Effective stats (with installed parts)
   const effStats = getEffectiveStats(car);
@@ -59,21 +63,28 @@ function checkSingleRequirement(car, r) {
     else if (n.includes('универс')) effectiveTire = 'У';
   }
 
+  const hasTag = (t: string) => !!car.tags?.some(x => x.toLowerCase() === t);
+
+  // Все узнанные условия строки должны выполняться одновременно (И).
+  // Если строка не распознана — требование считаем выполненным.
+  let matched = false;
+  let ok = true;
+  const req = (applies: boolean, passes: boolean) => {
+    if (!applies) return;
+    matched = true;
+    ok = ok && passes;
+  };
+
   // Автоспорт
-  if (r === 'автоспорт') return !!car.tags?.some(t => t.toLowerCase() === 'автоспорт');
+  req(r.includes('автоспорт'), hasTag('автоспорт'));
 
   // Эпоха (e.g. "эпоха - 70-ые", "эпоха 60-ые", "эпоха -60-ые")
   const epochMatch = r.match(/эпоха[\s-]*(?:(\d{2}))/);
-  if (epochMatch) {
-    const targetEpoch = parseInt(epochMatch[1]);
-    return car.epoch === targetEpoch;
-  }
+  req(!!epochMatch, epochMatch ? car.epoch === parseInt(epochMatch[1]) : false);
 
   // Редкость (e.g. "редкость 3", "редкость 1")
   const rarityMatch = r.match(/[рp]едкость\s*(\d)/);
-  if (rarityMatch) {
-    return car.rarity === parseInt(rarityMatch[1]);
-  }
+  req(!!rarityMatch, rarityMatch ? car.rarity === parseInt(rarityMatch[1]) : false);
 
   // Классы (A-S)
   const classMatch = r.match(/([a-zа-я])[-\s]*класс/) || r.match(/класс[\s:]*([a-zа-я])/);
@@ -84,7 +95,7 @@ function checkSingleRequirement(car, r) {
     if (letter === 'С') letter = 'C';
     if (letter === 'Д') letter = 'D';
     if (letter === 'Е') letter = 'E';
-    return car.carClass === letter;
+    req(true, car.carClass === letter);
   }
   // Also handle "1 авто X класса" patterns
   if (r.includes('авто') && r.includes('класс')) {
@@ -94,74 +105,78 @@ function checkSingleRequirement(car, r) {
       if (letter === 'А') letter = 'A';
       if (letter === 'В') letter = 'B';
       if (letter === 'С') letter = 'C';
-      return car.carClass === letter;
+      req(true, car.carClass === letter);
     }
   }
 
   // Тип кузова/теги
-  if ((r.includes('хэтчбэк') || r.includes('хэтчбек')) || r.includes('hatch') || r.includes('hot hatch')) return !!car.tags?.some(t => (t.toLowerCase() === 'хэтчбэк' || t.toLowerCase() === 'хэтчбек'));
-  if (r.includes('купе')) return !!car.tags?.some(t => t.toLowerCase() === 'купе');
-  if (r.includes('седан')) return !!car.tags?.some(t => t.toLowerCase() === 'седан');
-  if (r.includes('внедорожник')) return !!car.tags?.some(t => t.toLowerCase() === 'внедорожник');
-  if (r.includes('muscle') || r.includes('muscle car')) return !!car.tags?.some(t => t.toLowerCase() === 'muscle car');
-  if (r.includes('комфорт')) return !!car.tags?.some(t => t.toLowerCase() === 'комфорт');
-  if (r.includes('коллекция')) return !!car.tags?.some(t => t.toLowerCase() === 'коллекция');
-  if (r.includes('widow maker')) return !!car.tags?.some(t => t.toLowerCase() === 'widow maker');
+  req(r.includes('хэтчбэк') || r.includes('хэтчбек') || r.includes('hatch'), hasTag('хэтчбэк') || hasTag('хэтчбек'));
+  req(r.includes('купе'), hasTag('купе'));
+  req(r.includes('седан'), hasTag('седан'));
+  req(r.includes('внедорожник'), hasTag('внедорожник'));
+  req(r.includes('muscle'), hasTag('muscle car'));
+  req(r.includes('комфорт'), hasTag('комфорт'));
+  req(r.includes('коллекция'), hasTag('коллекция'));
+  req(r.includes('widow maker'), hasTag('widow maker'));
 
   // Страны
-  if (r.includes('франция')) return !!car.tags?.some(t => t.toLowerCase() === 'франция');
-  if (r.includes('сша')) return !!car.tags?.some(t => t.toLowerCase() === 'сша');
-  if (r.includes('италия')) return !!car.tags?.some(t => t.toLowerCase() === 'италия');
-  if (r.includes('германия')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
-  if (r.includes('япония')) return !!car.tags?.some(t => t.toLowerCase() === 'япония');
-  if (r.includes('ссср')) return !!car.tags?.some(t => t.toLowerCase() === 'ссср');
+  req(r.includes('франция'), hasTag('франция'));
+  req(r.includes('сша'), hasTag('сша'));
+  req(r.includes('италия'), hasTag('италия'));
+  req(r.includes('германия'), hasTag('германия'));
+  req(r.includes('япония'), hasTag('япония'));
+  req(r.includes('ссср'), hasTag('ссср'));
 
   // Марки авто (Porsche, Ferrari, etc.)
-  const brands = ['porsche', 'ferrari', 'lamborghini', 'bmw', 'ford', 'chevrolet', 'renault', 'citroen', 'Chevrolet'];
+  const brands = ['porsche', 'ferrari', 'lamborghini', 'bmw', 'ford', 'chevrolet', 'renault', 'citroen'];
   for (const brand of brands) {
-    if (r.includes(brand.toLowerCase())) return car.name.toLowerCase().includes(brand.toLowerCase());
+    req(r.includes(brand), car.name.toLowerCase().includes(brand));
   }
 
   // Шины
-  if (r.includes('слик')) return effectiveTire === 'С';
-  if (r.includes('шины внедорожн') || r === 'внедорожные шины') return effectiveTire === 'В';
-  if (r.includes('шины универсальн') || r === 'универсальные шины') return effectiveTire === 'У';
-  if (r.includes('гоночные шины') || r.includes('гоночных шин')) return effectiveTire === 'Г';
+  req(r.includes('слик'), effectiveTire === 'С');
+  req(r.includes('шин') && (r.includes('внедорож') || r.includes('шипов')), effectiveTire === 'В');
+  req(r.includes('шин') && r.includes('универсал'), effectiveTire === 'У');
+  req(r.includes('шин') && r.includes('гоночн'), effectiveTire === 'Г');
 
   // Мощность ranges
   const powerRange = r.match(/(\d+)[-–](\d+)\s*л[сc]/);
-  if (powerRange) return effStats.power >= parseInt(powerRange[1]) && effStats.power <= parseInt(powerRange[2]);
+  req(!!powerRange, powerRange ? effStats.power >= parseInt(powerRange[1]) && effStats.power <= parseInt(powerRange[2]) : false);
   // General "мощность до X" and "мощность менее X" patterns
   const powerTo = r.match(/мощность\s*до\s*(\d+)/);
-  if (powerTo) return effStats.power <= parseInt(powerTo[1]);
+  req(!!powerTo, powerTo ? effStats.power <= parseInt(powerTo[1]) : false);
   const powerAbove = r.match(/мощность\s*выше\s*(\d+)/);
-  if (powerAbove) return effStats.power > parseInt(powerAbove[1]);
+  req(!!powerAbove, powerAbove ? effStats.power > parseInt(powerAbove[1]) : false);
   const powerBelow = r.match(/мощность\s*менее\s*(\d+)/);
-  if (powerBelow) return effStats.power < parseInt(powerBelow[1]);
+  req(!!powerBelow, powerBelow ? effStats.power < parseInt(powerBelow[1]) : false);
 
   // Статы (Управляемость выше X, Проходимость выше X, Скорость выше X)
   const handlingAbove = r.match(/управляемость\s*выше\s*(\d+)/);
-  if (handlingAbove) return effStats.handling > parseInt(handlingAbove[1]);
+  req(!!handlingAbove, handlingAbove ? effStats.handling > parseInt(handlingAbove[1]) : false);
   const offroadAbove = r.match(/проходимость\s*выше\s*(\d+)/);
-  if (offroadAbove) return effStats.offroad > parseInt(offroadAbove[1]);
+  req(!!offroadAbove, offroadAbove ? effStats.offroad > parseInt(offroadAbove[1]) : false);
   const speedAbove = r.match(/скорость\s*выше\s*(\d+)/);
-  if (speedAbove) return effStats.topSpeed > parseInt(speedAbove[1]);
+  req(!!speedAbove, speedAbove ? effStats.topSpeed > parseInt(speedAbove[1]) : false);
 
-  // Оплатить 1000 - это не фильтр машин, пропускаем
-  if (r.includes('оплатить 1000')) return true;
+  // Оплатить взнос — это не фильтр машин, пропускаем
+  req(r.includes('оплатить'), true);
 
   // Полный лимит деталей
-  if (r.includes('полностью установленны') || r.includes('полным установленным лимитом')) {
+  req(r.includes('полностью установленны') || r.includes('полным установленным лимитом'), (() => {
     const limits = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
     const limit = limits[car.carClass] || 16;
     return car.installedParts.length >= limit;
-  }
+  })());
 
   // Немецкий = Германия
-  if (r.includes('нем ') || r.includes('немецк')) return !!car.tags?.some(t => t.toLowerCase() === 'германия');
+  req(r.includes('нем ') || r.includes('немецк'), hasTag('германия'));
 
-  // По умолчанию разрешаем
-  return true;
+  // Голая эпоха после ИЛИ: "эпоха 80ых или 90-ых" → альтернатива "90-ых"
+  const bareEpoch = r.match(/^(\d{2})\s*[-–]?\s*(?:ые|ых|е|х)(?!\d)/);
+  req(!!bareEpoch, bareEpoch ? car.epoch === parseInt(bareEpoch[1]) : false);
+
+  if (!matched) return true;
+  return ok;
 }
 
 function weightColor(v: number) {
