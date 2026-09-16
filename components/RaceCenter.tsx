@@ -272,7 +272,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     if (!roomId || !playerId) return;
 
     // Проверка: участвует ли эта машина уже в другой гонке сегодня?
-    if (carId) {
+    // В Мировой Серии (суббота) заезды идут не одновременно — одна и та же
+    // машина может быть заявлена на все три гонки (платную, бонусную, главную)
+    if (carId && !isWorldSeries) {
       const alreadyAssigned = entries.find(e => e.player_id === playerId && e.car_id === carId && e.race_id !== raceId);
       if (alreadyAssigned) {
         alert('Эта машина уже заявлена на другую гонку сегодня!');
@@ -344,7 +346,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
 
         {pickingRaceId === 'main-categories' && isWorldSeries && raceIndex === 2 ? (
           <div className="flex flex-col gap-2">
-            <div className="text-[8px] text-[#ffdd00] mb-1">Выберите категорию мощности:</div>
+            <div className="text-[8px] text-[#ffdd00] mb-1">Выберите категорию мощности <span className="text-[#00ff88]">— одну машину можно заявить на все три заезда серии</span>:</div>
             {POWER_CATEGORIES.map((cat, ci) => {
               const catRaceId = `main-cat-${ci}`;
               const catEntry = entries.find(e => e.race_id === catRaceId && e.player_id === playerId);
@@ -402,7 +404,8 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
         {pickingRaceId === raceId ? (
           <div className="flex flex-col gap-1">
             <div className="text-[7px] text-[#888] mb-1">
-              Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>:
+              Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>
+              {isWorldSeries && <span className="text-[#00ff88]"> — одну машину можно заявить на все три заезда серии</span>}:
             </div>
             {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт')) && !c.lockedForTournament).length === 0 ? (
               <span className="text-[7px] text-[#ff4444]">Нет подходящих машин в гараже</span>
@@ -421,7 +424,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                     else if (n.includes('универс')) effectiveTire = 'У';
                   }
 
-                  const isAssignedElsewhere = entries.some(e => e.player_id === playerId && e.car_id === car.id && e.race_id !== raceId);
+                  // В Мировой Серии одна машина может ехать все три заезда —
+                  // занятость в другой субботней гонке не блокирует выбор
+                  const isAssignedElsewhere = !isWorldSeries && entries.some(e => e.player_id === playerId && e.car_id === car.id && e.race_id !== raceId);
 
                   return (
                     <button
