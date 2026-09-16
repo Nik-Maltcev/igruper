@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
-import { Car, Room, RoomPlayer, RoomPhase, View } from '../types';
+import { Car, Room, RoomPlayer, RoomPhase, View, TournamentEntry } from '../types';
 import {
   createRoom, joinRoom, fetchPlayers, startGame,
   updateRoomPhase, updateRoomState, sendSystemMessage,
@@ -463,20 +463,37 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               if (sectionIdx === 2) {
                 const sortedEntries = [...newEntries].sort((a,b) => a.totalTime - b.totalTime);
                 const rewards = getRewards(tournPlayers.length).tournament;
-                if (rewards && rewards.length > 0) {
-                  for (let i = 0; i < sortedEntries.length; i++) {
-                    const place = i + 1;
-                    const rwd = rewards.find(r => r.place === place) || { money: 0, points: 0, prizes: 0 };
-                    if (rwd.money > 0 || rwd.points > 0) {
-                       const pId = sortedEntries[i].playerId;
-                       const p = tournPlayers.find(pl => pl.id === pId);
-                       if (p) {
-                         await updatePlayerState(p.id, {
-                           money: p.money + rwd.money,
-                           points: p.points + rwd.points
-                         });
-                         await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${place} место по сумме трёх участков! +$${rwd.money} +${rwd.points}оч.`);
-                       }
+                const rewardFor = (place: number) => rewards?.find(r => r.place === place) || { money: 0, points: 0, prizes: 0 };
+
+                // Машины с одинаковой суммой времени делят диапазон мест:
+                // деньги за занятые места делится поровну, очки — как за лучшее место группы
+                const finalResults: { entry: TournamentEntry; place: number; money: number; points: number }[] = [];
+                let idx = 0;
+                while (idx < sortedEntries.length) {
+                  let end = idx;
+                  while (end + 1 < sortedEntries.length && sortedEntries[end + 1].totalTime === sortedEntries[idx].totalTime) end++;
+                  const startPlace = idx + 1;
+                  const size = end - idx + 1;
+                  let moneySum = 0;
+                  for (let p = startPlace; p < startPlace + size; p++) moneySum += rewardFor(p).money;
+                  const groupMoney = Math.round(moneySum / size);
+                  const groupPoints = rewardFor(startPlace).points;
+                  for (let k = idx; k <= end; k++) {
+                    finalResults.push({ entry: sortedEntries[k], place: startPlace, money: groupMoney, points: groupPoints });
+                  }
+                  idx = end + 1;
+                }
+
+                for (const fr of finalResults) {
+                  if (fr.money > 0 || fr.points > 0) {
+                    const p = tournPlayers.find(pl => pl.id === fr.entry.playerId);
+                    if (p) {
+                      await updatePlayerState(p.id, {
+                        money: p.money + fr.money,
+                        points: p.points + fr.points
+                      });
+                      const shared = finalResults.filter(x => x.place === fr.place).length > 1 ? ' (делённое место)' : '';
+                      await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${fr.place} место по сумме трёх участков!${shared} +$${fr.money} +${fr.points}оч.`);
                     }
                   }
                 }
@@ -497,18 +514,17 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                 }
 
                 // Сохраняем итоговые результаты турнира с наградами для отображения
-                const tournFinalResults = sortedEntries.map((entry, i) => {
-                  const p = tournPlayers.find(pl => pl.id === entry.playerId);
-                  const car = p?.garage?.find(c => c.id === entry.carId);
-                  const rwd = rewards?.find(r => r.place === i + 1) || { money: 0, points: 0, prizes: 0 };
+                const tournFinalResults = finalResults.map(fr => {
+                  const p = tournPlayers.find(pl => pl.id === fr.entry.playerId);
+                  const car = p?.garage?.find(c => c.id === fr.entry.carId);
                   return {
-                    carId: entry.carId,
+                    carId: fr.entry.carId,
                     carName: car?.name || '?',
                     playerName: p?.username || '',
-                    position: i + 1,
-                    time: entry.totalTime,
-                    earnings: rwd.money,
-                    points: rwd.points,
+                    position: fr.place,
+                    time: fr.entry.totalTime,
+                    earnings: fr.money,
+                    points: fr.points,
                   };
                 });
                 await saveRaceDayResults(room.id, room.current_day, 'tournament-final', `🏆 ИТОГИ: ${room.tournament_state.tournamentName}`, tournFinalResults, 'SUNNY');

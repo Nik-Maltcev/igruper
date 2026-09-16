@@ -47,6 +47,19 @@ export const getEffectiveStats = (car: Car): CarStats => {
   return base;
 };
 
+// Награда за место: из таблицы наград или дефолтная (когда таблица не передана)
+function rewardForPlace(place: number, rewardTable?: RewardEntry[]): { money: number; points: number } {
+  if (rewardTable) {
+    const rw = rewardTable.find(r => r.place === place);
+    return { money: rw?.money || 0, points: rw?.points || 0 };
+  }
+  if (place === 1) return { money: 5000, points: 25 };
+  if (place === 2) return { money: 2500, points: 18 };
+  if (place === 3) return { money: 1000, points: 15 };
+  if (place <= 5) return { money: 250, points: 10 };
+  return { money: 50, points: 0 };
+}
+
 export const simulateRace = (
   userCars: Car[],
   track: Track,
@@ -56,7 +69,8 @@ export const simulateRace = (
 ): RaceResult[] => {
   const allRacers = includeBots ? [...userCars, ...MOCK_OPPONENTS] : [...userCars];
 
-  const results: RaceResult[] = allRacers.map(car => {
+  // Базовая скорость машины без случайной прибавки (с погодой и шинами)
+  const baseSpeeds: number[] = allRacers.map(car => {
     const s = getEffectiveStats(car);
 
     // Определяем эффективный тип шин: заводские или купленные
@@ -99,10 +113,22 @@ export const simulateRace = (
     const mitigation = (s.handling * 0.5 + s.offroad * 0.5) / 200;
     const effectivePenalty = weatherPenalty * track.weatherModifier * Math.max(0, (1 - mitigation));
     averageSpeed = averageSpeed * (1 - effectivePenalty);
+    return averageSpeed;
+  });
 
-    // Рандом ±5
-    const luck = Math.random() * 10 - 5;
-    const finalSpeed = Math.max(10, averageSpeed + luck);
+  // Один бросок случайности на уникальную базовую скорость: машины с
+  // одинаковыми характеристиками получают одинаковое время и делят место
+  const luckBySpeed = new Map<number, number>();
+
+  const results: RaceResult[] = allRacers.map((car, i) => {
+    const baseSpeed = baseSpeeds[i];
+    let luck = luckBySpeed.get(baseSpeed);
+    if (luck === undefined) {
+      // Рандом ±5
+      luck = Math.random() * 10 - 5;
+      luckBySpeed.set(baseSpeed, luck);
+    }
+    const finalSpeed = Math.max(10, baseSpeed + luck);
 
     const trackDistanceKm = 4.0;
     const timeHours = trackDistanceKm / finalSpeed;
@@ -120,32 +146,30 @@ export const simulateRace = (
 
   results.sort((a, b) => a.time - b.time);
 
-  return results.map((r, index) => {
-    // Ничья: если время совпадает с предыдущим, берём его позицию
-    let position = index + 1;
-    if (index > 0 && r.time === results[index - 1].time) {
-      // Ищем первого в группе с таким же временем
-      let groupStart = index - 1;
-      while (groupStart > 0 && results[groupStart - 1].time === r.time) groupStart--;
-      position = groupStart + 1;
-    }
+  // Группа машин с одинаковым временем занимает диапазон мест k..k+n-1
+  // (следующая машина получает место k+n). Награды по правилам ничьих:
+  // деньги за занятые места делятся поровну, очки — как за лучшее место группы.
+  let i = 0;
+  while (i < results.length) {
+    let j = i;
+    while (j + 1 < results.length && results[j + 1].time === results[i].time) j++;
 
-    let earnings = 0;
-    let points = 0;
-
-    if (rewardTable) {
-      const reward = rewardTable.find(rw => rw.place === position);
-      if (reward) {
-        earnings = reward.money;
-        points = reward.points;
-      }
-    } else {
-      if (position === 1) { earnings = 5000; points = 25; }
-      else if (position === 2) { earnings = 2500; points = 18; }
-      else if (position === 3) { earnings = 1000; points = 15; }
-      else if (position <= 5) { earnings = 250; points = 10; }
-      else { earnings = 50; points = 0; }
+    const startPlace = i + 1;
+    const groupSize = j - i + 1;
+    let moneySum = 0;
+    for (let p = startPlace; p < startPlace + groupSize; p++) {
+      moneySum += rewardForPlace(p, rewardTable).money;
     }
-    return { ...r, position, earnings, points };
-  });
+    const groupMoney = Math.round(moneySum / groupSize);
+    const groupPoints = rewardForPlace(startPlace, rewardTable).points;
+
+    for (let k = i; k <= j; k++) {
+      results[k].position = startPlace;
+      results[k].earnings = groupMoney;
+      results[k].points = groupPoints;
+    }
+    i = j + 1;
+  }
+
+  return results;
 };

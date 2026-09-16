@@ -412,6 +412,82 @@ describe('simulateRace', () => {
     }
   });
 
+  it('identical cars tie even with different random draws', () => {
+    // Разные значения random для двух машин — время всё равно одинаковое:
+    // бросок случайности один на уникальную расчётную скорость
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.05).mockReturnValueOnce(0.95);
+    const car1 = makeCar({ id: 'a' });
+    const car2 = makeCar({ id: 'b' });
+    const results = simulateRace([car1, car2], DRAG_TRACK, 'SUNNY', false);
+    expect(results).toHaveLength(2);
+    expect(results[0].time).toBe(results[1].time);
+    expect(results[0].position).toBe(1);
+    expect(results[1].position).toBe(1);
+  });
+
+  it('ties occupy same place, next car gets place further down (1,2,2,4)', () => {
+    // Пример из правил: A=150лс, Б и В по 110лс, Г=90лс, оценивается только мощность
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const powerTrack: Track = {
+      id: 'p', name: 'Power', image: '', description: '',
+      weights: { power: 1, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 },
+      weatherModifier: 0,
+    };
+    const powerCar = (id: string, power: number) =>
+      makeCar({ id, name: id, stats: { power, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 } });
+    const results = simulateRace(
+      [powerCar('A', 150), powerCar('Б', 110), powerCar('В', 110), powerCar('Г', 90)],
+      powerTrack, 'SUNNY', false,
+    );
+    const byId = Object.fromEntries(results.map(r => [r.carId, r]));
+    expect(byId['A'].position).toBe(1);
+    expect(byId['Б'].position).toBe(2);
+    expect(byId['В'].position).toBe(2);
+    expect(byId['Г'].position).toBe(4);
+  });
+
+  it('tied cars share averaged money and get points of the best place', () => {
+    // Б и В делят места 2-3: деньги (2200 + 1000) / 2 = 1600, очки как за 2 место
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const powerTrack: Track = {
+      id: 'p', name: 'Power', image: '', description: '',
+      weights: { power: 1, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 },
+      weatherModifier: 0,
+    };
+    const powerCar = (id: string, power: number) =>
+      makeCar({ id, name: id, stats: { power, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 } });
+    const rewardTable = [
+      { place: 1, money: 3500, points: 3, prizes: 0 },
+      { place: 2, money: 2200, points: 2, prizes: 0 },
+      { place: 3, money: 1000, points: 1, prizes: 0 },
+    ];
+    const results = simulateRace(
+      [powerCar('A', 150), powerCar('Б', 110), powerCar('В', 110), powerCar('Г', 90)],
+      powerTrack, 'SUNNY', false, rewardTable,
+    );
+    const byId = Object.fromEntries(results.map(r => [r.carId, r]));
+    expect(byId['A']).toMatchObject({ position: 1, earnings: 3500, points: 3 });
+    expect(byId['Б']).toMatchObject({ position: 2, earnings: 1600, points: 2 });
+    expect(byId['В']).toMatchObject({ position: 2, earnings: 1600, points: 2 });
+    expect(byId['Г']).toMatchObject({ position: 4, earnings: 0, points: 0 });
+  });
+
+  it('three-way tie for first place splits money of places 1-3, points as for 1st', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const rewardTable = [
+      { place: 1, money: 3500, points: 3, prizes: 0 },
+      { place: 2, money: 2200, points: 2, prizes: 0 },
+      { place: 3, money: 1000, points: 1, prizes: 0 },
+    ];
+    const cars = [makeCar({ id: 'a' }), makeCar({ id: 'b' }), makeCar({ id: 'c' })];
+    const results = simulateRace(cars, DRAG_TRACK, 'SUNNY', false, rewardTable);
+    for (const r of results) {
+      expect(r.position).toBe(1);
+      expect(r.earnings).toBe(Math.round((3500 + 2200 + 1000) / 3)); // 2233
+      expect(r.points).toBe(3);
+    }
+  });
+
   it('weatherModifier=0 track is unaffected by rain', () => {
     const noWeatherTrack: Track = {
       ...DRAG_TRACK,
