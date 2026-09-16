@@ -333,7 +333,7 @@
           "name": "Шины Внедорожные1",
           "description": "Повышают проходимость, но слегка портят управляемость.",
           "boosts": {
-            "handling": 2,
+            "handling": -2,
             "offroad": 9,
             "accelerationPct": 1,
             "topSpeedPct": 1

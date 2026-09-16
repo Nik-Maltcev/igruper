@@ -12,7 +12,9 @@ let partIdCounter = 1;
 function parseBoosts(str) {
   if (!str) return {};
   const b = {};
-  const s = str.replace(/\s+/g, ' ').trim();
+  // Нормализация: слепляем пробелы и минус с числом ("- 2 У" -> "-2 У"),
+  // иначе регулярки с (-?\d+) теряют знак
+  const s = str.replace(/\s+/g, ' ').replace(/-\s+(?=\d)/g, '-').trim();
 
   // Процентные лс: "2% лс +6 лс" или "10%лс + 30 лс" или "5% лс +20 лс"
   const pctPowerMatch = s.match(/(\d+)\s*%\s*лс\s*\+?\s*(\d+)\s*лс/i);
