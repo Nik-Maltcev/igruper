@@ -410,9 +410,11 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           if (tournamentData && sectionIdx < tournamentData.sections.length) {
             const section = tournamentData.sections[sectionIdx];
 
+            // Свежие данные игроков: выше в этом же ходе уже применялись награды гонок дня
+            const tournPlayers = await fetchPlayers(room.id);
             const tCars: Car[] = [];
             for (const entry of room.tournament_state.entries) {
-              const player = players.find(p => p.id === entry.playerId);
+              const player = tournPlayers.find(p => p.id === entry.playerId);
               if (player) {
                 const car = player.garage.find(c => c.id === entry.carId);
                 if (car) tCars.push(car);
@@ -420,10 +422,12 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             }
 
             if (tCars.length > 0) {
+              // Пустая таблица наград: за участок деньги/очки не начисляются —
+              // награждение одно, в субботу, по сумме трёх участков
               const tResults = simulateRace(tCars, {
                 id: `tourn-${sectionIdx}`, name: section.name,
                 image: '', description: '', weights: section.weights, weatherModifier: section.weatherModifier
-              }, 'SUNNY', false);
+              }, 'SUNNY', false, []);
 
               const newEntries = room.tournament_state.entries.map(entry => {
                 const res = tResults.find(r => r.carId === entry.carId);
@@ -442,14 +446,14 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                 completedSections: sectionIdx + 1,
               };
               await updateRoomState(room.id, { tournament_state: updatedTournamentState });
-              
+
               const sectName = sectionIdx === 0 ? 'ПЕРВЫЙ УЧАСТОК' : sectionIdx === 1 ? 'ВТОРОЙ УЧАСТОК' : 'ФИНАЛЬНЫЙ УЧАСТОК';
-              await sendSystemMessage(room.id, `🏆 Турнир [${room.tournament_state.tournamentName}]: Завершён ${sectName}!`);
+              await sendSystemMessage(room.id, `🏆 Турнир [${room.tournament_state.tournamentName}]: Завершён ${sectName}! Время суммируется, награждение — в субботу по итогам всех трёх участков.`);
 
               // Сохраняем результаты участка турнира для визуализации в RaceResults
               const tournResultsWithPlayers = tResults.map(r => {
                 const entry = room.tournament_state!.entries.find(e => e.carId === r.carId);
-                const p = entry ? players.find(pl => pl.id === entry.playerId) : null;
+                const p = entry ? tournPlayers.find(pl => pl.id === entry.playerId) : null;
                 const car = p?.garage?.find(c => c.id === r.carId);
                 const updEntry = newEntries.find(e => e.carId === r.carId);
                 return { ...r, playerName: p?.username || '', carStats: null, totalTime: updEntry?.totalTime || 0 };
@@ -458,27 +462,27 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
 
               if (sectionIdx === 2) {
                 const sortedEntries = [...newEntries].sort((a,b) => a.totalTime - b.totalTime);
-                const rewards = getRewards(players.length).tournament;
+                const rewards = getRewards(tournPlayers.length).tournament;
                 if (rewards && rewards.length > 0) {
                   for (let i = 0; i < sortedEntries.length; i++) {
                     const place = i + 1;
                     const rwd = rewards.find(r => r.place === place) || { money: 0, points: 0, prizes: 0 };
                     if (rwd.money > 0 || rwd.points > 0) {
                        const pId = sortedEntries[i].playerId;
-                       const p = players.find(pl => pl.id === pId);
+                       const p = tournPlayers.find(pl => pl.id === pId);
                        if (p) {
                          await updatePlayerState(p.id, {
                            money: p.money + rwd.money,
                            points: p.points + rwd.points
                          });
-                         await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${place} место! +$${rwd.money} +${rwd.points}оч.`);
+                         await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${place} место по сумме трёх участков! +$${rwd.money} +${rwd.points}оч.`);
                        }
                     }
                   }
                 }
-                
+
                 // Разблокируем машины
-                for (const player of players) {
+                for (const player of tournPlayers) {
                   let changed = false;
                   const newGarage = player.garage.map(c => {
                     if (c.lockedForTournament) {
@@ -494,7 +498,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
 
                 // Сохраняем итоговые результаты турнира с наградами для отображения
                 const tournFinalResults = sortedEntries.map((entry, i) => {
-                  const p = players.find(pl => pl.id === entry.playerId);
+                  const p = tournPlayers.find(pl => pl.id === entry.playerId);
                   const car = p?.garage?.find(c => c.id === entry.carId);
                   const rwd = rewards?.find(r => r.place === i + 1) || { money: 0, points: 0, prizes: 0 };
                   return {

@@ -330,7 +330,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                     <div className="animate-fade-in">
                         <h3 className="text-sm mb-4 text-center text-[#00ffaa]">РЕЗУЛЬТАТЫ ЗАЕЗДА</h3>
                         <div className="flex flex-col gap-2">
-                            {currentRace.results.sort((a, b) => a.position - b.position).map((r, idx) => (
+                            {[...currentRace.results].sort((a, b) => a.position - b.position).map((r, idx) => (
                                 <div key={r.carId} className={`flex justify-between items-center p-2 border ${idx === 0 ? 'border-[#ffdd00] bg-[#332200]' : idx === 1 ? 'border-[#aaaaaa] bg-[#222222]' : idx === 2 ? 'border-[#cd7f32] bg-[#331a00]' : 'border-[#333] bg-[#111]'}`}>
                                     <div className="flex items-center gap-3">
                                         <span className={`text-[12px] font-bold ${idx === 0 ? 'text-[#ffdd00]' : idx === 1 ? 'text-[#aaaaaa]' : idx === 2 ? 'text-[#cd7f32]' : 'text-[#777]'}`}>
@@ -342,7 +342,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                         </span>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-[10px] text-[#ffaa00]">+${r.earnings.toLocaleString()}</div>
+                                        {r.earnings > 0 && <div className="text-[10px] text-[#ffaa00]">+${r.earnings.toLocaleString()}</div>}
                                         {r.points > 0 && <div className="text-[8px] text-[#00ffaa]">+{r.points} очк.</div>}
                                         {(r as any).prizes?.length > 0 && (
                                             <div className="text-[7px] text-[#aa44ff] mt-0.5">
@@ -352,10 +352,19 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                             </div>
                                         )}
                                         <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
+                                        {(currentRace.race_id || '').startsWith('tournament-section-') && (r as any).totalTime > 0 && (
+                                            <div className="text-[8px] text-[#aa44ff]">Σ по участкам: {formatTime((r as any).totalTime, currentRace.race_name)}</div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
                         </div>
+
+                        {(currentRace.race_id || '').startsWith('tournament-section-') && (
+                            <div className="text-center mt-2 text-[8px] text-[#888]">
+                                Награждение — один раз в субботу, по сумме времени всех трёх участков
+                            </div>
+                        )}
 
                         <button onClick={handleNext} className="mt-6 w-full retro-btn py-3 text-[14px]">
                             {isLastRace ? 'ЗАВЕРШИТЬ ДЕНЬ 🏁' : 'СЛЕДУЮЩАЯ ГОНКА ▶'}
