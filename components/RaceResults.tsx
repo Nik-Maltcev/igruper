@@ -248,6 +248,8 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                                 {r.playerName && <span className="text-[#44ff44] font-bold">{r.playerName}</span>}
                                                 {r.playerName && <span className="text-[#555] mx-1">—</span>}
                                                 <span className="text-[#aaa]">{r.carName}</span>
+                                                {(r as any).didNotStart && <span className="text-[#ff6666] ml-1">🚫 не едет в дождь (слики)</span>}
+                                                {(r as any).rainAffected && !(r as any).didNotStart && <span className="text-[#88bbff] ml-1">⛈ тучка</span>}
                                             </td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.power || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.torque || '—'}</td>
@@ -289,6 +291,9 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                     const progressModifier = minTime / r.time;
                                     const currentProgress = Math.min(95, animationProgress * progressModifier * 0.95);
                                     const color = CAR_COLORS[i % CAR_COLORS.length];
+                                    // «Не едет»: слики + дождь + тяжёлое покрытие — отъезжает и остаётся на месте
+                                    const didNotStart = !!(r as any).didNotStart;
+                                    const carLeft = didNotStart ? '-10px' : `${currentProgress}%`;
 
                                     return (
                                         <div key={r.carId} className="relative" style={{ height: '32px' }}>
@@ -297,22 +302,37 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                                 style={{ background: i % 2 === 0 ? '#0d0d0d' : '#141414' }} />
                                             
                                             {/* Имя слева */}
-                                            <div className="absolute left-1 top-1/2 -translate-y-1/2 text-[7px] z-[5]" style={{ color }}>
+                                            <div className="absolute left-1 top-1/2 -translate-y-1/2 text-[7px] z-[5]" style={{ color: didNotStart ? '#666' : color }}>
                                                 {r.playerName ? `${r.playerName} | ${r.carName.length > 12 ? r.carName.substring(0, 12) + '…' : r.carName}` : (r.carName.length > 15 ? r.carName.substring(0, 15) + '…' : r.carName)}
                                             </div>
+
+                                            {/* Грозовая тучка над машинкой, если дождь влияет из-за шин */}
+                                            {(r as any).rainAffected && (
+                                                <div
+                                                    className="absolute top-0 text-[9px] z-[6]"
+                                                    style={{ left: `calc(${carLeft} + 3px)`, transition: 'left 75ms linear' }}
+                                                >⛈️</div>
+                                            )}
 
                                             {/* Машинка */}
                                             <div
                                                 className="absolute top-1/2 text-[16px] z-[5]"
                                                 style={{
-                                                    left: `${currentProgress}%`,
+                                                    left: carLeft,
                                                     transition: 'left 75ms linear',
-                                                    filter: `drop-shadow(0 0 4px ${color})`,
+                                                    filter: didNotStart ? 'grayscale(1)' : `drop-shadow(0 0 4px ${color})`,
+                                                    opacity: didNotStart ? 0.6 : 1,
                                                     transform: 'translateY(-50%) scaleX(-1)',
                                                 }}
                                             >
                                                 🏎️
                                             </div>
+
+                                            {didNotStart && (
+                                                <div className="absolute text-[6px] text-[#ff6666] z-[6]" style={{ left: '14px', top: '60%' }}>
+                                                    не едет
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -351,7 +371,11 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                                 ))}
                                             </div>
                                         )}
-                                        <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
+                                        {(r as any).didNotStart ? (
+                                            <div className="text-[8px] text-[#ff6666]">🚫 не едет: слики + дождь</div>
+                                        ) : (
+                                            <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
+                                        )}
                                         {(currentRace.race_id || '').startsWith('tournament-section-') && (r as any).totalTime > 0 && (
                                             <div className="text-[8px] text-[#aa44ff]">Σ по участкам: {formatTime((r as any).totalTime, currentRace.race_name)}</div>
                                         )}

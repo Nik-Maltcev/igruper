@@ -47,6 +47,19 @@ export const getEffectiveStats = (car: Car): CarStats => {
   return base;
 };
 
+// Тип покрытия трассы по названию — определяет влияние дождя (таблица «Влияние осадков»):
+// heavy — песок, болото, снег, лёд, полигон, грунтовка, мотокросс, бездорожье;
+// country — сельская дорога, лес; asphalt — все остальные (асфальт)
+export function getRoadCategory(trackName: string): 'heavy' | 'country' | 'asphalt' {
+  const n = (trackName || '').toLowerCase();
+  if (/(песок|болот|снег|лёд|лед|полигон|грунт|мотокросс|бездорож)/.test(n)) return 'heavy';
+  if (/(сельск|лес)/.test(n)) return 'country';
+  return 'asphalt';
+}
+
+// Время «не едет»: слики + дождь + тяжёлое покрытие — машина отступает и не финиширует
+export const DNS_TIME = 9999;
+
 // Награда за место: из таблицы наград или дефолтная (когда таблица не передана)
 function rewardForPlace(place: number, rewardTable?: RewardEntry[]): { money: number; points: number } {
   if (rewardTable) {
@@ -69,8 +82,12 @@ export const simulateRace = (
 ): RaceResult[] => {
   const allRacers = includeBots ? [...userCars, ...MOCK_OPPONENTS] : [...userCars];
 
+  const roadCategory = getRoadCategory(track.name);
+  const isWet = weather === 'RAIN' || weather === 'STORM';
+
   // Базовая скорость машины без случайной прибавки (с погодой и шинами)
-  const baseSpeeds: number[] = allRacers.map(car => {
+  // + флажки влияния дождя для визуализации
+  const perCar = allRacers.map(car => {
     const s = getEffectiveStats(car);
 
     // Определяем эффективный тип шин: заводские или купленные
@@ -83,6 +100,14 @@ export const simulateRace = (
       else if (n.includes('внедорож') || n.includes('шипов')) tireType = 'В';
       else if (n.includes('слик')) tireType = 'С';
     }
+
+    // Слики не едут по тяжёлому покрытию в дождь (таблица «Влияние осадков»)
+    const didNotStart = isWet && tireType === 'С' && roadCategory === 'heavy';
+
+    // Тучка: дождь влияет из-за неподходящих шин. Нет тучки:
+    // универсальные на асфальте, внедорожные на тяжёлом покрытии
+    const rainAffected = isWet && !didNotStart &&
+      !((roadCategory === 'asphalt' && tireType === 'У') || (roadCategory === 'heavy' && tireType === 'В'));
 
     // Определяем штраф за погоду в зависимости от шин
     let weatherPenalty = 0;
@@ -113,7 +138,8 @@ export const simulateRace = (
     const mitigation = (s.handling * 0.5 + s.offroad * 0.5) / 200;
     const effectivePenalty = weatherPenalty * track.weatherModifier * Math.max(0, (1 - mitigation));
     averageSpeed = averageSpeed * (1 - effectivePenalty);
-    return averageSpeed;
+
+    return { baseSpeed: averageSpeed, tireType, didNotStart, rainAffected };
   });
 
   // Один бросок случайности на уникальную базовую скорость: машины с
@@ -121,27 +147,36 @@ export const simulateRace = (
   const luckBySpeed = new Map<number, number>();
 
   const results: RaceResult[] = allRacers.map((car, i) => {
-    const baseSpeed = baseSpeeds[i];
-    let luck = luckBySpeed.get(baseSpeed);
+    const info = perCar[i];
+    const base = {
+      carId: car.id,
+      carName: car.name,
+      position: 0,
+      time: 0,
+      earnings: 0,
+      points: 0,
+      tireType: info.tireType,
+      rainAffected: info.rainAffected,
+      didNotStart: info.didNotStart,
+    };
+
+    if (info.didNotStart) {
+      return { ...base, time: DNS_TIME };
+    }
+
+    let luck = luckBySpeed.get(info.baseSpeed);
     if (luck === undefined) {
       // Рандом ±5
       luck = Math.random() * 10 - 5;
-      luckBySpeed.set(baseSpeed, luck);
+      luckBySpeed.set(info.baseSpeed, luck);
     }
-    const finalSpeed = Math.max(10, baseSpeed + luck);
+    const finalSpeed = Math.max(10, info.baseSpeed + luck);
 
     const trackDistanceKm = 4.0;
     const timeHours = trackDistanceKm / finalSpeed;
     const timeSeconds = timeHours * 3600;
 
-    return {
-      carId: car.id,
-      carName: car.name,
-      position: 0,
-      time: parseFloat(timeSeconds.toFixed(3)),
-      earnings: 0,
-      points: 0
-    };
+    return { ...base, time: parseFloat(timeSeconds.toFixed(3)) };
   });
 
   results.sort((a, b) => a.time - b.time);
@@ -169,6 +204,14 @@ export const simulateRace = (
       results[k].points = groupPoints;
     }
     i = j + 1;
+  }
+
+  // «Не едет» — последнее место без наград и очков
+  for (const r of results) {
+    if (r.didNotStart) {
+      r.earnings = 0;
+      r.points = 0;
+    }
   }
 
   return results;

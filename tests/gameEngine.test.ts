@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getEffectiveStats, simulateRace } from '../services/gameEngine';
+import { getEffectiveStats, simulateRace, getRoadCategory } from '../services/gameEngine';
 import { Car, Track, Part } from '../types';
 
 // ─── Helpers ───
@@ -486,6 +486,99 @@ describe('simulateRace', () => {
       expect(r.earnings).toBe(Math.round((3500 + 2200 + 1000) / 3)); // 2233
       expect(r.points).toBe(3);
     }
+  });
+
+  // ─── Дождь: тип покрытия, тучка, «не едет» ───
+
+  const SAND_TRACK: Track = {
+    id: 'sand', name: 'Песок', image: '', description: '',
+    weights: { power: 1, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 },
+    weatherModifier: 0,
+  };
+  const COUNTRY_TRACK: Track = {
+    id: 'c', name: 'Сельская дорога', image: '', description: '',
+    weights: { power: 1, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 },
+    weatherModifier: 0,
+  };
+  const powerCar = (id: string, power: number, overrides: Partial<Car> = {}) =>
+    makeCar({ id, name: id, stats: { power, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 }, ...overrides });
+
+  it('categorizes road type by track name', () => {
+    expect(getRoadCategory('Песок')).toBe('heavy');
+    expect(getRoadCategory('Лёд дрифт 1')).toBe('heavy');
+    expect(getRoadCategory('Снег слалом')).toBe('heavy');
+    expect(getRoadCategory('Грунтовка 3')).toBe('heavy');
+    expect(getRoadCategory('Мотокросс 2')).toBe('heavy');
+    expect(getRoadCategory('Бездорожье')).toBe('heavy');
+    expect(getRoadCategory('Сельская дорога 2')).toBe('country');
+    expect(getRoadCategory('ДРИФТ')).toBe('asphalt');
+    expect(getRoadCategory('Дрэг 400 метров')).toBe('asphalt');
+    expect(getRoadCategory('Асфальт')).toBe('asphalt');
+    expect(getRoadCategory('Трасса 1')).toBe('asphalt');
+  });
+
+  it('slicks do not start on heavy road in rain: last place, no rewards', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const results = simulateRace(
+      [powerCar('fast', 200, { roadType: 'С' }), powerCar('slow', 50, { roadType: 'У' })],
+      SAND_TRACK, 'RAIN', false,
+    );
+    const byId = Object.fromEntries(results.map(r => [r.carId, r]));
+    expect(byId['fast'].didNotStart).toBe(true);
+    expect(byId['fast'].position).toBe(2); // последнее место
+    expect(byId['fast'].earnings).toBe(0);
+    expect(byId['fast'].points).toBe(0);
+    expect(byId['slow'].didNotStart).toBeFalsy();
+    expect(byId['slow'].position).toBe(1);
+  });
+
+  it('slicks drive on asphalt and on heavy road in sunny weather', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const onAsphalt = simulateRace([powerCar('s', 100, { roadType: 'С' })], DRAG_TRACK, 'RAIN', false);
+    expect(onAsphalt[0].didNotStart).toBeFalsy();
+    expect(onAsphalt[0].rainAffected).toBe(true);
+    const onSandSunny = simulateRace([powerCar('s', 100, { roadType: 'С' })], SAND_TRACK, 'SUNNY', false);
+    expect(onSandSunny[0].didNotStart).toBeFalsy();
+    expect(onSandSunny[0].rainAffected).toBeFalsy();
+  });
+
+  it('cloud appears per «Влияние осадков» table', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const race = (track: Track, roadType: string) =>
+      simulateRace([powerCar('x', 100, { roadType })], track, 'RAIN', false)[0];
+
+    // асфальт: универсальные — нет тучки, остальные — тучка
+    expect(race(DRAG_TRACK, 'У').rainAffected).toBeFalsy();
+    expect(race(DRAG_TRACK, 'Г').rainAffected).toBe(true);
+    expect(race(DRAG_TRACK, 'В').rainAffected).toBe(true);
+    // тяжёлое покрытие: внедорожные — нет тучки, остальные — тучка
+    expect(race(SAND_TRACK, 'В').rainAffected).toBeFalsy();
+    expect(race(SAND_TRACK, 'У').rainAffected).toBe(true);
+    expect(race(SAND_TRACK, 'Г').rainAffected).toBe(true);
+    // сельская дорога/лес: тучка у всех
+    expect(race(COUNTRY_TRACK, 'У').rainAffected).toBe(true);
+    expect(race(COUNTRY_TRACK, 'В').rainAffected).toBe(true);
+    // в солнечную погоду тучек нет
+    expect(simulateRace([powerCar('x', 100, { roadType: 'Г' })], SAND_TRACK, 'SUNNY', false)[0].rainAffected).toBeFalsy();
+  });
+
+  it('DNS time is detached: finishers keep places and rewards ahead of it', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const rewardTable = [
+      { place: 1, money: 3500, points: 3, prizes: 0 },
+      { place: 2, money: 2200, points: 2, prizes: 0 },
+    ];
+    const results = simulateRace(
+      [powerCar('a', 100, { roadType: 'С' }), powerCar('b', 90, { roadType: 'С' }), powerCar('m', 80, { roadType: 'У' })],
+      SAND_TRACK, 'RAIN', false, rewardTable,
+    );
+    const byId = Object.fromEntries(results.map(r => [r.carId, r]));
+    expect(byId['m'].position).toBe(1);
+    expect(byId['m'].earnings).toBe(3500);
+    expect(byId['a'].position).toBe(2); // две «неедущие» делят последнее место
+    expect(byId['b'].position).toBe(2);
+    expect(byId['a'].earnings).toBe(0);
+    expect(byId['b'].earnings).toBe(0);
   });
 
   it('weatherModifier=0 track is unaffected by rain', () => {

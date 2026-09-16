@@ -256,9 +256,9 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             const stats = car ? getEffectiveStats(car) : null;
             return { ...r, playerName: pl?.username || '', playerPoints: pl?.points || 0, carStats: stats };
           });
-          // Генерируем призы из Bonus Track (World Series Race 2)
+          // Генерируем призы из Bonus Track (World Series Race 2) — только финишировавшим
           if (worldRaceIndex === 1) {
-            const prizeMap = generatePrizesForRace(results, players.length, room.current_year);
+            const prizeMap = generatePrizesForRace(results.filter(r => !r.didNotStart), players.length, room.current_year);
             for (const [carId, prizes] of prizeMap) {
               const pid = playerMap[carId];
               if (!pid) continue;
@@ -345,8 +345,10 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               continue;
             }
 
+            // Реальное имя трассы главной гонки (нужно движку для типа покрытия при дожде)
+            const mainRaceName = roundData?.races?.[2]?.name || 'main-cat';
             const catResults = simulateRace(catCars, {
-              id: catRaceId, name: catRaceId,
+              id: catRaceId, name: mainRaceName,
               image: '', description: '',
               weights: mainTrackWeights,
               weatherModifier: 0.3,

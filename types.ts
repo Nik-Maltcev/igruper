@@ -84,6 +84,9 @@ export interface RaceResult {
   earnings: number;
   points: number;
   playerName?: string;
+  tireType?: string;        // эффективный тип шин в заезде (У/Г/В/С)
+  rainAffected?: boolean;   // дождь влияет из-за шин — тучка над машинкой
+  didNotStart?: boolean;    // слики + дождь + тяжёлое покрытие: не едет, без наград
 }
 
 export interface PlayerState {
