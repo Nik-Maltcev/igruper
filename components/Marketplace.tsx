@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SHOPS, AVAILABLE_CARS } from '../constants';
-import { Car, Part } from '../types';
+import { Car, CarStats, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 import { getPartBaseName } from '../services/prizeService';
 
@@ -30,10 +30,75 @@ const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, 
 
 const JAMSHUT_BRAND = 'Джамшут';
 
+// Панель характеристик выбранной машины (видна сбоку во всех экранах магазина).
+// При наведении на деталь previewStats содержит статы с этой деталью (или без неё — для снятия),
+// и рядом с изменившимися показателями появляется цветная дельта: зелёная — стало лучше, красная — хуже.
+const STAT_ROWS: { key: keyof CarStats; label: string; unit: string; lowerBetter?: boolean }[] = [
+  { key: 'power', label: 'Мощность', unit: ' лс' },
+  { key: 'torque', label: 'Момент', unit: ' Нм' },
+  { key: 'topSpeed', label: 'Скорость', unit: ' км/ч' },
+  { key: 'acceleration', label: 'Разгон', unit: ' с', lowerBetter: true },
+  { key: 'handling', label: 'Управляемость', unit: '' },
+  { key: 'offroad', label: 'Проходимость', unit: '' },
+];
+
+const fmtStat = (v: number) => String(Math.round(v * 100) / 100);
+
+const CarStatsPanel: React.FC<{ car: Car | null; previewStats: CarStats | null; previewLabel: string | null }> = ({ car, previewStats, previewLabel }) => {
+  if (!car) return null;
+  const cur = getEffectiveStats(car);
+  return (
+    <aside className="w-[170px] flex-shrink-0">
+      <div className="pixel-card p-2" style={{ borderWidth: '2px', borderColor: previewStats ? '#ffaa00' : '#333' }}>
+        <div className="w-full h-14 bg-[#111] overflow-hidden mb-2">
+          <img src={car.image} alt={car.name} className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).src = ''; }} />
+        </div>
+        <div className="text-[8px] text-white mb-1" style={{ textShadow: '1px 1px 0 #000' }}>{car.name}</div>
+        <div className="text-[6px] text-[#555] mb-2">
+          КЛАСС {getCarClass(car)} · {car.installedParts.length}/{CLASS_PART_LIMITS[getCarClass(car)] || 16} ДЕТ.
+        </div>
+        <div className="text-[6px] text-[#555] uppercase tracking-wider border-b border-[#222] pb-1 mb-1">Характеристики</div>
+        {STAT_ROWS.map(row => {
+          const before = cur[row.key];
+          const after = previewStats ? previewStats[row.key] : before;
+          const diff = after - before;
+          const isAccel = row.key === 'acceleration';
+          const changed = previewStats !== null && Math.abs(diff) >= (isAccel ? 0.01 : 1);
+          const better = row.lowerBetter ? diff < 0 : diff > 0;
+          return (
+            <div key={row.key} className="flex items-center justify-between gap-1 py-[2px]">
+              <span className="text-[7px] text-[#777]">{row.label}</span>
+              <span className="flex items-baseline gap-1">
+                <span className="text-[8px] text-white tabular-nums">{fmtStat(before)}{row.unit}</span>
+                {changed && (
+                  <span className="text-[8px] font-bold tabular-nums" style={{ color: better ? '#00ff00' : '#ff4444' }}>
+                    {diff > 0 ? '+' : '−'}{fmtStat(Math.abs(isAccel ? diff : Math.round(diff)))}
+                  </span>
+                )}
+              </span>
+            </div>
+          );
+        })}
+        {previewLabel && (
+          <div className="text-[6px] text-[#ffaa00] mt-2 border-t border-[#222] pt-1 leading-tight">
+            ПРЕДПРОСМОТР:<br />{previewLabel}
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+};
+
 const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVisits, onBuyPart, onRemovePart, onBack }) => {
   const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
   const [selectedShopIdx, setSelectedShopIdx] = useState<number | null>(null);
   const [showJamshut, setShowJamshut] = useState(false);
+  // Живой предпросмотр: buy — деталь наведена в магазине, remove — деталь наведена у Джамшута
+  const [preview, setPreview] = useState<{ kind: 'buy'; part: Part } | { kind: 'remove'; index: number } | null>(null);
+
+  // При смене экрана/машины предпросмотр сбрасывается
+  useEffect(() => { setPreview(null); }, [selectedCarId, selectedShopIdx, showJamshut]);
 
   const unlockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear <= gameYear), [gameYear]);
   const lockedShops = useMemo(() => SHOPS.filter(s => s.unlockYear > gameYear).sort((a, b) => a.unlockYear - b.unlockYear), [gameYear]);
@@ -75,6 +140,19 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
     }
     return { blocked: false };
   };
+
+  // Статы с учётом наведённой детали: buy — деталь добавляется, remove — снимается.
+  // Для уже установленной или заблокированной детали предпросмотр не показываем.
+  const previewStats = useMemo(() => {
+    if (!selectedCar || !preview) return null;
+    if (preview.kind === 'remove') {
+      return getEffectiveStats({ ...selectedCar, installedParts: selectedCar.installedParts.filter((_, i) => i !== preview.index) });
+    }
+    const part = preview.part;
+    if (ownedPartIds.has(part.id) || ownedPartNames.has(getPartBaseName(part.name))) return null;
+    if (getPartStatus(part).blocked) return null;
+    return getEffectiveStats({ ...selectedCar, installedParts: [...selectedCar.installedParts, part] });
+  }, [selectedCar, preview, ownedPartIds, ownedPartNames]);
 
   const boostBadges = (part: Part) => {
     const b = part.boosts;
@@ -169,7 +247,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
             style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← МАШИНЫ</button>
         </div>
 
-        <div className="flex flex-col gap-3 pb-10">
+        <div className="flex gap-3 items-start">
+        <div className="flex-grow min-w-0 flex flex-col gap-3 pb-10">
           {unlockedShops.map((shop, idx) => {
             const locked = visitedBrand !== undefined && visitedBrand !== shop.brand;
             return (
@@ -242,6 +321,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
             );
           })()}
         </div>
+        <CarStatsPanel car={selectedCar} previewStats={null} previewLabel={null} />
+        </div>
       </div>
     );
   }
@@ -269,11 +350,15 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
             <div className="text-[8px] text-[#444] mt-1">МАШИНА В СТОКЕ</div>
           </div>
         ) : (
-          <div className="flex flex-col gap-2 pb-20">
+          <div className="flex gap-3 items-start">
+          <div className="flex-grow min-w-0 flex flex-col gap-2 pb-20">
             {selectedCar.installedParts.map((part, pIdx) => {
               const badges = boostBadges(part);
+              const removable = !(part.name.toLowerCase().includes('расточк') || part.slot === 'bore');
               return (
                 <div key={pIdx} className="pixel-card p-0 flex items-stretch overflow-hidden"
+                  onMouseEnter={() => { if (removable) setPreview({ kind: 'remove', index: pIdx }); }}
+                  onMouseLeave={() => setPreview(null)}
                   style={{ borderWidth: '2px', borderColor: '#553300' }}>
                   <div className="flex-grow px-3 py-2 border-r border-[#222]">
                     <div className="flex items-center gap-2 mb-1">
@@ -314,6 +399,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
               );
             })}
           </div>
+          <CarStatsPanel car={selectedCar} previewStats={previewStats} previewLabel={preview?.kind === 'remove' ? `СНЯТИЕ: ${selectedCar.installedParts[preview.index]?.name}` : null} />
+          </div>
         )}
       </div>
     );
@@ -335,7 +422,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
           style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>← МАГАЗИНЫ</button>
       </div>
 
-      <div className="flex flex-col gap-2 pb-20">
+      <div className="flex gap-3 items-start">
+      <div className="flex-grow min-w-0 flex flex-col gap-2 pb-20">
         {currentShop.parts.map((part) => {
           const owned = ownedPartIds.has(part.id) || ownedPartNames.has(getPartBaseName(part.name));
           const canAfford = money >= part.price;
@@ -345,6 +433,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
           return (
             <div key={part.id}
               className={`pixel-card p-0 flex items-stretch overflow-hidden ${owned ? 'opacity-40' : blocked ? 'opacity-50' : ''}`}
+              onMouseEnter={() => setPreview({ kind: 'buy', part })}
+              onMouseLeave={() => setPreview(null)}
               style={{ borderWidth: '2px', borderColor: owned ? '#44ff44' : blocked ? '#ff4444' : '#333' }}>
 
               {/* Название + описание + характеристики */}
@@ -395,6 +485,8 @@ const Marketplace: React.FC<MarketplaceProps> = ({ money, gameYear, cars, shopVi
             </div>
           );
         })}
+      </div>
+      <CarStatsPanel car={selectedCar} previewStats={previewStats} previewLabel={preview?.kind === 'buy' ? preview.part.name : null} />
       </div>
     </div>
   );
