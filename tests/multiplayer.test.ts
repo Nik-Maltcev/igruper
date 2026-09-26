@@ -5,6 +5,7 @@ import {
   getScheduleDay,
   WEEK_SCHEDULE,
   POWER_CATEGORIES,
+  shouldAutoAdvanceDay,
 } from '../services/multiplayer';
 
 // ═══════════════════════════════════════════════════════
@@ -247,5 +248,40 @@ describe('POWER_CATEGORIES', () => {
       const matches = POWER_CATEGORIES.filter(c => val >= c.min && val <= c.max);
       expect(matches).toHaveLength(1);
     }
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// shouldAutoAdvanceDay (защита от перескока дня в 22:00)
+// ═══════════════════════════════════════════════════════
+
+describe('shouldAutoAdvanceDay', () => {
+  // Пятница 22:03
+  const now = new Date(2026, 8, 25, 22, 3, 0);
+
+  it('allows advance when phase started before 22:00 the same day', () => {
+    // Обычный случай: тюнинг пятницы начался днём
+    expect(shouldAutoAdvanceDay(new Date(2026, 8, 25, 14, 0, 0).toISOString(), now)).toBe(true);
+  });
+
+  it('blocks advance when phase started after 22:00 (second host tab / reload)', () => {
+    // Баг: первая вкладка перевела пятницу в субботу в 22:00, вторая вкладка
+    // или перезагрузка не должны считать гонки с пустыми заявками
+    expect(shouldAutoAdvanceDay(new Date(2026, 8, 25, 22, 0, 30).toISOString(), now)).toBe(false);
+    expect(shouldAutoAdvanceDay(new Date(2026, 8, 25, 22, 2, 0).toISOString(), now)).toBe(false);
+  });
+
+  it('blocks advance when phase started exactly at the deadline', () => {
+    expect(shouldAutoAdvanceDay(new Date(2026, 8, 25, 22, 0, 0).toISOString(), now)).toBe(false);
+  });
+
+  it('allows advance when phase started yesterday late evening', () => {
+    // Фаза началась вчера в 23:00 — до сегодняшнего дедлайна, перевод разрешён
+    expect(shouldAutoAdvanceDay(new Date(2026, 8, 24, 23, 0, 0).toISOString(), now)).toBe(true);
+  });
+
+  it('allows advance when day_started_at is missing (legacy rooms)', () => {
+    expect(shouldAutoAdvanceDay(null, now)).toBe(true);
+    expect(shouldAutoAdvanceDay(undefined, now)).toBe(true);
   });
 });

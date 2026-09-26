@@ -507,3 +507,15 @@ export function getScheduleDay(dayNum: number) {
   const cycleDay = ((dayNum - 4) % 7) + 4;
   return WEEK_SCHEDULE.find(s => s.dayNum === cycleDay) || WEEK_SCHEDULE[3];
 }
+
+// Авто-переход дня в 22:00 (хост). Разрешаем только если текущая фаза началась ДО 22:00.
+// Защита от перескока дня: после перевода (автоматом, второй вкладкой/устройством хоста
+// или кнопкой "+12 часов") day_started_at становится >= 22:00, и повторный перевод
+// не сработает — иначе гонки посчитаются с пустыми заявками, а игроки не успеют
+// расставить машины.
+export function shouldAutoAdvanceDay(dayStartedAt: string | null | undefined, now: Date): boolean {
+  if (!dayStartedAt) return true;
+  const deadline = new Date(now);
+  deadline.setHours(22, 0, 0, 0);
+  return new Date(dayStartedAt) < deadline;
+}

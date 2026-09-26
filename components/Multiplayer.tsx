@@ -6,7 +6,7 @@ import {
   updateRoomPhase, updateRoomState, sendSystemMessage,
   getScheduleDay, WEEK_SCHEDULE, resetShopVisits,
   fetchRaceEntries, updatePlayerState, saveRaceDayResults,
-  leaveRoom as apiLeaveRoom, POWER_CATEGORIES
+  leaveRoom as apiLeaveRoom, POWER_CATEGORIES, shouldAutoAdvanceDay
 } from '../services/multiplayer';
 import { simulateRace, getEffectiveStats } from '../services/gameEngine';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
@@ -673,6 +673,15 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
       if (now.getHours() === 22 && now.getMinutes() <= 5) {
         // Убедимся, что мы не запускали перевод времени сегодня
         if (lastAutoAdvanceDate.current !== todayStr) {
+          // Защита от перескока дня: решение принимаем по СЕРВЕРНОМУ day_started_at
+          // (локальный ref не спасает при второй вкладке хоста или перезагрузке страницы).
+          // Перечитываем комнату, чтобы не полагаться на возможно устаревший room из стейта.
+          const { data: freshRoom } = await supabase.from('rooms').select('day_started_at').eq('id', room.id).single();
+          if (!shouldAutoAdvanceDay(freshRoom?.day_started_at, now)) {
+            // Фаза уже началась после 22:00 — день кто-то перевёл, повторно не считаем
+            lastAutoAdvanceDate.current = todayStr;
+            return;
+          }
           lastAutoAdvanceDate.current = todayStr;
           await advanceDay();
         }
