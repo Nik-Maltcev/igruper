@@ -458,7 +458,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                 const p = entry ? tournPlayers.find(pl => pl.id === entry.playerId) : null;
                 const car = p?.garage?.find(c => c.id === r.carId);
                 const updEntry = newEntries.find(e => e.carId === r.carId);
-                return { ...r, playerName: p?.username || '', carStats: null, totalTime: updEntry?.totalTime || 0 };
+                return { ...r, playerName: p?.username || '', carStats: car ? getEffectiveStats(car) : null, totalTime: updEntry?.totalTime || 0 };
               });
               await saveRaceDayResults(room.id, room.current_day, `tournament-section-${sectionIdx}`, `🏆 ${room.tournament_state.tournamentName}: ${sectName}`, tournResultsWithPlayers, 'SUNNY');
 
@@ -527,6 +527,7 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
                     time: fr.entry.totalTime,
                     earnings: fr.money,
                     points: fr.points,
+                    carStats: car ? getEffectiveStats(car) : null,
                   };
                 });
                 await saveRaceDayResults(room.id, room.current_day, 'tournament-final', `🏆 ИТОГИ: ${room.tournament_state.tournamentName}`, tournFinalResults, 'SUNNY');
