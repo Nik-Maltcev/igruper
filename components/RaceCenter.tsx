@@ -4,6 +4,7 @@ import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
 import type { RewardEntry } from '../constants';
 import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES, joinTournament } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
+import { playEffect } from '../services/sound';
 import { supabase } from '../services/supabase';
 
 interface RaceCenterProps {
@@ -286,6 +287,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     try {
       if (carId) {
         await submitRaceEntry(roomId, playerId, raceId, carId, currentDay);
+        playEffect('race-entry');
       } else {
         // Отмена заявки
         await supabase.from('race_entries').delete()
@@ -378,6 +380,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                               onClick={async () => {
                                 if (alreadyInOtherCat) { alert('Эта машина уже заявлена в другую категорию'); return; }
                                 await submitRaceEntry(roomId, playerId, catRaceId, car.id, currentDay);
+                                playEffect('race-entry');
                                 loadEntries();
                                 setMainRaceCategory(null);
                               }}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../services/supabase';
 import { fetchRaceDayResults, POWER_CATEGORIES, getScheduleDay } from '../services/multiplayer';
 import { RACES_DATA } from '../constants';
+import { playEffect, stopLoop } from '../services/sound';
 import { Car, RaceDayResult } from '../types';
 
 interface RaceResultsProps {
@@ -90,6 +91,23 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
         if (!currentRace?.results?.length) return [];
         return [...currentRace.results].sort((a, b) => (a.playerName || '').localeCompare(b.playerName || ''));
     }, [currentIdx, results]);
+
+    // Звуки экрана результатов (фоновая музыка тут стоит на паузе — см. App):
+    // решётка → звук решётки, анимация → гул гонки (+ звук «не едет» при сликах в дождь),
+    // награды → фанфары, экран поддержки отстающих → свой звук.
+    useEffect(() => {
+        if (!currentRace) return;
+        if ((currentRace.race_id || '') === 'catchup-support') { playEffect('catchup'); return; }
+        if (viewStep === 'GRID') {
+            playEffect('grid');
+        } else if (viewStep === 'ANIMATION') {
+            playEffect('race-visual', { loop: true });
+            if (currentRace.results.some(r => (r as any).didNotStart)) playEffect('dns');
+        } else if (viewStep === 'WINNERS') {
+            playEffect('rewards');
+        }
+        return () => { stopLoop(); };
+    }, [currentIdx, viewStep, currentRace]);
 
     // Требование трассы: ищем только в эпохе и раунде этого дня
     // (имена гонок повторяются между эпохами с разными требованиями)

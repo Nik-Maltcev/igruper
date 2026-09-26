@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Room, RoomPlayer, Car, Part, RaceResult } from './types';
 import { supabase } from './services/supabase';
 import {
@@ -6,6 +6,7 @@ import {
   buyPart, buyCar, removePart, removePartToStorage, installFromStorage,
 } from './services/multiplayer';
 import { findActiveSession, signOut } from './services/auth';
+import { isSoundEnabled, setSoundEnabled, startMusic, pauseMusic, playEffect } from './services/sound';
 import type { User } from '@supabase/supabase-js';
 import Garage from './components/Garage';
 import Dealer from './components/Dealer';
@@ -26,6 +27,51 @@ const App = () => {
   const [currentView, setCurrentView] = useState<View>('MULTIPLAYER');
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
   const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [soundOn, setSoundOn] = useState<boolean>(() => isSoundEnabled());
+
+  // Фоновая музыка: пауза на экранах стартовой решётки, визуализации гонки и наград
+  useEffect(() => {
+    if (currentView === 'RACE_RESULTS') pauseMusic();
+    else startMusic();
+  }, [currentView]);
+
+  // Браузеры блокируют автоплей до первого жеста — стартуем музыку на первый клик
+  const currentViewRef = useRef<View>(currentView);
+  useEffect(() => { currentViewRef.current = currentView; }, [currentView]);
+  useEffect(() => {
+    const unlock = () => { if (currentViewRef.current !== 'RACE_RESULTS') startMusic(); };
+    document.addEventListener('pointerdown', unlock, { once: true });
+    document.addEventListener('keydown', unlock, { once: true });
+    return () => {
+      document.removeEventListener('pointerdown', unlock);
+      document.removeEventListener('keydown', unlock);
+    };
+  }, []);
+
+  // Звук «десять вечера» при переходе игрового дня
+  const prevDayRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!room) { prevDayRef.current = null; return; }
+    if (prevDayRef.current !== null && room.current_day > prevDayRef.current) playEffect('midnight');
+    prevDayRef.current = room.current_day;
+  }, [room?.current_day]);
+
+  const handleToggleSound = () => {
+    const next = !isSoundEnabled();
+    setSoundEnabled(next);
+    setSoundOn(next);
+    if (next && currentViewRef.current !== 'RACE_RESULTS') startMusic();
+  };
+
+  const soundToggle = (
+    <button
+      onClick={handleToggleSound}
+      className="retro-btn text-[8px] py-1 px-2"
+      style={{ position: 'fixed', top: 6, right: 8, zIndex: 50, backgroundColor: '#1a1a2e', border: '2px solid #ffaa00', color: soundOn ? '#00ff00' : '#888' }}
+      title="Звук вкл/выкл">
+      {soundOn ? '🔊 ЗВУК ВКЛ' : '🔇 ЗВУК ВЫКЛ'}
+    </button>
+  );
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -63,7 +109,7 @@ const App = () => {
   const handleRoomJoined = (r: Room, pid: string) => { setRoom(r); setPlayerId(pid); };
   const handleRoomLeft = () => { setRoom(null); setPlayer(null); setPlayerId(''); setCurrentView('MULTIPLAYER'); };
   const handleLogout = async () => { await signOut(); handleRoomLeft(); setAuthUser(null); };
-  const navigate = (view: View) => setCurrentView(view);
+  const navigate = (view: View) => { if (view !== 'RACE_RESULTS') playEffect('menu'); setCurrentView(view); };
 
   const handleUseDiscount = async (dealerId: string) => {
     if (!player) return;
@@ -82,8 +128,8 @@ const App = () => {
     await refreshPlayer();
   };
 
-  const handleBuyCar = async (car: Car) => { if (!player || !room) return; const result = await buyCar(player, car, room.id, room.current_day); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
-  const handleBuyPart = async (carId: string, part: Part) => { if (!player) return; const result = await buyPart(player, carId, part); if (result.error) { alert(result.error); return; } await refreshPlayer(); };
+  const handleBuyCar = async (car: Car) => { if (!player || !room) return; const result = await buyCar(player, car, room.id, room.current_day); if (result.error) { playEffect('buy-fail'); alert(result.error); return; } playEffect('buy-car'); await refreshPlayer(); };
+  const handleBuyPart = async (carId: string, part: Part) => { if (!player) return; const result = await buyPart(player, carId, part); if (result.error) { playEffect('buy-fail'); alert(result.error); return; } playEffect('buy-part'); await refreshPlayer(); };
   const handleRemovePart = async (carId: string, partIndex: number) => { if (!player) return; await removePart(player, carId, partIndex); await refreshPlayer(); };
   const handleRemovePartToStorage = async (carId: string, partIndex: number) => { if (!player) return; await removePartToStorage(player, carId, partIndex); await refreshPlayer(); };
   const handleInstallFromStorage = async (carId: string, storageIndex: number) => { if (!player) return; await installFromStorage(player, carId, storageIndex); await refreshPlayer(); };
@@ -104,10 +150,11 @@ const App = () => {
   const money = player?.money || 0;
   const shopVisits = player?.shop_visits || {};
 
-  if (authLoading || isLoadingSession) { return (<div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]"><div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div></div>); }
+  if (authLoading || isLoadingSession) { return (<div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]">{soundToggle}<div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div></div>); }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
+      {soundToggle}
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
