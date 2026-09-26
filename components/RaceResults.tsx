@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../services/supabase';
 import { fetchRaceDayResults, POWER_CATEGORIES, getScheduleDay } from '../services/multiplayer';
-import { RACES_DATA } from '../constants';
+import { RACES_DATA, TOURNAMENTS_DATA } from '../constants';
 import { playEffect, stopLoop } from '../services/sound';
 import { Car, RaceDayResult } from '../types';
 
@@ -29,6 +29,20 @@ function formatTime(seconds: number, raceName: string): string {
 
 // Цвета машинок по позициям
 const CAR_COLORS = ['#ffdd00', '#aaaaaa', '#cd7f32', '#4488ff', '#44ff44', '#ff8800', '#aa44ff', '#ff4444'];
+
+// Коэффициенты трассы: те же цвета, что в расписании (RaceSchedule)
+const WEIGHT_STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'offroad'] as const;
+const WEIGHT_STAT_LABELS: Record<string, string> = {
+    power: 'Мощн.', torque: 'Кр.мом.', topSpeed: 'Скор.', acceleration: 'Разг.', handling: 'Упр.', offroad: 'Прох.',
+};
+
+function weightColor(v: number) {
+    if (v >= 6) return '#ff4444';
+    if (v >= 4) return '#ffaa00';
+    if (v >= 2) return '#ffdd00';
+    if (v >= 1) return '#ccc';
+    return '#333';
+}
 
 // Порядок показа заездов субботы (Мировая серия): платная → бонусная → главная по категориям мощности
 function orderDayResults(races: any[], currentDay: number, gameYear: number): any[] {
@@ -146,6 +160,42 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
         return (race.requirement || roundData.requirement || '').trim();
     }, [currentIdx, results, currentDay, gameYear]);
 
+    // Коэффициенты (веса) трассы заезда — те же, что берёт движок при симуляции:
+    // квалификация и эпохи — из races_data, участки турниров — из TOURNAMENTS_DATA
+    // (нормированные веса, для показа восстанавливаем целые ×15, как в расписании).
+    const raceWeights = useMemo<Record<string, number> | null>(() => {
+        if (!currentRace) return null;
+        const rid = currentRace.race_id || '';
+        const schedule = getScheduleDay(currentDay);
+
+        if (rid.startsWith('tournament-section-')) {
+            const tName = (currentRace.race_name || '').replace(/^🏆\s*/, '').split(':')[0].trim();
+            const t = TOURNAMENTS_DATA.find(x => x.name === tName);
+            const si = parseInt(rid.slice('tournament-section-'.length), 10) || 0;
+            const sec = t?.sections?.[si];
+            if (!sec) return null;
+            const out: Record<string, number> = {};
+            WEIGHT_STAT_KEYS.forEach(k => { out[k] = Math.round((sec.weights as any)[k] * 15); });
+            return out;
+        }
+        if (rid === 'tournament-final') return null; // суммы участков — собственных весов нет
+
+        if (schedule.raceType === 'QUALIFICATION') {
+            const qual = (RACES_DATA.specials || []).find((s: any) => s.name === 'квалификация');
+            const race = (qual?.races || []).find((r: any) => r.name === currentRace.race_name);
+            return race?.weights || null;
+        }
+
+        const roundNum = schedule.raceType === 'CITY' ? 1 : schedule.raceType === 'NATIONAL' ? 2 : schedule.raceType === 'WORLD' ? 3 : 0;
+        const epochData = roundNum ? (RACES_DATA.epochs || []).find((e: any) => e.year === gameYear) : null;
+        const roundData = epochData?.rounds?.find((r: any) => r.round === roundNum) || null;
+        if (!roundData) return null;
+        // Заезды категорий Главной гонки идут по весам основной гонки раунда
+        const name = rid.startsWith('main-cat-') ? (roundData.races?.[2]?.name || currentRace.race_name) : currentRace.race_name;
+        const race = (roundData.races || []).find((r: any) => r.name === name);
+        return race?.weights || null;
+    }, [currentIdx, results, currentDay, gameYear]);
+
     if (loading) {
         return <div className="p-4 text-center text-white">Загрузка результатов...</div>;
     }
@@ -235,6 +285,17 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                 {viewStep === 'GRID' && (
                     <div>
                         <h3 className="text-sm mb-2 text-center text-[#ffaa00]">СТАРТОВАЯ РЕШЕТКА</h3>
+                        {raceWeights && (
+                            <div className="text-center mb-3 text-[9px] flex flex-wrap justify-center gap-x-3 gap-y-0.5">
+                                <span className="text-[#666]">КОЭФФИЦИЕНТЫ ТРАССЫ:</span>
+                                {WEIGHT_STAT_KEYS.map(k => (
+                                    <span key={k}>
+                                        <span className="text-[#888]">{WEIGHT_STAT_LABELS[k]}</span>{' '}
+                                        <span className="font-bold" style={{ color: weightColor(raceWeights[k] || 0) }}>{raceWeights[k] ?? 0}</span>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                         {raceRequirement !== null && (raceRequirement ? (
                             <div className="text-center mb-3 text-[9px] text-[#ffaa00] bg-[#1a1a00] border border-[#ffaa00] px-3 py-1.5">
                                 Требование: <span className="text-white font-bold">{raceRequirement}</span>
