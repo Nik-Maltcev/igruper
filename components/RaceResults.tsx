@@ -222,6 +222,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
 
     if ((currentRace.race_id || '') === 'catchup-support') {
         const d: any = currentRace.results[0] || {};
+        const rows: any[] = Array.isArray(d.rows) ? d.rows : [];
         return (
             <div className="p-4 max-w-2xl mx-auto text-white">
                 <div className="mb-4">
@@ -247,6 +248,36 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                         </tbody>
                     </table>
                 </div>
+                {rows.length > 0 && (
+                    <div className="pixel-card p-0 mt-3 bg-[#0a0a14] border-[#333]">
+                        <table className="w-full text-[10px]" style={{ borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr className="border-b border-[#333] text-[#aaa]">
+                                    <th className="p-2 text-left font-normal">Игрок</th>
+                                    <th className="p-2 text-center font-normal">Очки</th>
+                                    <th className="p-2 text-right font-normal">Поддержка</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows.map((r: any, i: number) => {
+                                    const role = r.username === d.leader ? '👑' : r.username === d.lastPlayer ? '💰' : r.username === d.secondLastPlayer ? '🤝' : '';
+                                    return (
+                                        <tr key={i} className="border-b border-[#222]">
+                                            <td className="p-2">
+                                                {role && <span className="mr-1">{role}</span>}
+                                                <span className="text-white">{r.username}</span>
+                                            </td>
+                                            <td className="p-2 text-center text-[#888]">{r.points}</td>
+                                            <td className="p-2 text-right font-bold" style={{ color: r.delta > 0 ? '#00ff00' : r.delta < 0 ? '#ff4444' : '#555' }}>
+                                                {r.delta > 0 ? `+$${r.delta.toLocaleString()}` : r.delta < 0 ? `−$${Math.abs(r.delta).toLocaleString()}` : '—'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
                 <button onClick={onBack} className="mt-4 w-full retro-btn py-3 text-[14px]">ГОТОВО</button>
             </div>
         );

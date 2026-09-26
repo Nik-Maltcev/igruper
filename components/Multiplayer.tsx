@@ -619,6 +619,15 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             leaderToLast,
             leaderToSecondLast,
             secondLastPlayer: validSecondLast ? (secondToLast?.username || '') : '',
+            // Табличка поддержки по каждому игроку (для экрана результатов)
+            rows: sortedPlayers.map((p: any) => ({
+              username: p.username,
+              points: p.points || 0,
+              delta: p.id === lastPlayer.id ? sponsorBonus + leaderToLast
+                : (validSecondLast && secondToLast && p.id === secondToLast.id) ? leaderToSecondLast
+                : (leaderTax && p.id === leader.id) ? -leaderPays
+                : 0,
+            })),
           }], 'SUNNY');
         }
 
