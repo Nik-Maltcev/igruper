@@ -60,6 +60,56 @@ export function getRoadCategory(trackName: string): 'heavy' | 'country' | 'aspha
 // Время «не едет»: слики + дождь + тяжёлое покрытие — машина отступает и не финиширует
 export const DNS_TIME = 9999;
 
+// ─── Реалистичное время прохождения ───
+// Скорость считается универсальной формулой выше и НЕ меняется — меняется только
+// перевод скорости в секунды. Диапазоны по правилам:
+//   дрэг 400 м → 6..20 с, дрэг 800 м → 10..27 с, дрэг 1600 м → 18..60 с,
+//   слалом и дрифт → старая формула (4 км / скорость),
+//   остальные трассы → 3..15 минут.
+// Эталоны (ниже) через веса конкретной трассы дают скорости, соответствующие границам
+// диапазона; промежуточные скорости ложатся на плавную степенную кривую между ними,
+// поэтому порядок финиша и относительные отрывы сохраняются.
+
+// Эталон «самой медленной» машины каталога (Citroen 2CV 4x4 Sahara, сток)
+const REF_SLOW_STATS: CarStats = { power: 14, torque: 25, topSpeed: 100, acceleration: 30, handling: 20, offroad: 90 };
+// Эталон «самой быстрой» машины: лучшие статы каталога (Ferrari FXX K-Evo) + максимум тюнинга по всем слотам
+const REF_FAST_STATS: CarStats = { power: 1460, torque: 1420, topSpeed: 411, acceleration: 1.5, handling: 260, offroad: 230 };
+
+export interface RaceTimeModel {
+  tMin: number; // время эталонно-быстрой машины, сек
+  tMax: number; // время эталонно-медленной машины, сек
+}
+
+export function getRaceTimeModel(trackName: string): RaceTimeModel | null {
+  const n = (trackName || '').toLowerCase();
+  if (/слалом|дрифт|slalom|drift/.test(n)) return null;
+  if (/дрэг|драг|drag/.test(n)) {
+    if (n.includes('1600')) return { tMin: 18, tMax: 60 };
+    if (n.includes('800')) return { tMin: 10, tMax: 27 };
+    return { tMin: 6, tMax: 20 }; // 400 м и дрэги без дистанции в названии
+  }
+  return { tMin: 180, tMax: 900 };
+}
+
+// Скорость эталонной машины на трассе с данными весами (та же формула, что в simulateRace)
+function refSpeed(stats: CarStats, weights: Track['weights']): number {
+  const accelScore = Math.max(1, 40 - stats.acceleration);
+  return (stats.power * weights.power) +
+    (stats.torque * weights.torque) +
+    (stats.topSpeed * weights.topSpeed) +
+    (accelScore * weights.acceleration) +
+    (stats.handling * weights.handling) +
+    (stats.offroad * weights.offroad);
+}
+
+export function mapSpeedToTime(speed: number, model: RaceTimeModel, weights: Track['weights']): number {
+  const vSlow = refSpeed(REF_SLOW_STATS, weights);
+  const vFast = refSpeed(REF_FAST_STATS, weights);
+  if (vFast <= vSlow) return (4.0 / speed) * 3600; // защита от вырожденных весов
+  const k = Math.log(model.tMax / model.tMin) / Math.log(vFast / vSlow);
+  return model.tMin * Math.pow(vFast / speed, k);
+}
+
 // Награда за место: из таблицы наград или дефолтная (когда таблица не передана)
 function rewardForPlace(place: number, rewardTable?: RewardEntry[]): { money: number; points: number } {
   if (rewardTable) {
@@ -84,6 +134,7 @@ export const simulateRace = (
 
   const roadCategory = getRoadCategory(track.name);
   const isWet = weather === 'RAIN' || weather === 'STORM';
+  const timeModel = getRaceTimeModel(track.name);
 
   // Базовая скорость машины без случайной прибавки (с погодой и шинами)
   // + флажки влияния дождя для визуализации
@@ -172,9 +223,11 @@ export const simulateRace = (
     }
     const finalSpeed = Math.max(10, info.baseSpeed + luck);
 
-    const trackDistanceKm = 4.0;
-    const timeHours = trackDistanceKm / finalSpeed;
-    const timeSeconds = timeHours * 3600;
+    // Перевод скорости в секунды: дрэги/обычные трассы — по реалистичной модели,
+    // слалом и дрифт — старая формула (4 км / скорость)
+    const timeSeconds = timeModel
+      ? mapSpeedToTime(finalSpeed, timeModel, track.weights)
+      : (4.0 / finalSpeed) * 3600;
 
     return { ...base, time: parseFloat(timeSeconds.toFixed(3)) };
   });
