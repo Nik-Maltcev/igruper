@@ -98,19 +98,32 @@ const RaceSchedule: React.FC<RaceScheduleProps> = ({ gameYear, onBack }) => {
                   </tr>
 
                   {/* Трассы */}
-                  {round.races.map((race: any, rri: number) => (
-                    <tr key={rri} className="hover:bg-[#111] transition-colors"
-                      style={{borderBottom: '1px solid #1a1a2e'}}>
-                      <td className="text-[9px] text-white px-3 py-1.5 border-r border-[#222]">{race.name}</td>
-                      {STAT_KEYS.map((k, ki) => (
-                        <td key={ki} className="text-[10px] text-center px-2 py-1.5 border-r border-[#1a1a2e]"
-                          style={{color: weightColor(race.weights[k])}}>
-                          {race.weights[k]}
+                  {round.races.map((race: any, rri: number) => {
+                    // Суббота (Мировая серия): три гонки по типам — платная, призовая (Bonus Track), главная
+                    const worldType = round.round === 3
+                      ? (rri === 0
+                        ? { label: '1) Платная гонка', color: '#ffdd00' }
+                        : rri === 1
+                          ? { label: '2) Призовая гонка', color: '#aa44ff' }
+                          : { label: '3) Главная гонка', color: '#ff4444' })
+                      : null;
+                    return (
+                      <tr key={rri} className="hover:bg-[#111] transition-colors"
+                        style={{borderBottom: '1px solid #1a1a2e'}}>
+                        <td className="text-[9px] text-white px-3 py-1.5 border-r border-[#222]">
+                          {worldType && <span className="font-bold" style={{ color: worldType.color }}>{worldType.label} — </span>}
+                          {race.name}
                         </td>
-                      ))}
-                      <td className="text-[8px] text-[#ffaa00] px-3 py-1.5">{race.requirement || ''}</td>
-                    </tr>
-                  ))}
+                        {STAT_KEYS.map((k, ki) => (
+                          <td key={ki} className="text-[10px] text-center px-2 py-1.5 border-r border-[#1a1a2e]"
+                            style={{color: weightColor(race.weights[k])}}>
+                            {race.weights[k]}
+                          </td>
+                        ))}
+                        <td className="text-[8px] text-[#ffaa00] px-3 py-1.5">{race.requirement || ''}</td>
+                      </tr>
+                    );
+                  })}
                 </React.Fragment>
               );
             })}
