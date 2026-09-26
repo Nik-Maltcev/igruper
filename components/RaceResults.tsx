@@ -359,7 +359,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                                 {r.playerName && <span className="text-[#555] mx-1">—</span>}
                                                 <span className="text-[#aaa]">{r.carName}</span>
                                                 {(r as any).didNotStart && <span className="text-[#ff6666] ml-1">🚫 не едет в дождь (слики)</span>}
-                                                {(r as any).rainAffected && !(r as any).didNotStart && <span className="text-[#88bbff] ml-1">⛈ тучка</span>}
+                                                {(r as any).rainAffected && !(r as any).didNotStart && <span className="text-[#88bbff] ml-1">⛈ Влияние осадков</span>}
                                             </td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.power || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.torque || '—'}</td>

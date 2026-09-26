@@ -503,13 +503,15 @@ describe('simulateRace', () => {
   const powerCar = (id: string, power: number, overrides: Partial<Car> = {}) =>
     makeCar({ id, name: id, stats: { power, torque: 0, topSpeed: 0, acceleration: 0, handling: 0, offroad: 0 }, ...overrides });
 
-  it('categorizes road type by track name', () => {
-    expect(getRoadCategory('Песок')).toBe('heavy');
-    expect(getRoadCategory('Лёд дрифт 1')).toBe('heavy');
-    expect(getRoadCategory('Снег слалом')).toBe('heavy');
-    expect(getRoadCategory('Грунтовка 3')).toBe('heavy');
-    expect(getRoadCategory('Мотокросс 2')).toBe('heavy');
-    expect(getRoadCategory('Бездорожье')).toBe('heavy');
+  it('categorizes road type by track name (строки таблицы «Влияние осадков»)', () => {
+    expect(getRoadCategory('Песок')).toBe('sand');
+    expect(getRoadCategory('Болото')).toBe('sand');
+    expect(getRoadCategory('Лёд дрифт 1')).toBe('snow');
+    expect(getRoadCategory('Снег слалом')).toBe('snow');
+    expect(getRoadCategory('Полигон')).toBe('snow');
+    expect(getRoadCategory('Грунтовка 3')).toBe('dirt');
+    expect(getRoadCategory('Мотокросс 2')).toBe('dirt');
+    expect(getRoadCategory('Бездорожье')).toBe('dirt');
     expect(getRoadCategory('Сельская дорога 2')).toBe('country');
     expect(getRoadCategory('ДРИФТ')).toBe('asphalt');
     expect(getRoadCategory('Дрэг 400 метров')).toBe('asphalt');
@@ -581,7 +583,7 @@ describe('simulateRace', () => {
     expect(byId['b'].earnings).toBe(0);
   });
 
-  it('weatherModifier=0 track is unaffected by rain', () => {
+  it('rain penalties follow the table regardless of track weatherModifier', () => {
     const noWeatherTrack: Track = {
       ...DRAG_TRACK,
       weatherModifier: 0,
@@ -589,7 +591,8 @@ describe('simulateRace', () => {
     const car = makeCar({ id: 'test', roadType: 'С' });
     const sunny = simulateRace([car], noWeatherTrack, 'SUNNY', false);
     const rain = simulateRace([car], noWeatherTrack, 'RAIN', false);
-    expect(sunny[0].time).toBe(rain[0].time);
+    // Слики на асфальте в дождь теряют 30У и 1 сек разгона по таблице — штраф абсолютный
+    expect(rain[0].time).toBeGreaterThan(sunny[0].time);
   });
 
   it('racing tires (Г) have medium rain penalty', () => {
@@ -628,12 +631,24 @@ describe('simulateRace', () => {
     expect(diff).toBeGreaterThan(0);
   });
 
-  it('handling and offroad mitigate weather penalty', () => {
-    const lowHandling = makeCar({ id: 'low', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 8, handling: 0, offroad: 0 }, roadType: 'У' });
-    const highHandling = makeCar({ id: 'high', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 8, handling: 200, offroad: 200 }, roadType: 'У' });
-    const lowResults = simulateRace([lowHandling], RALLY_TRACK, 'RAIN', false);
-    const highResults = simulateRace([highHandling], RALLY_TRACK, 'RAIN', false);
-    // High handling/offroad should mitigate weather penalty → faster
-    expect(highResults[0].time).toBeLessThan(lowResults[0].time);
+  it('rain penalty per table: racing tires on asphalt lose exactly 20 handling', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    // Машина с упр. 80 в солнце едет ровно так же, как машина с упр. 100 в дождь (100 − 20У)
+    const sunnyCar = makeCar({ id: 'sunny', roadType: 'Г', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 8, handling: 80, offroad: 30 } });
+    const rainyCar = makeCar({ id: 'rainy', roadType: 'Г', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 8, handling: 100, offroad: 30 } });
+    const sunny = simulateRace([sunnyCar], RALLY_TRACK, 'SUNNY', false);
+    const rain = simulateRace([rainyCar], RALLY_TRACK, 'RAIN', false);
+    expect(rain[0].time).toBe(sunny[0].time);
+  });
+
+  it('rain penalty per table: slicks on asphalt lose 30 handling and 1 sec of acceleration', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    // Слики в дождь на асфальте: −30У и +1 сек разгона. Машина с упр. 70/разгоном 4.0
+    // в солнце эквивалентна машине с упр. 100/разгоном 3.0 в дождь
+    const sunnyCar = makeCar({ id: 'sunny', roadType: 'С', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 4.0, handling: 70, offroad: 30 } });
+    const rainyCar = makeCar({ id: 'rainy', roadType: 'С', stats: { power: 200, torque: 200, topSpeed: 200, acceleration: 3.0, handling: 100, offroad: 30 } });
+    const sunny = simulateRace([sunnyCar], RALLY_TRACK, 'SUNNY', false);
+    const rain = simulateRace([rainyCar], RALLY_TRACK, 'RAIN', false);
+    expect(rain[0].time).toBe(sunny[0].time);
   });
 });

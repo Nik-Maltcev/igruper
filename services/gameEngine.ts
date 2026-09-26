@@ -47,15 +47,62 @@ export const getEffectiveStats = (car: Car): CarStats => {
   return base;
 };
 
-// Тип покрытия трассы по названию — определяет влияние дождя (таблица «Влияние осадков»):
-// heavy — песок, болото, снег, лёд, полигон, грунтовка, мотокросс, бездорожье;
+// Тип покрытия по названию трассы — строки таблицы правил «Влияние осадков»:
+// sand — песок, болото; snow — снег, лёд, полигон; dirt — грунтовка, мотокросс, бездорожье;
 // country — сельская дорога, лес; asphalt — все остальные (асфальт)
-export function getRoadCategory(trackName: string): 'heavy' | 'country' | 'asphalt' {
+export type RoadCategory = 'sand' | 'snow' | 'dirt' | 'country' | 'asphalt';
+
+export function getRoadCategory(trackName: string): RoadCategory {
   const n = (trackName || '').toLowerCase();
-  if (/(песок|болот|снег|лёд|лед|полигон|грунт|мотокросс|бездорож)/.test(n)) return 'heavy';
+  if (/(песок|болот)/.test(n)) return 'sand';
+  if (/(снег|лёд|лед|полигон)/.test(n)) return 'snow';
+  if (/(грунт|мотокросс|бездорож)/.test(n)) return 'dirt';
   if (/(сельск|лес)/.test(n)) return 'country';
   return 'asphalt';
 }
+
+// Ячейка таблицы «Влияние осадков»: штрафы к статам, «не едет» или «нет тучки».
+// handling = −У (управляемость), offroad = −П (проходимость), accelSec = +сек к разгону («медленнее»).
+export type RainCell = { handling?: number; offroad?: number; accelSec?: number } | 'dns' | 'none';
+
+// Таблица «Влияние осадков» из правил: покрытие × шины (числа заданы для дождя).
+export const RAIN_TABLE: Record<RoadCategory, Record<string, RainCell>> = {
+  // Песок, Болото
+  sand: {
+    'У': { offroad: 10, handling: 10, accelSec: 0.5 },
+    'Г': { offroad: 15, handling: 20, accelSec: 1 },
+    'В': 'none',
+    'С': 'dns',
+  },
+  // Снег, Лёд, Полигон
+  snow: {
+    'У': { offroad: 15, handling: 20, accelSec: 1 },
+    'Г': { offroad: 20, handling: 25, accelSec: 1.5 },
+    'В': 'none',
+    'С': 'dns',
+  },
+  // Грунтовка, Мотокросс (и бездорожье)
+  dirt: {
+    'У': { offroad: 10, handling: 5 },
+    'Г': { offroad: 15, handling: 10 },
+    'В': 'none',
+    'С': 'dns',
+  },
+  // Сельская дорога, Лес
+  country: {
+    'У': { offroad: 5 },
+    'Г': { handling: 15, offroad: 5, accelSec: 0.5 },
+    'В': { handling: 5 },
+    'С': { handling: 30, offroad: 10, accelSec: 1.5 },
+  },
+  // Асфальт (все остальные трассы)
+  asphalt: {
+    'У': 'none',
+    'Г': { handling: 20 },
+    'В': { handling: 15, accelSec: 1 },
+    'С': { handling: 30, accelSec: 1 },
+  },
+};
 
 // Время «не едет»: слики + дождь + тяжёлое покрытие — машина отступает и не финиширует
 export const DNS_TIME = 9999;
@@ -152,43 +199,33 @@ export const simulateRace = (
       else if (n.includes('слик')) tireType = 'С';
     }
 
-    // Слики не едут по тяжёлому покрытию в дождь (таблица «Влияние осадков»)
-    const didNotStart = isWet && tireType === 'С' && roadCategory === 'heavy';
+    // Ячейка таблицы «Влияние осадков» для этого покрытия и типа шин
+    const rainCell: RainCell = isWet ? (RAIN_TABLE[roadCategory]?.[tireType] ?? 'none') : 'none';
 
-    // Тучка: дождь влияет из-за неподходящих шин. Нет тучки:
-    // универсальные на асфальте, внедорожные на тяжёлом покрытии
-    const rainAffected = isWet && !didNotStart &&
-      !((roadCategory === 'asphalt' && tireType === 'У') || (roadCategory === 'heavy' && tireType === 'В'));
+    // «Не едет»: слики + дождь + песок/болото, снег/лёд/полигон или грунтовка/мотокросс
+    const didNotStart = rainCell === 'dns';
 
-    // Определяем штраф за погоду в зависимости от шин
-    let weatherPenalty = 0;
-    if (weather === 'RAIN') {
-      if (tireType === 'С') weatherPenalty = 0.40; // Слики: сильный штраф в дождь
-      else if (tireType === 'Г') weatherPenalty = 0.25; // Гоночные: средний штраф
-      else if (tireType === 'У') weatherPenalty = 0.10; // Универсальные: слабый штраф
-      else if (tireType === 'В') weatherPenalty = 0.05; // Внедорожные: минимальный штраф
-    } else if (weather === 'STORM') {
-      if (tireType === 'С') weatherPenalty = 0.60;
-      else if (tireType === 'Г') weatherPenalty = 0.40;
-      else if (tireType === 'У') weatherPenalty = 0.25;
-      else if (tireType === 'В') weatherPenalty = 0.15;
-    }
+    // Тучка: осадки влияют из-за неподходящих шин (по таблице есть штраф).
+    // Нет тучки: внедорожные на песке/снеге/грунтовке, универсальные на асфальте.
+    const rainAffected = isWet && rainCell !== 'none' && rainCell !== 'dns';
+
+    // Штрафы применяются к эффективным статам по таблице (для шторма — вдвое).
+    const mult = weather === 'STORM' ? 2 : 1;
+    const cell = rainAffected ? (rainCell as Exclude<RainCell, 'dns' | 'none'>) : null;
+    const effHandling = cell ? Math.max(0, s.handling - (cell.handling || 0) * mult) : s.handling;
+    const effOffroad = cell ? Math.max(0, s.offroad - (cell.offroad || 0) * mult) : s.offroad;
+    const effAccel = cell ? s.acceleration + (cell.accelSec || 0) * mult : s.acceleration;
 
     // Нормализуем acceleration: меньше секунд = лучше, инвертируем для формулы
-    const accelScore = Math.max(1, 40 - s.acceleration);
+    const accelScore = Math.max(1, 40 - effAccel);
 
     let averageSpeed =
       (s.power * track.weights.power) +
       (s.torque * track.weights.torque) +
       (s.topSpeed * track.weights.topSpeed) +
       (accelScore * track.weights.acceleration) +
-      (s.handling * track.weights.handling) +
-      (s.offroad * track.weights.offroad);
-
-    // Применяем влияние погоды с учетом коэффициента трассы
-    const mitigation = (s.handling * 0.5 + s.offroad * 0.5) / 200;
-    const effectivePenalty = weatherPenalty * track.weatherModifier * Math.max(0, (1 - mitigation));
-    averageSpeed = averageSpeed * (1 - effectivePenalty);
+      (effHandling * track.weights.handling) +
+      (effOffroad * track.weights.offroad);
 
     return { baseSpeed: averageSpeed, tireType, didNotStart, rainAffected };
   });
