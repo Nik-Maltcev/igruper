@@ -163,7 +163,7 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                         {/* Детали (только чтение) */}
                         <div className="border-t-2 border-[#333] px-4 py-2">
                           <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[8px] text-[#555]">ДЕТАЛИ ({car.installedParts.length}/{partLimit}):</span>
+                            <span className="text-[8px]" style={{ color: car.installedParts.length >= partLimit ? '#ff4444' : '#555' }}>ДЕТАЛИ ({car.installedParts.length}/{partLimit}):</span>
                             {car.installedParts.length > 0 ? (
                               car.installedParts.map((part, pIdx) => (
                                 <div key={pIdx} className="flex items-center gap-1 bg-[#111] px-2 py-0.5 border border-[#333]" style={{ borderRadius: '2px' }}>
