@@ -107,6 +107,41 @@ export const RAIN_TABLE: Record<RoadCategory, Record<string, RainCell>> = {
 // Время «не едет»: слики + дождь + тяжёлое покрытие — машина отступает и не финиширует
 export const DNS_TIME = 9999;
 
+// ─── Нормализация характеристик («предварительный результат») ───
+// Сырые числа несопоставимы: мощность дожимается до ~1300 лс, управляемость — до ~200.
+// Каждая характеристика сначала приводится к конкурентоспособному масштабу (~0..2000),
+// и только затем умножается на коэффициент трассы и складывается в общий результат.
+// Формулы из таблицы правил (Excel): ЕСЛИ/IFS по диапазонам значений.
+export function normalizeStat(
+  stat: 'power' | 'torque' | 'topSpeed' | 'acceleration' | 'handling' | 'offroad',
+  v: number,
+): number {
+  switch (stat) {
+    case 'power': // ЕСЛИ(мощность<299;(мощность-25)*2,16;мощность*1,2+300)
+      return Math.max(0, v < 299 ? (v - 25) * 2.16 : v * 1.2 + 300);
+    case 'torque': // ЕСЛИ(момент<381;(момент-29)*1,81;(момент-29)*1,55+200)
+      return Math.max(0, v < 381 ? (v - 29) * 1.81 : (v - 29) * 1.55 + 200);
+    case 'topSpeed': // ЕСЛИ(скорость<222;(скорость-96)*3,9;(скорость-222)*7,5+500)
+      return Math.max(0, v < 222 ? (v - 96) * 3.9 : (v - 222) * 7.5 + 500);
+    case 'acceleration': // разгон: меньше секунд = больше очков
+      if (v < 5) return (5 - v) * 333 + 900;
+      if (v < 10) return (10 - v) * 130 + 250;
+      if (v < 20) return (20 - v) * 13 + 120;
+      if (v < 30) return (30 - v) * 6 + 60;
+      return Math.max(0, (46 - v) * 3.75);
+    case 'handling':
+      if (v < 45) return v * 5.5;
+      if (v < 82) return v * 7.5 - 94;
+      if (v < 120) return v * 9.5 - 230;
+      return Math.max(0, v * 11 - 290);
+    case 'offroad':
+      if (v < 45) return v * 4.5;
+      if (v < 82) return v * 6.5 - 94;
+      if (v < 120) return v * 8 - 200;
+      return Math.max(0, v * 10 - 400);
+  }
+}
+
 // ─── Реалистичное время прохождения ───
 // Скорость считается универсальной формулой выше и НЕ меняется — меняется только
 // перевод скорости в секунды. Диапазоны по правилам:
@@ -138,23 +173,22 @@ export function getRaceTimeModel(trackName: string): RaceTimeModel | null {
   return { tMin: 180, tMax: 900 };
 }
 
-// Скорость эталонной машины на трассе с данными весами (та же формула, что в simulateRace)
+// Скорость эталонной машины на трассе с данными весами (та же нормализация, что в simulateRace)
 function refSpeed(stats: CarStats, weights: Track['weights']): number {
-  const accelScore = Math.max(1, 40 - stats.acceleration);
-  return (stats.power * weights.power) +
-    (stats.torque * weights.torque) +
-    (stats.topSpeed * weights.topSpeed) +
-    (accelScore * weights.acceleration) +
-    (stats.handling * weights.handling) +
-    (stats.offroad * weights.offroad);
+  return (normalizeStat('power', stats.power) * weights.power) +
+    (normalizeStat('torque', stats.torque) * weights.torque) +
+    (normalizeStat('topSpeed', stats.topSpeed) * weights.topSpeed) +
+    (normalizeStat('acceleration', stats.acceleration) * weights.acceleration) +
+    (normalizeStat('handling', stats.handling) * weights.handling) +
+    (normalizeStat('offroad', stats.offroad) * weights.offroad);
 }
 
 export function mapSpeedToTime(speed: number, model: RaceTimeModel, weights: Track['weights']): number {
-  const vSlow = refSpeed(REF_SLOW_STATS, weights);
-  const vFast = refSpeed(REF_FAST_STATS, weights);
-  if (vFast <= vSlow) return (4.0 / speed) * 3600; // защита от вырожденных весов
+  // Защита от вырождения: на одномерных весах нормализация эталона может дать 0
+  const vSlow = Math.max(1, refSpeed(REF_SLOW_STATS, weights));
+  const vFast = Math.max(vSlow * 1.0001, refSpeed(REF_FAST_STATS, weights));
   const k = Math.log(model.tMax / model.tMin) / Math.log(vFast / vSlow);
-  return model.tMin * Math.pow(vFast / speed, k);
+  return model.tMin * Math.pow(vFast / Math.max(speed, 1), k);
 }
 
 // Награда за место: из таблицы наград или дефолтная (когда таблица не передана)
@@ -216,16 +250,15 @@ export const simulateRace = (
     const effOffroad = cell ? Math.max(0, s.offroad - (cell.offroad || 0) * mult) : s.offroad;
     const effAccel = cell ? s.acceleration + (cell.accelSec || 0) * mult : s.acceleration;
 
-    // Нормализуем acceleration: меньше секунд = лучше, инвертируем для формулы
-    const accelScore = Math.max(1, 40 - effAccel);
-
+    // Предварительный результат каждой характеристики (нормализация к общему масштабу)
+    // умножается на коэффициент трассы, суммы складываются в расчётную скорость
     let averageSpeed =
-      (s.power * track.weights.power) +
-      (s.torque * track.weights.torque) +
-      (s.topSpeed * track.weights.topSpeed) +
-      (accelScore * track.weights.acceleration) +
-      (effHandling * track.weights.handling) +
-      (effOffroad * track.weights.offroad);
+      (normalizeStat('power', s.power) * track.weights.power) +
+      (normalizeStat('torque', s.torque) * track.weights.torque) +
+      (normalizeStat('topSpeed', s.topSpeed) * track.weights.topSpeed) +
+      (normalizeStat('acceleration', effAccel) * track.weights.acceleration) +
+      (normalizeStat('handling', effHandling) * track.weights.handling) +
+      (normalizeStat('offroad', effOffroad) * track.weights.offroad);
 
     return { baseSpeed: averageSpeed, tireType, didNotStart, rainAffected };
   });

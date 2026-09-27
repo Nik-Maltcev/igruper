@@ -391,12 +391,12 @@ describe('simulateRace', () => {
     expect(results[0].time).toBeGreaterThan(0);
   });
 
-  it('time is in seconds (reasonable range for 4km)', () => {
+  it('drag time lands in the realistic 6..20 range', () => {
     const car = makeCar({ stats: { power: 200, torque: 300, topSpeed: 250, acceleration: 5, handling: 70, offroad: 40 } });
     const results = simulateRace([car], DRAG_TRACK, 'SUNNY', false);
-    // 4km at ~100-300 km/h → roughly 48-144 seconds
-    expect(results[0].time).toBeGreaterThan(10);
-    expect(results[0].time).toBeLessThan(1500);
+    // Средняя машина на дрэге 400 м — порядка 8-12 с
+    expect(results[0].time).toBeGreaterThan(5);
+    expect(results[0].time).toBeLessThan(25);
   });
 
   it('handles tie-breaking (same time gets same position)', () => {
@@ -595,14 +595,19 @@ describe('simulateRace', () => {
     expect(rain[0].time).toBeGreaterThan(sunny[0].time);
   });
 
-  it('racing tires (Г) have medium rain penalty', () => {
-    const racing = makeCar({ id: 'racing', roadType: 'Г' });
-    const offroad = makeCar({ id: 'offroad', roadType: 'В' });
-    const results = simulateRace([racing, offroad], RALLY_TRACK, 'RAIN', false);
-    const racingResult = results.find(r => r.carId === 'racing')!;
-    const offroadResult = results.find(r => r.carId === 'offroad')!;
-    // Racing tires (25% penalty) should be slower than offroad (5% penalty) in rain
-    expect(racingResult.time).toBeGreaterThan(offroadResult.time);
+  it('offroad tires: no rain penalty on snow per table, racing tires suffer', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    const SNOW_TRACK: Track = { ...RALLY_TRACK, name: 'Снег' };
+    // Внедорожные шины на снегу — «нет тучки»: время в дождь равно времени в солнце
+    const offroad = makeCar({ id: 'v', roadType: 'В' });
+    const sunnyV = simulateRace([offroad], SNOW_TRACK, 'SUNNY', false);
+    const rainV = simulateRace([offroad], SNOW_TRACK, 'RAIN', false);
+    expect(rainV[0].time).toBe(sunnyV[0].time);
+    // Гоночные на снегу в дождь: −20П, −25У, +1,5с разгона — заметно медленнее
+    const racing = makeCar({ id: 'g', roadType: 'Г' });
+    const sunnyG = simulateRace([racing], SNOW_TRACK, 'SUNNY', false);
+    const rainG = simulateRace([racing], SNOW_TRACK, 'RAIN', false);
+    expect(rainG[0].time).toBeGreaterThan(sunnyG[0].time);
   });
 
   it('gоночные tire name is detected from installed part', () => {
