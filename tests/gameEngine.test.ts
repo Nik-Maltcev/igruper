@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getEffectiveStats, simulateRace, getRoadCategory } from '../services/gameEngine';
+import { getEffectiveStats, simulateRace, getRoadCategory, normalizeStat } from '../services/gameEngine';
 import { Car, Track, Part } from '../types';
 
 // ─── Helpers ───
@@ -45,6 +45,34 @@ const RALLY_TRACK: Track = {
   weights: { power: 0.15, torque: 0.15, topSpeed: 0.1, acceleration: 0.1, handling: 0.15, offroad: 0.35 },
   weatherModifier: 1.0,
 };
+
+// ═══════════════════════════════════════════════════════
+// normalizeStat — пример из правил (ДРЭГ, машина Б)
+// ═══════════════════════════════════════════════════════
+
+describe('normalizeStat — контрольный пример из правил', () => {
+  // Машина Б: 1000 лс, 1200 Нм, 360 км/ч, 2 с, 107 упр, 32 прох
+  it('предварительный результат совпадает с примером', () => {
+    expect(normalizeStat('power', 1000)).toBe(1500);
+    expect(normalizeStat('torque', 1200)).toBeCloseTo(2015.05, 2);
+    expect(normalizeStat('topSpeed', 360)).toBe(1535);
+    expect(normalizeStat('acceleration', 2)).toBe(1899);
+    expect(normalizeStat('handling', 107)).toBe(786.5);
+    expect(normalizeStat('offroad', 32)).toBe(144);
+  });
+
+  it('общий результат на ДРЭГе: 28877,15', () => {
+    const weights = { power: 1, torque: 3, topSpeed: 4, acceleration: 8, handling: 0, offroad: 0 };
+    const total =
+      normalizeStat('power', 1000) * weights.power +
+      normalizeStat('torque', 1200) * weights.torque +
+      normalizeStat('topSpeed', 360) * weights.topSpeed +
+      normalizeStat('acceleration', 2) * weights.acceleration +
+      normalizeStat('handling', 107) * weights.handling +
+      normalizeStat('offroad', 32) * weights.offroad;
+    expect(total).toBeCloseTo(28877.15, 2);
+  });
+});
 
 // ═══════════════════════════════════════════════════════
 // getEffectiveStats
