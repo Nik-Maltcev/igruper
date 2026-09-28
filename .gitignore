@@ -27,3 +27,6 @@ dist-ssr
 # Source images (originals, not for git)
 cars_images/output_images/
 public/cars/
+
+# Generated source art for loader background (originals, not for git)
+vibe_images/

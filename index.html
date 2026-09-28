@@ -91,6 +91,22 @@
         background-clip: text;
         filter: drop-shadow(2px 2px 0px #000);
       }
+      /* === Loading screen === */
+      .ls-root { position: fixed; inset: 0; background: #0a0512; overflow: hidden; z-index: 9990; }
+      .ls-bg { position: absolute; inset: -4%; background: url('/loader-bg.webp') center/cover no-repeat; image-rendering: pixelated; animation: lsZoom 14s ease-in-out infinite alternate; }
+      @keyframes lsZoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+      .ls-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 46%, rgba(8, 2, 16, .55) 0%, rgba(8, 2, 16, .15) 45%, transparent 75%); }
+      .ls-scene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+      .ls-title { font-size: 52px; letter-spacing: 6px; color: #fff; transform: skew(-4deg); text-shadow: 3px 3px 0 #05d9e8, -2px -2px 0 #ff2a6d, 0 0 12px #ff2a6d, 0 0 42px #b537f2; animation: lsNeon 4s linear infinite; }
+      @keyframes lsNeon { 0%, 100% { opacity: 1; } 90% { opacity: 1; } 91% { opacity: .5; } 92% { opacity: 1; } 95% { opacity: .7; } 96% { opacity: 1; } }
+      .ls-sub { color: #05d9e8; font-size: 11px; letter-spacing: 10px; text-shadow: 0 0 10px #05d9e8, 0 0 24px rgba(5, 217, 232, .6); }
+      .ls-bar-row { display: flex; align-items: center; gap: 14px; }
+      .ls-bar { width: min(420px, 68vw); height: 22px; border: 3px solid #05d9e8; background: rgba(10, 2, 20, .85); box-shadow: 0 0 14px rgba(5, 217, 232, .5), 4px 4px 0 rgba(0, 0, 0, .8); padding: 3px; }
+      .ls-bar-fill { height: 100%; width: 0%; background-image: repeating-linear-gradient(90deg, transparent 0 11px, rgba(10, 2, 20, .9) 11px 14px), linear-gradient(90deg, #ff2a6d, #ff9de2); box-shadow: 0 0 12px rgba(255, 42, 109, .8); }
+      .ls-bar-fill.ls-anim { animation: lsFill 2s steps(16) forwards; }
+      @keyframes lsFill { from { width: 0%; } to { width: 92%; } }
+      .ls-pct { font-size: 10px; color: #ff9de2; min-width: 44px; text-shadow: 0 0 8px #ff2a6d; }
+      .ls-phrase { font-size: 9px; color: #c8b6ff; letter-spacing: 2px; text-shadow: 0 0 8px rgba(181, 55, 242, .8); }
     </style>
   <script type="importmap">
 {
@@ -106,7 +122,21 @@
 <link rel="stylesheet" href="/index.css">
 </head>
   <body class="scanlines">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Прелоадер: виден до загрузки React, заменяется компонентом LoadingScreen -->
+      <div class="ls-root">
+        <div class="ls-bg"></div>
+        <div class="ls-vignette"></div>
+        <div class="ls-scene">
+          <div class="ls-title">IGRUPER</div>
+          <div class="ls-sub">RACE MANAGER</div>
+          <div class="ls-bar-row">
+            <div class="ls-bar"><div class="ls-bar-fill ls-anim"></div></div>
+          </div>
+          <div class="ls-phrase blink">ЗАВОДИМ ДВИГАТЕЛЬ...</div>
+        </div>
+      </div>
+    </div>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>

@@ -17,6 +17,7 @@ import Rules from './components/Rules';
 import RaceSchedule from './components/RaceSchedule';
 import RaceResults from './components/RaceResults';
 import Players from './components/Players';
+import LoadingScreen from './components/LoadingScreen';
 
 const App = () => {
   const [authUser, setAuthUser] = useState<User | null>(null);
@@ -28,6 +29,12 @@ const App = () => {
   const [purchaseCounts, setPurchaseCounts] = useState<Record<string, number>>({});
   const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [soundOn, setSoundOn] = useState<boolean>(() => isSoundEnabled());
+  // Минимальное время показа загрузочного экрана, чтобы не мигал
+  const [minBootDone, setMinBootDone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setMinBootDone(true), 2200);
+    return () => clearTimeout(t);
+  }, []);
 
   // Фоновая музыка: пауза на экранах стартовой решётки, визуализации гонки и наград
   useEffect(() => {
@@ -150,7 +157,9 @@ const App = () => {
   const money = player?.money || 0;
   const shopVisits = player?.shop_visits || {};
 
-  if (authLoading || isLoadingSession) { return (<div className="min-h-screen bg-[#0a0a1a] flex items-center justify-center text-[#e0e0e0]">{soundToggle}<div className="text-xl animate-pulse">ВОССТАНОВЛЕНИЕ СВЯЗИ...</div></div>); }
+  if (authLoading || isLoadingSession || !minBootDone) {
+    return <LoadingScreen ready={!authLoading && !isLoadingSession} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
