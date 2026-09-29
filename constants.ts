@@ -6,9 +6,15 @@ import rewardsDataRaw from './rewards_data.json';
 
 export const INITIAL_MONEY = 15000;
 
-// Загружаем машины из спарсенного JSON, добавляем runtime-поля
+// Наличие машинок в салонах зависит только от метки редкости:
+// редкость 1 → 5 шт., 2 → 4, 3 → 3, 4 → 2, 5 → 1
+export const QUANTITY_BY_RARITY: Record<number, number> = { 1: 5, 2: 4, 3: 3, 4: 2, 5: 1 };
+
+// Загружаем машины из спарсенного JSON, добавляем runtime-поля.
+// quantity перекрывается правилом редкости — значения в cars_data.json не используются
 export const AVAILABLE_CARS: Car[] = carsDataRaw.map((c: any) => ({
   ...c,
+  quantity: QUANTITY_BY_RARITY[c.rarity] ?? c.quantity ?? 1,
   color: '#333',
   installedParts: [],
 }));

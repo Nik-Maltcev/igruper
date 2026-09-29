@@ -233,6 +233,17 @@ export async function buyPart(player: RoomPlayer, carId: string, part: Part): Pr
 export async function buyCar(player: RoomPlayer, car: Car, roomId: string, currentDay?: number): Promise<{ error?: string }> {
   if (player.money < car.price) return { error: 'Недостаточно денег' };
 
+  // Остаток в салоне: покупок этой модели в комнате не может быть больше наличия.
+  // Наличие задаётся редкостью (см. QUANTITY_BY_RARITY в constants.ts)
+  const { count: boughtCount } = await supabase
+    .from('purchase_log')
+    .select('*', { count: 'exact', head: true })
+    .eq('room_id', roomId)
+    .eq('car_original_id', car.id);
+  if ((boughtCount || 0) >= (car.quantity || 1)) {
+    return { error: 'Этих машинок больше нет в салоне' };
+  }
+
   const newCar: Car = { ...car, id: `my-${Date.now()}`, originalId: car.id, installedParts: [], ...(currentDay ? { purchaseDay: currentDay } : {}) };
   const garage = [...player.garage, newCar];
 

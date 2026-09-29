@@ -167,6 +167,23 @@ describe('buyCar', () => {
     expect(result.error).toBeUndefined();
   });
 
+  it('rejects purchase when the model is sold out', async () => {
+    // Счётный запрос по purchase_log возвращает 5 купленных, при наличии 2 — распродано
+    const countChain: any = {};
+    ['select', 'eq', 'limit', 'order'].forEach(m => { countChain[m] = vi.fn().mockReturnValue(countChain); });
+    countChain.then = (onFulfilled?: any, onRejected?: any) =>
+      Promise.resolve({ data: null, error: null, count: 5 }).then(onFulfilled, onRejected);
+
+    const normal = mockChain();
+    vi.mocked(supabase.from).mockImplementation(((table: string) =>
+      table === 'purchase_log' ? countChain : normal) as any);
+
+    const player = makePlayer({ money: 10000 });
+    const car = makeCar({ price: 5000, quantity: 2 });
+    const result = await buyCar(player, car, 'room-1');
+    expect(result.error).toBe('Этих машинок больше нет в салоне');
+  });
+
   it('sets purchaseDay when currentDay is provided', async () => {
     const player = makePlayer({ money: 10000 });
     const car = makeCar({ price: 5000 });
