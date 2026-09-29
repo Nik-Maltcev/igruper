@@ -72,6 +72,32 @@ describe('normalizeStat — контрольный пример из прави�
       normalizeStat('offroad', 32) * weights.offroad;
     expect(total).toBeCloseTo(28877.15, 2);
   });
+
+  it('границы диапазонов ЕСЛИ/IFS совпадают с правилами', () => {
+    // мощность: 299 — переход во вторую ветку ЕСЛИ
+    expect(normalizeStat('power', 298)).toBeCloseTo((298 - 25) * 2.16, 9);
+    expect(normalizeStat('power', 299)).toBeCloseTo(299 * 1.2 + 300, 9);
+    // крутящий момент: 381 — переход
+    expect(normalizeStat('torque', 380)).toBeCloseTo((380 - 29) * 1.81, 9);
+    expect(normalizeStat('torque', 381)).toBeCloseTo((381 - 29) * 1.55 + 200, 9);
+    // скорость: 222 — переход
+    expect(normalizeStat('topSpeed', 221)).toBeCloseTo((221 - 96) * 3.9, 9);
+    expect(normalizeStat('topSpeed', 222)).toBeCloseTo((222 - 222) * 7.5 + 500, 9);
+    // разгон: пороги IFS 5/10/20/30/46
+    expect(normalizeStat('acceleration', 5)).toBeCloseTo((10 - 5) * 130 + 250, 9);
+    expect(normalizeStat('acceleration', 10)).toBeCloseTo((20 - 10) * 13 + 120, 9);
+    expect(normalizeStat('acceleration', 20)).toBeCloseTo((30 - 20) * 6 + 60, 9);
+    expect(normalizeStat('acceleration', 30)).toBeCloseTo((46 - 30) * 3.75, 9);
+    expect(normalizeStat('acceleration', 46)).toBe(0);
+    // управляемость: пороги 45/82/120
+    expect(normalizeStat('handling', 45)).toBeCloseTo(45 * 7.5 - 94, 9);
+    expect(normalizeStat('handling', 82)).toBeCloseTo(82 * 9.5 - 230, 9);
+    expect(normalizeStat('handling', 120)).toBeCloseTo(120 * 11 - 290, 9);
+    // проходимость: пороги 45/82/120
+    expect(normalizeStat('offroad', 45)).toBeCloseTo(45 * 6.5 - 94, 9);
+    expect(normalizeStat('offroad', 82)).toBeCloseTo(82 * 8 - 200, 9);
+    expect(normalizeStat('offroad', 120)).toBeCloseTo(120 * 10 - 400, 9);
+  });
 });
 
 // ═══════════════════════════════════════════════════════
