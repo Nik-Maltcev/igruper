@@ -137,7 +137,10 @@ function checkSingleRequirement(car: any, r0: string): boolean {
     }
   }
 
-  req(r.includes('хэтчбэк') || r.includes('хэтчбек') || r.includes('hatch'), hasTag('хэтчбэк') || hasTag('хэтчбек'));
+  // "hot hatch" — особая метка: обычный хэтчбек под неё не подпадает
+  // (проверяем ДО общего хэтчбека, т.к. "hot hatch" содержит подстроку "hatch")
+  req(r.includes('hot hatch'), hasTag('hot hatch'));
+  req((r.includes('хэтчбэк') || r.includes('хэтчбек') || r.includes('hatch')) && !r.includes('hot hatch'), hasTag('хэтчбэк') || hasTag('хэтчбек'));
   req(r.includes('купе'), hasTag('купе'));
   req(r.includes('седан'), hasTag('седан'));
   req(r.includes('внедорожник'), hasTag('внедорожник'));
@@ -468,6 +471,21 @@ describe('checkRequirement', () => {
     expect(checkRequirement(makeCar({ tags: ['Хэтчбек'] }), 'хэтчбек')).toBe(true);
     expect(checkRequirement(makeCar({ tags: ['Хэтчбэк'] }), 'хэтчбэк')).toBe(true);
     expect(checkRequirement(makeCar({ tags: ['Седан'] }), 'хэтчбек')).toBe(false);
+  });
+
+  it('checks hot hatch tag — обычный хэтчбек не проходит', () => {
+    // hot hatch проходит требование "hot hatch"
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек', 'hot hatch'] }), 'hot hatch')).toBe(true);
+    // обычный хэтчбек под "hot hatch" НЕ подпадает
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек'] }), 'hot hatch')).toBe(false);
+    // hot hatch не проходит требование "hot hatch", если метки нет
+    expect(checkRequirement(makeCar({ tags: ['США'] }), 'hot hatch')).toBe(false);
+    // составные требования из данных гонок
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек', 'США', 'hot hatch'] }), 'hot hatch +США')).toBe(true);
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек', 'США'] }), 'hot hatch +США')).toBe(false);
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек', 'США'] }), 'США + hot hatch')).toBe(false);
+    // hot hatch остаётся хэтчбеком: общее требование "хэтчбек" по-прежнему проходит
+    expect(checkRequirement(makeCar({ tags: ['Хэтчбек', 'hot hatch'] }), 'хэтчбек')).toBe(true);
   });
 
   it('checks купе tag', () => {

@@ -111,7 +111,10 @@ function checkSingleRequirement(car, r0) {
   }
 
   // Тип кузова/теги
-  req(r.includes('хэтчбэк') || r.includes('хэтчбек') || r.includes('hatch'), hasTag('хэтчбэк') || hasTag('хэтчбек'));
+  // "hot hatch" — особая метка: обычный хэтчбек под неё не подпадает
+  // (проверяем ДО общего хэтчбека, т.к. "hot hatch" содержит подстроку "hatch")
+  req(r.includes('hot hatch'), hasTag('hot hatch'));
+  req((r.includes('хэтчбэк') || r.includes('хэтчбек') || r.includes('hatch')) && !r.includes('hot hatch'), hasTag('хэтчбэк') || hasTag('хэтчбек'));
   req(r.includes('купе'), hasTag('купе'));
   req(r.includes('седан'), hasTag('седан'));
   req(r.includes('внедорожник'), hasTag('внедорожник'));
