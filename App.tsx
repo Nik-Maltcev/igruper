@@ -4,6 +4,7 @@ import { supabase } from './services/supabase';
 import {
   fetchPlayer, fetchPurchaseCounts,
   buyPart, buyCar, removePart, removePartToStorage, installFromStorage,
+  getScheduleDay, fetchRaceDayResults,
 } from './services/multiplayer';
 import { findActiveSession, signOut } from './services/auth';
 import { isSoundEnabled, setSoundEnabled, startMusic, pauseMusic, playEffect } from './services/sound';
@@ -18,6 +19,7 @@ import RaceSchedule from './components/RaceSchedule';
 import RaceResults from './components/RaceResults';
 import Players from './components/Players';
 import LoadingScreen from './components/LoadingScreen';
+import CatchupSupportNotice from './components/CatchupSupportNotice';
 
 const App = () => {
   const [authUser, setAuthUser] = useState<User | null>(null);
@@ -62,6 +64,26 @@ const App = () => {
     if (prevDayRef.current !== null && room.current_day > prevDayRef.current) playEffect('midnight');
     prevDayRef.current = room.current_day;
   }, [room?.current_day]);
+
+  // Табличка «Поддержка отстающих»: появляется при входе в день этапа (день 10 цикла),
+  // когда начисляются спонсорская помощь и благотворительная выплата лидера.
+  // Показывается поверх любого экрана; закрывается кнопкой «ПОНЯТНО» (один раз на день)
+  const [catchupNotice, setCatchupNotice] = useState<any | null>(null);
+  const prevCatchupDayRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!room || room.status !== 'PLAYING' || !playerId) { prevCatchupDayRef.current = null; return; }
+    const day = room.current_day;
+    if (prevCatchupDayRef.current === day) return;
+    prevCatchupDayRef.current = day;
+    if (getScheduleDay(day).dayNum !== 10) return;
+    const seen = localStorage.getItem(`catchup_seen_${playerId}`);
+    if (seen === String(day)) return;
+    // Строка 'catchup-support' пишется хостом ДО смены дня — к моменту смены дня она уже в БД
+    fetchRaceDayResults(room.id, day).then((rows: any[]) => {
+      const row = (rows || []).find(r => r.race_id === 'catchup-support');
+      if (row?.results?.[0]) setCatchupNotice(row.results[0]);
+    });
+  }, [room?.current_day, room?.status, room?.id, playerId]);
 
   const handleToggleSound = () => {
     const next = !isSoundEnabled();
@@ -164,6 +186,15 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-[#e0e0e0] flex flex-col">
       {soundToggle}
+      {catchupNotice && room && (
+        <CatchupSupportNotice
+          data={catchupNotice}
+          onClose={() => {
+            localStorage.setItem(`catchup_seen_${playerId}`, String(room.current_day));
+            setCatchupNotice(null);
+          }}
+        />
+      )}
       {room && room.status === 'PLAYING' && currentView !== 'MULTIPLAYER' && (
         <div className="bg-[#0d0d20] p-2 text-[8px] flex justify-between items-center border-b-2 border-[#222]" style={{ boxShadow: '0 2px 0 #000' }}>
           <div className="flex items-center gap-3">
