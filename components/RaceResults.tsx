@@ -364,7 +364,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.power || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.torque || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.topSpeed || '—'}</td>
-                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.acceleration?.toFixed(1) || '—'}</td>
+                                            <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.acceleration?.toFixed(2) || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.handling || '—'}</td>
                                             <td className="p-2 text-center text-[#fff]">{(r as any).carStats?.offroad || '—'}</td>
                                         </tr>
