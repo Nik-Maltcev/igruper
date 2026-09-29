@@ -9,6 +9,7 @@ interface RaceResultsProps {
     roomId: string;
     currentDay: number;
     gameYear?: number;
+    playerId?: string;
     onBack: () => void;
 }
 
@@ -64,7 +65,7 @@ function orderDayResults(races: any[], currentDay: number, gameYear: number): an
     return [...races].sort((a, b) => orderKey(a) - orderKey(b));
 }
 
-export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBack }: RaceResultsProps) {
+export default function RaceResults({ roomId, currentDay, gameYear = 1960, playerId, onBack }: RaceResultsProps) {
     const [results, setResults] = useState<RaceDayResult[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentIdx, setCurrentIdx] = useState(0);
@@ -285,7 +286,25 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
     const isLastRace = currentIdx === results.length - 1;
     const isDrag = (currentRace.race_name || '').toLowerCase().includes('дрэг');
 
-    const handleNext = () => {
+    // Награды дня копились в pending_rewards (не начислялись при запуске гонок).
+    // Игрок досмотрел результаты — выдаём ему его награды; повторный просмотр уже ничего не даёт
+    const claimPendingRewards = async () => {
+        if (!playerId) return;
+        const { data: p } = await supabase.from('room_players').select('money, points, storage, pending_rewards').eq('id', playerId).single();
+        const pend: any = p?.pending_rewards;
+        if (!p || !pend || pend.day !== currentDay) return;
+        const updates: any = {
+            money: (p.money || 0) + (pend.money || 0),
+            points: (p.points || 0) + (pend.points || 0),
+            pending_rewards: null,
+        };
+        if (pend.prizes?.length) {
+            updates.storage = [...(p.storage || []), ...pend.prizes];
+        }
+        await supabase.from('room_players').update(updates).eq('id', playerId);
+    };
+
+    const handleNext = async () => {
         if (viewStep === 'GRID') {
             setViewStep('ANIMATION');
             setAnimationProgress(0);
@@ -294,6 +313,7 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                 setCurrentIdx(i => i + 1);
                 setViewStep('GRID');
             } else {
+                await claimPendingRewards();
                 onBack();
             }
         }
@@ -497,6 +517,12 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, onBac
                         {(currentRace.race_id || '').startsWith('tournament-section-') && (
                             <div className="text-center mt-2 text-[8px] text-[#888]">
                                 Награждение — один раз в субботу, по сумме времени всех трёх участков
+                            </div>
+                        )}
+
+                        {isLastRace && (
+                            <div className="text-center mt-2 text-[8px] text-[#888]">
+                                Награды за день начислятся, когда завершите просмотр результатов
                             </div>
                         )}
 

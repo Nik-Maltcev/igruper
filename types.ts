@@ -148,6 +148,16 @@ export interface PrizeDiscount {
   icon: string;
 }
 
+// Отложенные награды гоночного дня: копятся при запуске гонок,
+// выдаются после просмотра результатов или автоматически при смене дня
+export interface PendingRewards {
+  day: number;
+  money: number;
+  points: number;
+  prizes: (Part | PrizeDiscount)[];
+  notes?: string[];      // пояснения для чата (итоги турнира и т.п.)
+}
+
 export interface RoomPlayer {
   id: string;
   room_id: string;
@@ -161,6 +171,7 @@ export interface RoomPlayer {
   shop_visits: Record<string, string>;
   joined_at: string;
   auth_uid?: string;
+  pending_rewards?: PendingRewards | null;
 }
 
 export interface RaceEntry {

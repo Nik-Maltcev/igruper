@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry, PrizeDiscount } from '../types';
+import { Room, RoomPlayer, RoomPhase, ChatMessage, Car, Part, RaceEntry, PrizeDiscount, PendingRewards } from '../types';
 import { AVAILABLE_CARS } from '../constants';
 import { getPartBaseName } from './prizeService';
 
@@ -195,6 +195,7 @@ export async function updatePlayerState(playerId: string, updates: {
   money?: number;
   shop_visits?: Record<string, string>;
   points?: number;
+  pending_rewards?: PendingRewards | null;
 }) {
   await supabase
     .from('room_players')

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
-import { Car, Room, RoomPlayer, RoomPhase, View, TournamentEntry } from '../types';
+import { Car, Room, RoomPlayer, RoomPhase, View, TournamentEntry, Part, PrizeDiscount } from '../types';
 import {
   createRoom, joinRoom, fetchPlayers, startGame,
   updateRoomPhase, updateRoomState, sendSystemMessage,
@@ -125,6 +125,16 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     // --- Если сейчас фаза RACE_SETUP — запускаем гонки и раздаём призы ---
     if (room.phase === 'RACE_SETUP') {
       const entries = await fetchRaceEntries(room.id, room.current_day);
+
+      // Аккумуляторы для суммирования денег/очков/призов за все гонки дня
+      // (и за финал турнира — см. ниже). Сразу на балансы НЕ начисляем: копим
+      // в pending_rewards — игрок получит награды, когда досмотрит результаты дня,
+      // а если не посмотрит — автоматически при переходе к следующему дню.
+      const moneyAccum: Record<string, number> = {};
+      const pointsAccum: Record<string, number> = {};
+      const prizesAccum: Record<string, any[]> = {};
+      const notesAccum: Record<string, string[]> = {};
+
       if (entries.length > 0) {
         // Группируем заявки по race_id
         const byRace: Record<string, typeof entries> = {};
@@ -132,11 +142,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           if (!byRace[e.race_id]) byRace[e.race_id] = [];
           byRace[e.race_id].push(e);
         }
-
-        // Аккумуляторы для суммирования денег/очков/призов за все гонки дня
-        const moneyAccum: Record<string, number> = {};
-        const pointsAccum: Record<string, number> = {};
-        const prizesAccum: Record<string, any[]> = {};
 
         // Для каждой гонки — симулируем и раздаём призы
         // Определяем порядок гонок из races_data
@@ -256,7 +261,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             const stats = car ? getEffectiveStats(car) : null;
             return { ...r, playerName: pl?.username || '', playerPoints: pl?.points || 0, carStats: stats };
           });
-          // Генерируем призы из Bonus Track (World Series Race 2) — только финишировавшим
+          // Генерируем призы из Bonus Track (World Series Race 2) — только финишировавшим.
+          // В чат НЕ сообщаем: призы войдут в pending_rewards и будут видны на экране результатов
           if (worldRaceIndex === 1) {
             const prizeMap = generatePrizesForRace(results.filter(r => !r.didNotStart), players.length, room.current_year);
             for (const [carId, prizes] of prizeMap) {
@@ -264,14 +270,6 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
               if (!pid) continue;
               if (!prizesAccum[pid]) prizesAccum[pid] = [];
               prizesAccum[pid].push(...prizes);
-              for (const prize of prizes) {
-                const pName = players.find(p => p.id === pid)?.username || '';
-                if ('type' in prize && prize.type === 'discount') {
-                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name}`);
-                } else {
-                  await sendSystemMessage(room.id, `🎁 ${pName} получил приз: ${prize.name} (тир ${prize.tier || '?'})`);
-                }
-              }
             }
           }
 
@@ -377,23 +375,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
         }
         // === END MAIN RACE ===
 
-// Refetch fresh player data to avoid stale closure
-        const freshPlayers = await fetchPlayers(room.id);
-        // Применяем накопленные деньги, очки и призы
-        for (const p of freshPlayers) {
-          const extraMoney = moneyAccum[p.id] || 0;
-          const extraPoints = pointsAccum[p.id] || 0;
-          const newPrizes = prizesAccum[p.id] || [];
-          if (extraMoney === 0 && extraPoints === 0 && newPrizes.length === 0) continue;
-          const updates = {
-            money: p.money + extraMoney,
-            points: p.points + extraPoints,
-          };
-          if (newPrizes.length > 0) {
-            updates.storage = [...(p.storage || []), ...newPrizes];
-          }
-          await updatePlayerState(p.id, updates);
-        }
+        // Деньги/очки/призы здесь НЕ начисляем — накопленное уйдёт в pending_rewards
+        // после турнирного блока (награды турниров складываются в те же аккумуляторы)
       } else {
         await sendSystemMessage(room.id, '⚠ Никто не записался на гонки в этот день.');
       }
@@ -412,7 +395,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
           if (tournamentData && sectionIdx < tournamentData.sections.length) {
             const section = tournamentData.sections[sectionIdx];
 
-            // Свежие данные игроков: выше в этом же ходе уже применялись награды гонок дня
+            // Свежие данные игроков: машины и склад для симуляции/итогов
+            // (балансы в этом ходе не меняются — награды уходят в pending_rewards)
             const tournPlayers = await fetchPlayers(room.id);
             const tCars: Car[] = [];
             for (const entry of room.tournament_state.entries) {
@@ -488,15 +472,16 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
 
                 for (const fr of finalResults) {
                   if (fr.money > 0 || fr.points > 0) {
-                    const p = tournPlayers.find(pl => pl.id === fr.entry.playerId);
-                    if (p) {
-                      await updatePlayerState(p.id, {
-                        money: p.money + fr.money,
-                        points: p.points + fr.points
-                      });
-                      const shared = finalResults.filter(x => x.place === fr.place).length > 1 ? ' (делённое место)' : '';
-                      await sendSystemMessage(room.id, `🏆 [${room.tournament_state.tournamentName}] ${p.username}: ${fr.place} место по сумме трёх участков!${shared} +$${fr.money} +${fr.points}оч.`);
-                    }
+                    // Награды финала турнира копятся в общие аккумуляторы дня —
+                    // выдача вместе со всеми наградами дня через pending_rewards
+                    const pid = fr.entry.playerId;
+                    if (!moneyAccum[pid]) moneyAccum[pid] = 0;
+                    if (!pointsAccum[pid]) pointsAccum[pid] = 0;
+                    if (!notesAccum[pid]) notesAccum[pid] = [];
+                    moneyAccum[pid] += fr.money;
+                    pointsAccum[pid] += fr.points;
+                    const shared = finalResults.filter(x => x.place === fr.place).length > 1 ? ' (делённое место)' : '';
+                    notesAccum[pid].push(`🏆 [${room.tournament_state.tournamentName}] ${fr.place} место по сумме трёх участков${shared}`);
                   }
                 }
 
@@ -538,6 +523,19 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
       }
       // === КОНЕЦ ТУРНИРОВ ===
 
+      // Сохраняем накопленные за день награды в pending_rewards каждого игрока.
+      // На балансы не начисляем: игрок увидит начисление после просмотра результатов,
+      // а если не посмотрит — при переходе к следующему дню (ветка RESULTS ниже)
+      const pendPlayers = await fetchPlayers(room.id);
+      for (const p of pendPlayers) {
+        const money = moneyAccum[p.id] || 0;
+        const points = pointsAccum[p.id] || 0;
+        const prizes = prizesAccum[p.id] || [];
+        const notes = notesAccum[p.id] || [];
+        if (money === 0 && points === 0 && prizes.length === 0) continue;
+        await updatePlayerState(p.id, { pending_rewards: { day: room.current_day, money, points, prizes, notes } });
+      }
+
       // Переходим в фазу показа результатов
       await updateRoomPhase(room.id, 'RESULTS');
       await sendSystemMessage(room.id, `🏁 Гоночный день завершен. Смотрите результаты!`);
@@ -548,6 +546,32 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     if (room.phase === 'RESULTS') {
       // Очищаем погоду перед следующим днем
       await supabase.from('rooms').update({ race_weather: null }).eq('id', room.id);
+
+      // Невостребованные награды: игрок не досмотрел результаты дня (или не заходил в игру).
+      // Начисляем их автоматически, чтобы смена дня гарантированно закрывала гоночный день
+      const leftoverPlayers = await fetchPlayers(room.id);
+      for (const p of leftoverPlayers) {
+        const pend = p.pending_rewards;
+        if (!pend) continue;
+        const updates: {
+          money: number;
+          points: number;
+          pending_rewards: null;
+          storage?: (Part | PrizeDiscount)[];
+        } = {
+          money: p.money + (pend.money || 0),
+          points: p.points + (pend.points || 0),
+          pending_rewards: null,
+        };
+        if (pend.prizes?.length) {
+          updates.storage = [...(p.storage || []), ...pend.prizes];
+        }
+        await updatePlayerState(p.id, updates);
+
+        const prizeNames = (pend.prizes || []).map((z: any) => z.name).filter(Boolean);
+        const extras = [...(pend.notes || []), ...prizeNames.map((n: string) => `🎁 ${n}`)];
+        await sendSystemMessage(room.id, `💰 ${p.username}: награды за день ${pend.day} начислены автоматически: +$${(pend.money || 0).toLocaleString()} +${pend.points || 0} очк.${extras.length ? ' · ' + extras.join(' · ') : ''}`);
+      }
     }
 
     const nextDay = room.current_day + 1;
