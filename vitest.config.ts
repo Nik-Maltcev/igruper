@@ -14,11 +14,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
-    environmentMatchGlobs: [
-      ['tests/componentLogic.test.ts', 'node'],
-      ['tests/gameEngine*.test.ts', 'node'],
-      ['tests/constants.test.ts', 'node'],
-    ],
+    // Логические тесты без DOM помечены '// @vitest-environment node' в шапке файла
+    // (environmentMatchGlobs удалён в Vitest 4)
     coverage: {
       include: ['services/**', 'constants.ts'],
       exclude: ['services/supabase.ts'],

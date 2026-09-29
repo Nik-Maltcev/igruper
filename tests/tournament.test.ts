@@ -7,7 +7,7 @@
  * - Tournament results accumulation
  * - Tournament display in schedule
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TOURNAMENTS_DATA } from '../constants';
 import { joinTournament, getScheduleDay } from '../services/multiplayer';
 import { simulateRace, getEffectiveStats } from '../services/gameEngine';

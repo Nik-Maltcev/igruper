@@ -75,7 +75,7 @@ const App = () => {
     const day = room.current_day;
     if (prevCatchupDayRef.current === day) return;
     prevCatchupDayRef.current = day;
-    if (getScheduleDay(day).dayNum !== 10) return;
+    if (!day || getScheduleDay(day).dayNum !== 10) return;
     const seen = localStorage.getItem(`catchup_seen_${playerId}`);
     if (seen === String(day)) return;
     // Строка 'catchup-support' пишется хостом ДО смены дня — к моменту смены дня она уже в БД

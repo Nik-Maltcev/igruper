@@ -337,6 +337,9 @@ export async function installFromStorage(player: RoomPlayer, carId: string, stor
   const storage = [...(player.storage || [])];
   const part = storage[storageIndex];
   if (!part) return;
+  // На машину устанавливаются только детали: скидки тратятся в автосалоне,
+  // денежные призы на склад не попадают
+  if ('type' in part) return;
 
   const garage = [...player.garage];
   const carIdx = garage.findIndex(c => c.id === carId);

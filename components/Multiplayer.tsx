@@ -118,9 +118,13 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     return () => clearInterval(interval);
   }, [room?.status]);
 
+  // Защита от повторного запуска: advanceDay долгая (симуляции + десятки запросов к БД),
+  // двойной клик по кнопке или автоперевод во время ручного перевода задублировали бы
+  // строки результатов и сообщения
+  const advancingRef = useRef(false);
   const advanceDay = useCallback(async () => {
-    if (!room) return;
-
+    if (!room || advancingRef.current) return;
+    advancingRef.current = true;
     try {
     // --- Если сейчас фаза RACE_SETUP — запускаем гонки и раздаём призы ---
     if (room.phase === 'RACE_SETUP') {
@@ -698,6 +702,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
     } catch (err) {
       console.error('advanceDay error:', err);
       await sendSystemMessage(room.id, `❌ Ошибка при переключении дня: ${err instanceof Error ? err.message : String(err)}`).catch(() => {});
+    } finally {
+      advancingRef.current = false;
     }
   }, [room, players, playerId]);
 

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getEffectiveStats, simulateRace, getRoadCategory, normalizeStat } from '../services/gameEngine';
 import { Car, Track, Part } from '../types';

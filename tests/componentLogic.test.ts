@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Tests for pure business logic functions defined inside React components.
  * These functions are re-implemented here since they're not exported,
