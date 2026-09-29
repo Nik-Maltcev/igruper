@@ -3,6 +3,7 @@ import { AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, RoomPlayer } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
+import CarTags from './CarTags';
 
 
 function getCarClass(car) {
@@ -97,14 +98,7 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                           <div className="flex flex-col justify-center px-3 py-2 min-w-[140px] max-w-[160px] border-r border-[#222]">
                             <div className="text-[10px] text-white leading-tight mb-1" style={{ textShadow: '1px 1px 0 #000' }}>{car.name}</div>
                             <div className="text-[7px] text-white leading-relaxed">
-                              {car.carClass && <div>класс: {car.carClass}</div>}
-                              {car.epoch && <div style={{color: '#00aaff'}}>эпоха: {car.epoch}</div>}
-                              {car.tags?.[0] && <div>{car.tags[0]}</div>}
-                              {car.tags?.[1] && <div>{car.tags[1]}</div>}
-                              {car.rarity && <div>редкость: {car.rarity}</div>}
-                              {car.tags?.slice(2).map((tag: string, ti: number) => (
-                                <div key={ti} style={{ color: '#ffaa00' }}>{tag}</div>
-                              ))}
+                              <CarTags car={car} />
                               {(() => {
                                 const tiresPart = car.installedParts?.find(pt => pt.slot === 'tires');
                                 let letter = null;
