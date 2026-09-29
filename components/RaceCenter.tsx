@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Car, RaceResult, RaceEntry } from '../types';
 import { RACES_DATA, TOURNAMENTS_DATA, getRewards } from '../constants';
 import type { RewardEntry } from '../constants';
-import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES, joinTournament } from '../services/multiplayer';
+import { submitRaceEntry, fetchRaceEntries, fetchPlayers, POWER_CATEGORIES, joinTournament, getScheduleDay } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
 import { playEffect } from '../services/sound';
 import { supabase } from '../services/supabase';
@@ -513,7 +513,7 @@ if (!targetRace) {
   }
 
   return (
-    <div className="p-3 max-w-6xl mx-auto">
+    <div className="p-3 max-w-6xl mx-auto flex flex-col">
       <div className="flex justify-between items-center mb-3">
         <div className="flex items-center gap-4">
           <h2 className="text-lg retro-title" style={{ color: targetRace.titleColor }}>🏁 {targetRace.title}</h2>
@@ -526,7 +526,9 @@ if (!targetRace) {
         <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{ backgroundColor: '#1a1a2e', border: '2px solid #555' }}>МЕНЮ</button>
       </div>
 
-      <div className="flex flex-col gap-4 pb-20">
+      {/* Карточки гонок дня. order: 1 — визуально НИЖЕ турнирного блока (он в конце
+          JSX, но запись на турнир важнее и не должна теряться внизу экрана) */}
+      <div className="flex flex-col gap-4 pb-20" style={{ order: 1 }}>
         {targetRace.rounds.map((round: any, ri: number) => (
           <div key={ri}>
             {round.requirement && (
@@ -548,9 +550,13 @@ if (!targetRace) {
       {tournamentState && tournamentState.tournamentName && (() => {
         const tournDef = TOURNAMENTS_DATA.find(t => t.name === tournamentState.tournamentName);
         const isRegistered = tournamentState.entries?.some((e: any) => e.playerId === playerId);
-        const registrationOpen = tournamentState.completedSections === 0;
+        // Запись на турнир — только во вторник (день первого участка): машина обязана
+        // пройти все 3 участка, поэтому в четверг и субботу составы уже не меняются
+        const scheduleDayNum = currentDay && currentDay > 0 ? getScheduleDay(currentDay).dayNum : 0;
+        const isSignupDay = phase === 'RACE_DAY' && scheduleDayNum === 5;
+        const registrationOpen = isSignupDay && tournamentState.completedSections === 0;
         return (
-        <div className="pixel-card p-4 mt-4 border-[#aa44ff]" style={{ borderWidth: '3px' }}>
+        <div className="pixel-card p-4 mb-4 border-[#aa44ff]" style={{ borderWidth: '3px' }}>
           <h3 className="text-sm text-[#aa44ff] mb-2">🏆 ТУРНИР: {tournamentState.tournamentName}</h3>
           <div className="text-[8px] text-[#aaa] mb-2">
             Участок {Math.min(tournamentState.completedSections + 1, 3)} из 3 | Требование: <span className="text-[#ffaa00]">АВТОСПОРТ</span>
@@ -633,9 +639,13 @@ if (!targetRace) {
 
           {isRegistered ? (
             <div className="text-[8px] text-[#00ff00]">✔ Вы уже записаны на турнир</div>
+          ) : phase !== 'RACE_DAY' ? (
+            <div className="text-[8px] text-[#888]">Запись на турнир доступна в гоночный день (вторник)</div>
+          ) : !isSignupDay ? (
+            <div className="text-[8px] text-[#ff4444]">Запись закрыта: машина должна пройти все 3 участка турнира — записаться можно только во вторник</div>
           ) : !registrationOpen ? (
             <div className="text-[8px] text-[#ff4444]">Турнир уже начался, запись закрыта</div>
-          ) : phase === 'RACE_DAY' ? (
+          ) : (
             <div>
               <div className="text-[8px] text-[#888] mb-1">Выберите машину с меткой АВТОСПОРТ:</div>
               <div className="flex flex-wrap gap-1">
@@ -659,8 +669,6 @@ if (!targetRace) {
                 ))}
               </div>
             </div>
-          ) : (
-            <div className="text-[8px] text-[#888]">Запись на турнир доступна в гоночный день (вторник)</div>
           )}
         </div>
         );

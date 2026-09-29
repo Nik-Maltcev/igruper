@@ -252,6 +252,12 @@ export async function buyCar(player: RoomPlayer, car: Car, roomId: string, curre
 
 // --- Турниры ---
 export async function joinTournament(player: RoomPlayer, carId: string, room: Room): Promise<{ error?: string }> {
+  // Запись только во вторник (день первого участка): машина обязана пройти все 3 участка,
+  // в четверг и субботу составы турнира уже не меняются
+  if (!room.current_day || getScheduleDay(room.current_day).dayNum !== 5) {
+    return { error: 'Запись на турнир доступна только во вторник' };
+  }
+
   const carIndex = player.garage.findIndex(c => c.id === carId);
   if (carIndex === -1) return { error: 'Машина не найдена' };
 

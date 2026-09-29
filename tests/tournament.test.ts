@@ -228,6 +228,19 @@ describe('joinTournament', () => {
     expect(result.error).toBeUndefined();
   });
 
+  it('rejects signup on non-Tuesday — car must run all 3 sections', async () => {
+    const car = makeCar({ id: 'c1', tags: ['АВТОСПОРТ'] });
+    const player = makePlayer({ garage: [car] });
+    // Четверг (день 7 — второй участок турнира): записываться поздно
+    const thursday = makeRoom({ current_day: 7 });
+    const result = await joinTournament(player, 'c1', thursday);
+    expect(result.error).toBe('Запись на турнир доступна только во вторник');
+    // Суббота (день 9 — финальный участок) тоже закрыта
+    const saturday = makeRoom({ current_day: 9 });
+    const result2 = await joinTournament(player, 'c1', saturday);
+    expect(result2.error).toBe('Запись на турнир доступна только во вторник');
+  });
+
   it('rejects car not in garage', async () => {
     const player = makePlayer({ garage: [] });
     const room = makeRoom();
