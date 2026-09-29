@@ -1,7 +1,12 @@
-import { Part, PrizeDiscount } from '../types';
+import { Part, PrizeDiscount, Prize } from '../types';
 import { SHOPS, BONUS_PARTS, getRewards } from '../constants';
 
 const DEALERS = ['\u0410\u041b\u042c\u0424\u0410', '\u0411\u0415\u0422\u0410', '\u0413\u0410\u041c\u041c\u0410', '\u0414\u0415\u041b\u042c\u0422\u0410'];
+
+// Вместо детали может случайно достаться денежный приз.
+// Шанс замены внутри «детальной» ветки (70% всех призов) и размеры приза
+const MONEY_INSTEAD_OF_PART_CHANCE = 0.25;
+const MONEY_PRIZE_AMOUNTS = [12000, 17000];
 
 // Get all parts from unlocked shops for the current year
 function getUnlockedParts(currentYear: number): Part[] {
@@ -39,9 +44,20 @@ function findNextTierPart(baseName: string, currentTier: number): Part | null {
   return null;
 }
 
-export function generateSinglePrize(currentYear: number): Part | PrizeDiscount {
+export function generateSinglePrize(currentYear: number): Prize {
   const roll = Math.random();
   if (roll < 0.7) {
+    // Вместо детали может достаться денежный приз — идёт на баланс игрока
+    if (Math.random() < MONEY_INSTEAD_OF_PART_CHANCE) {
+      const amount = MONEY_PRIZE_AMOUNTS[Math.floor(Math.random() * MONEY_PRIZE_AMOUNTS.length)];
+      return {
+        id: `prize-money-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        type: 'money' as const,
+        amount,
+        name: `Денежный приз $${amount.toLocaleString('ru-RU')}`,
+        icon: '💰',
+      };
+    }
     // Prize Part: pick a random base part name, find max unlocked tier for THAT part, give +1
     const unlocked = getUnlockedParts(currentYear);
     if (unlocked.length === 0) {
@@ -92,13 +108,13 @@ export function generatePrizesForPlayer(
   position: number,
   playerCount: number,
   currentYear: number
-): (Part | PrizeDiscount)[] {
+): Prize[] {
   const rewards = getRewards(playerCount);
   const bonusTable = (rewards as any).worldBonus;
   if (!bonusTable) return [];
   const entry = bonusTable.find((r: any) => r.place === position);
   if (!entry || !entry.prizes || entry.prizes <= 0) return [];
-  const prizes: (Part | PrizeDiscount)[] = [];
+  const prizes: Prize[] = [];
   for (let i = 0; i < entry.prizes; i++) {
     prizes.push(generateSinglePrize(currentYear));
   }
@@ -109,8 +125,8 @@ export function generatePrizesForRace(
   results: { carId: string; position: number }[],
   playerCount: number,
   currentYear: number
-): Map<string, (Part | PrizeDiscount)[]> {
-  const prizeMap = new Map<string, (Part | PrizeDiscount)[]>();
+): Map<string, Prize[]> {
+  const prizeMap = new Map<string, Prize[]>();
   for (const r of results) {
     const prizes = generatePrizesForPlayer(r.position, playerCount, currentYear);
     if (prizes.length > 0) {

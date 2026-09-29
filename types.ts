@@ -148,6 +148,17 @@ export interface PrizeDiscount {
   icon: string;
 }
 
+// Денежный приз бонусной гонки: начисляется на баланс, на склад не попадает
+export interface MoneyPrize {
+  id: string;
+  type: 'money';
+  amount: number;       // 12000 | 17000
+  name: string;         // "Денежный приз $12 000"
+  icon: string;         // 💰
+}
+
+export type Prize = Part | PrizeDiscount | MoneyPrize;
+
 // Отложенные награды гоночного дня: копятся при запуске гонок,
 // выдаются после просмотра результатов или автоматически при смене дня
 export interface PendingRewards {

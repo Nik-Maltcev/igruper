@@ -1,13 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { generateSinglePrize, generatePrizesForPlayer, generatePrizesForRace } from '../services/prizeService';
-import { Part, PrizeDiscount } from '../types';
+import { Part, PrizeDiscount, MoneyPrize, Prize } from '../types';
 
-function isPart(item: Part | PrizeDiscount): item is Part {
-  return !('type' in item && (item as any).type === 'discount');
+function isPart(item: Prize): item is Part {
+  return !('type' in item && ((item as any).type === 'discount' || (item as any).type === 'money'));
 }
 
-function isDiscount(item: Part | PrizeDiscount): item is PrizeDiscount {
+function isDiscount(item: Prize): item is PrizeDiscount {
   return 'type' in item && (item as any).type === 'discount';
+}
+
+function isMoneyPrize(item: Prize): item is MoneyPrize {
+  return 'type' in item && (item as any).type === 'money';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -106,22 +110,63 @@ describe('generateSinglePrize', () => {
     expect(prize.id).toBeDefined();
   });
 
+  it('can return a money prize instead of a part', () => {
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0.3)   // roll < 0.7 → «детальная» ветка
+      .mockReturnValueOnce(0.1)   // 0.1 < 0.25 → денежный приз вместо детали
+      .mockReturnValueOnce(0.4);  // выбор суммы: < 0.5 → 12000
+    const prize = generateSinglePrize(1960);
+    expect(isMoneyPrize(prize)).toBe(true);
+    if (isMoneyPrize(prize)) {
+      expect(prize.amount).toBe(12000);
+      expect(prize.id).toMatch(/^prize-money-/);
+      expect(prize.icon).toBe('💰');
+    }
+  });
+
+  it('money prize can be 17000', () => {
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0.3)
+      .mockReturnValueOnce(0.1)
+      .mockReturnValueOnce(0.9);  // >= 0.5 → 17000
+    const prize = generateSinglePrize(1960);
+    expect(isMoneyPrize(prize)).toBe(true);
+    if (isMoneyPrize(prize)) {
+      expect(prize.amount).toBe(17000);
+    }
+  });
+
+  it('money prize is NOT returned when replacement roll >= 0.25', () => {
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0.3)   // «детальная» ветка
+      .mockReturnValueOnce(0.9)   // >= 0.25 → обычная деталь
+      .mockReturnValue(0.5);
+    const prize = generateSinglePrize(1960);
+    expect(isMoneyPrize(prize)).toBe(false);
+    expect(isPart(prize)).toBe(true);
+  });
+
   it('distribution is roughly 70/30 over many calls', () => {
     vi.restoreAllMocks(); // use real random
     let parts = 0;
     let discounts = 0;
+    let money = 0;
     const N = 1000;
     for (let i = 0; i < N; i++) {
       const prize = generateSinglePrize(1980);
-      if (isPart(prize)) parts++;
-      else discounts++;
+      if (isDiscount(prize)) discounts++;
+      else if (isMoneyPrize(prize)) money++;
+      else parts++;
     }
-    // 70% parts ± 5%
-    expect(parts / N).toBeGreaterThan(0.60);
-    expect(parts / N).toBeLessThan(0.80);
-    // 30% discounts ± 5%
+    // 70% «детальной» ветки, из них ~25% заменяются деньгами: ~52.5% деталей, ~17.5% денег
+    expect(parts / N).toBeGreaterThan(0.45);
+    expect(parts / N).toBeLessThan(0.60);
+    // 30% скидок ± 5%
     expect(discounts / N).toBeGreaterThan(0.20);
     expect(discounts / N).toBeLessThan(0.40);
+    // деньги: только суммы 12000 и 17000
+    expect(money / N).toBeGreaterThan(0.10);
+    expect(money / N).toBeLessThan(0.25);
   });
 });
 

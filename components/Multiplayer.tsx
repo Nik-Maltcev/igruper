@@ -262,14 +262,21 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
             return { ...r, playerName: pl?.username || '', playerPoints: pl?.points || 0, carStats: stats };
           });
           // Генерируем призы из Bonus Track (World Series Race 2) — только финишировавшим.
-          // В чат НЕ сообщаем: призы войдут в pending_rewards и будут видны на экране результатов
+          // В чат НЕ сообщаем: призы войдут в pending_rewards и будут видны на экране результатов.
+          // Денежный приз начисляется на баланс (moneyAccum), детали/скидки — на склад
           if (worldRaceIndex === 1) {
             const prizeMap = generatePrizesForRace(results.filter(r => !r.didNotStart), players.length, room.current_year);
             for (const [carId, prizes] of prizeMap) {
               const pid = playerMap[carId];
               if (!pid) continue;
-              if (!prizesAccum[pid]) prizesAccum[pid] = [];
-              prizesAccum[pid].push(...prizes);
+              for (const prize of prizes) {
+                if ((prize as any).type === 'money') {
+                  if (!moneyAccum[pid]) moneyAccum[pid] = 0;
+                  moneyAccum[pid] += (prize as any).amount;
+                }
+                if (!prizesAccum[pid]) prizesAccum[pid] = [];
+                prizesAccum[pid].push(prize); // показ на экране результатов
+              }
             }
           }
 
@@ -530,7 +537,8 @@ const Multiplayer: React.FC<MultiplayerProps> = ({ room, player, playerId, authU
       for (const p of pendPlayers) {
         const money = moneyAccum[p.id] || 0;
         const points = pointsAccum[p.id] || 0;
-        const prizes = prizesAccum[p.id] || [];
+        // На склад идут только детали и скидки — денежные призы уже в moneyAccum
+        const prizes = (prizesAccum[p.id] || []).filter((z: any) => z?.type !== 'money');
         const notes = notesAccum[p.id] || [];
         if (money === 0 && points === 0 && prizes.length === 0) continue;
         await updatePlayerState(p.id, { pending_rewards: { day: room.current_day, money, points, prizes, notes } });
