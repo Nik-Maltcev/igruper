@@ -34,19 +34,25 @@ const STAT_KEYS = ['power', 'torque', 'topSpeed', 'acceleration', 'handling', 'o
 const STAT_UNITS = ['лс', 'Нм', '', 'с', '', ''];
 const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
 
-// Task 11: Расчёт текущей цены автомобиля в зависимости от редкости и номера этапа
-function getCurrentPrice(car: Car, stage: number): number {
+// Task 11: Расчёт цены продажи в гараже. По правилам цена меняется только
+// по прошествии игрового года (этапа), поэтому считаем этапы, проведённые
+// машиной в гараже: от этапа покупки (purchaseDay) до текущего.
+// Машина, только что поступившая из автосалона, стоит как в салоне.
+// Без purchaseDay (старые сейвы) цену считаем неизменной.
+function getCurrentPrice(car: Car, currentStage: number): number {
   const base = car.price;
   const rarity = car.rarity ?? 3;
+  const purchaseStage = car.purchaseDay !== undefined ? Math.floor(car.purchaseDay / 10) : currentStage;
+  const stagesOwned = Math.max(0, currentStage - purchaseStage);
   let price = base;
   if (rarity === 1) {
-    price = Math.max(base * 0.5, base - 600 * stage);
+    price = Math.max(base * 0.5, base - 600 * stagesOwned);
   } else if (rarity === 2) {
-    price = Math.max(base * 0.5, base - 300 * stage);
+    price = Math.max(base * 0.5, base - 300 * stagesOwned);
   } else if (rarity === 4) {
-    price = base + 500 * stage;
+    price = base + 500 * stagesOwned;
   } else if (rarity === 5) {
-    price = base + 1000 * stage;
+    price = base + 1000 * stagesOwned;
   }
   return Math.round(price);
 }

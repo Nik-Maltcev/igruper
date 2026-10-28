@@ -13,18 +13,20 @@ import { Car, Part } from '../types';
 const CLASS_PART_LIMITS: Record<string, number> = { A: 16, B: 14, C: 12, D: 10, E: 8, R: 6, S: 4 };
 
 // From Garage.tsx — getCurrentPrice
-function getCurrentPrice(car: { price: number; rarity?: number }, stage: number): number {
+function getCurrentPrice(car: { price: number; rarity?: number; purchaseDay?: number }, currentStage: number): number {
   const base = car.price;
   const rarity = car.rarity ?? 3;
+  const purchaseStage = car.purchaseDay !== undefined ? Math.floor(car.purchaseDay / 10) : currentStage;
+  const stagesOwned = Math.max(0, currentStage - purchaseStage);
   let price = base;
   if (rarity === 1) {
-    price = Math.max(base * 0.5, base - 600 * stage);
+    price = Math.max(base * 0.5, base - 600 * stagesOwned);
   } else if (rarity === 2) {
-    price = Math.max(base * 0.5, base - 300 * stage);
+    price = Math.max(base * 0.5, base - 300 * stagesOwned);
   } else if (rarity === 4) {
-    price = base + 500 * stage;
+    price = base + 500 * stagesOwned;
   } else if (rarity === 5) {
-    price = base + 1000 * stage;
+    price = base + 1000 * stagesOwned;
   }
   return Math.round(price);
 }
@@ -258,47 +260,66 @@ function makeCar(overrides: any = {}): any {
 
 describe('getCurrentPrice', () => {
   it('rarity 3 — price stays the same regardless of stage', () => {
-    expect(getCurrentPrice({ price: 10000, rarity: 3 }, 0)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 3 }, 5)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 3 }, 100)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 3, purchaseDay: 1 }, 0)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 3, purchaseDay: 1 }, 5)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 3, purchaseDay: 1 }, 100)).toBe(10000);
   });
 
-  it('rarity 1 — decreases by 600 per stage, min 50%', () => {
-    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 0)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 1)).toBe(9400);
-    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 5)).toBe(7000);
+  it('только что купленная машина стоит как в автосалоне', () => {
+    // Редкость 5, куплена на 150-й день (этап 15) — раньше показывала +15000
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 150 }, 15)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 4, purchaseDay: 150 }, 15)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 105 }, 10)).toBe(10000);
+  });
+
+  it('rarity 1 — −600 за каждый этап в гараже, минимум 50%', () => {
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 1 }, 0)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 1 }, 1)).toBe(9400);
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 1 }, 5)).toBe(7000);
     // At stage 10: 10000 - 6000 = 4000, but min is 5000
-    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 10)).toBe(5000);
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 1 }, 10)).toBe(5000);
     // At stage 20: 10000 - 12000 → clamped to 5000
-    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 20)).toBe(5000);
+    expect(getCurrentPrice({ price: 10000, rarity: 1, purchaseDay: 1 }, 20)).toBe(5000);
   });
 
-  it('rarity 2 — decreases by 300 per stage, min 50%', () => {
-    expect(getCurrentPrice({ price: 10000, rarity: 2 }, 0)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 2 }, 1)).toBe(9700);
-    expect(getCurrentPrice({ price: 10000, rarity: 2 }, 10)).toBe(7000);
+  it('rarity 2 — −300 за каждый этап в гараже, минимум 50%', () => {
+    expect(getCurrentPrice({ price: 10000, rarity: 2, purchaseDay: 1 }, 0)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 2, purchaseDay: 1 }, 1)).toBe(9700);
+    expect(getCurrentPrice({ price: 10000, rarity: 2, purchaseDay: 1 }, 10)).toBe(7000);
     // At stage 20: 10000 - 6000 = 4000, clamped to 5000
-    expect(getCurrentPrice({ price: 10000, rarity: 2 }, 20)).toBe(5000);
+    expect(getCurrentPrice({ price: 10000, rarity: 2, purchaseDay: 1 }, 20)).toBe(5000);
   });
 
-  it('rarity 4 — increases by 500 per stage', () => {
-    expect(getCurrentPrice({ price: 10000, rarity: 4 }, 0)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 4 }, 1)).toBe(10500);
-    expect(getCurrentPrice({ price: 10000, rarity: 4 }, 10)).toBe(15000);
+  it('rarity 4 — +500 за каждый этап в гараже', () => {
+    expect(getCurrentPrice({ price: 10000, rarity: 4, purchaseDay: 1 }, 0)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 4, purchaseDay: 1 }, 1)).toBe(10500);
+    expect(getCurrentPrice({ price: 10000, rarity: 4, purchaseDay: 1 }, 10)).toBe(15000);
   });
 
-  it('rarity 5 — increases by 1000 per stage', () => {
-    expect(getCurrentPrice({ price: 10000, rarity: 5 }, 0)).toBe(10000);
-    expect(getCurrentPrice({ price: 10000, rarity: 5 }, 1)).toBe(11000);
-    expect(getCurrentPrice({ price: 10000, rarity: 5 }, 10)).toBe(20000);
+  it('rarity 5 — +1000 за каждый этап в гараже', () => {
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 1 }, 0)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 1 }, 1)).toBe(11000);
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 1 }, 10)).toBe(20000);
+  });
+
+  it('цена меняется только после смены игрового года (граница этапа)', () => {
+    // Куплена в день 12 (этап 1), сейчас день 19 (этап 1) — лет в гараже ноль
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 12 }, 1)).toBe(10000);
+    // Наступил день 20+ (этап 2) — один год в гараже
+    expect(getCurrentPrice({ price: 10000, rarity: 5, purchaseDay: 12 }, 2)).toBe(11000);
+  });
+
+  it('без purchaseDay (старые сейвы) цена не меняется', () => {
+    expect(getCurrentPrice({ price: 10000, rarity: 5 }, 15)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, rarity: 1 }, 20)).toBe(10000);
   });
 
   it('defaults to rarity 3 when undefined', () => {
-    expect(getCurrentPrice({ price: 10000 }, 5)).toBe(10000);
+    expect(getCurrentPrice({ price: 10000, purchaseDay: 1 }, 5)).toBe(10000);
   });
 
   it('rounds to integer', () => {
-    const price = getCurrentPrice({ price: 9999, rarity: 1 }, 1);
+    const price = getCurrentPrice({ price: 9999, rarity: 1, purchaseDay: 1 }, 1);
     expect(Number.isInteger(price)).toBe(true);
   });
 });

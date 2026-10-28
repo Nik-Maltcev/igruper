@@ -22,7 +22,7 @@ export function getStarterCars(): Car[] {
   for (const car of pool) {
     if (picked.length >= 3) break;
     if (!usedDealers.has(car.dealer || '')) {
-      picked.push({ ...car, id: `starter-${Date.now()}-${picked.length}`, originalId: car.id, installedParts: [] });
+      picked.push({ ...car, id: `starter-${Date.now()}-${picked.length}`, originalId: car.id, installedParts: [], purchaseDay: 1 });
       usedDealers.add(car.dealer || '');
     }
   }
@@ -30,7 +30,7 @@ export function getStarterCars(): Car[] {
   for (const car of pool) {
     if (picked.length >= 3) break;
     if (!picked.find(p => p.originalId === car.id)) {
-      picked.push({ ...car, id: `starter-${Date.now()}-${picked.length}`, originalId: car.id, installedParts: [] });
+      picked.push({ ...car, id: `starter-${Date.now()}-${picked.length}`, originalId: car.id, installedParts: [], purchaseDay: 1 });
     }
   }
   return picked;
