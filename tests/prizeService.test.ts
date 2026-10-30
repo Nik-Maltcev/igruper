@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateSinglePrize, generatePrizesForPlayer, generatePrizesForRace } from '../services/prizeService';
+import { generateSinglePrize, generatePrizesForPlayer, generatePrizesForRace, getPrizeKind } from '../services/prizeService';
 import { Part, PrizeDiscount, MoneyPrize, Prize } from '../types';
 
 function isPart(item: Prize): item is Part {
@@ -110,10 +110,10 @@ describe('generateSinglePrize', () => {
     expect(prize.id).toBeDefined();
   });
 
-  it('can return a money prize instead of a part', () => {
+  it('can return a money prize', () => {
+    // Свежий бросок без alreadyGiven: деталь < 0.525, деньги [0.525, 0.7), скидка >= 0.7
     vi.spyOn(Math, 'random')
-      .mockReturnValueOnce(0.3)   // roll < 0.7 → «детальная» ветка
-      .mockReturnValueOnce(0.1)   // 0.1 < 0.25 → денежный приз вместо детали
+      .mockReturnValueOnce(0.6)   // → денежный приз
       .mockReturnValueOnce(0.4);  // выбор суммы: < 0.5 → 12000
     const prize = generateSinglePrize(1960);
     expect(isMoneyPrize(prize)).toBe(true);
@@ -126,8 +126,7 @@ describe('generateSinglePrize', () => {
 
   it('money prize can be 17000', () => {
     vi.spyOn(Math, 'random')
-      .mockReturnValueOnce(0.3)
-      .mockReturnValueOnce(0.1)
+      .mockReturnValueOnce(0.6)
       .mockReturnValueOnce(0.9);  // >= 0.5 → 17000
     const prize = generateSinglePrize(1960);
     expect(isMoneyPrize(prize)).toBe(true);
@@ -136,14 +135,47 @@ describe('generateSinglePrize', () => {
     }
   });
 
-  it('money prize is NOT returned when replacement roll >= 0.25', () => {
+  it('roll below the money range gives a part', () => {
     vi.spyOn(Math, 'random')
-      .mockReturnValueOnce(0.3)   // «детальная» ветка
-      .mockReturnValueOnce(0.9)   // >= 0.25 → обычная деталь
+      .mockReturnValueOnce(0.3)   // < 0.525 → деталь
       .mockReturnValue(0.5);
     const prize = generateSinglePrize(1960);
     expect(isMoneyPrize(prize)).toBe(false);
     expect(isPart(prize)).toBe(true);
+  });
+
+  // ─── Антиповтор редких типов в наборе одного игрока ───
+
+  it('после скидки тот же бросок даёт уже деньги, а не вторую скидку', () => {
+    // alreadyGiven=['discount']: вес скидки 0.3→0.06, деталь < 0.6908, деньги < 0.9211
+    vi.spyOn(Math, 'random').mockReturnValue(0.8);
+    const first = generateSinglePrize(1960);
+    expect(isDiscount(first)).toBe(true);
+    const second = generateSinglePrize(1960, [getPrizeKind(first)]);
+    expect(isMoneyPrize(second)).toBe(true);
+  });
+
+  it('скидка после скидки всё же возможна — просто редко', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.95); // >= 0.9211 → скидка
+    const prize = generateSinglePrize(1960, ['discount']);
+    expect(isDiscount(prize)).toBe(true);
+  });
+
+  it('после денежного приза вероятнее всего деталь', () => {
+    // alreadyGiven=['money']: вес денег 0.175→0.035, сумма весов 0.86, деталь < 0.6105
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    expect(isPart(generateSinglePrize(1960, ['money']))).toBe(true);
+  });
+
+  it('после денежного приза возможна и скидка', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.8); // >= 0.6512 → скидка
+    expect(isDiscount(generateSinglePrize(1960, ['money']))).toBe(true);
+  });
+
+  it('повтор детали не штрафуется — alreadyGiven с деталью не меняет веса', () => {
+    // 0.8 без alreadyGiven — скидка; с ['part'] пороги те же — снова скидка
+    vi.spyOn(Math, 'random').mockReturnValue(0.75);
+    expect(isDiscount(generateSinglePrize(1960, ['part']))).toBe(true);
   });
 
   it('distribution is roughly 70/30 over many calls', () => {
@@ -191,6 +223,39 @@ describe('generatePrizesForPlayer', () => {
     const prizes = generatePrizesForPlayer(1, 4, 1960);
     for (const prize of prizes) {
       expect(prize.id).toBeDefined();
+    }
+  });
+
+  it('антиповтор: две скидки в паре призов выпадают редко (было ~9%)', () => {
+    let both = 0;
+    let pairs = 0;
+    const N = 1000;
+    for (let i = 0; i < N; i++) {
+      const prizes = generatePrizesForPlayer(1, 8, 1980); // 1 место — 2 приза
+      if (prizes.length === 2) {
+        pairs++;
+        if (isDiscount(prizes[0]) && isDiscount(prizes[1])) both++;
+      }
+    }
+    expect(pairs).toBeGreaterThan(900);
+    // Вес повтора снижен в 5 раз: P(обе скидки) ≈ 2.4% против 9% при независимых бросках
+    expect(both / pairs).toBeLessThan(0.06);
+  });
+
+  it('антиповтор: после денежного приза вторым чаще деталь или скидка', () => {
+    let moneyThenMoney = 0;
+    let moneyPairs = 0;
+    const N = 1000;
+    for (let i = 0; i < N; i++) {
+      const prizes = generatePrizesForPlayer(1, 8, 1980);
+      if (prizes.length === 2 && isMoneyPrize(prizes[0])) {
+        moneyPairs++;
+        if (isMoneyPrize(prizes[1])) moneyThenMoney++;
+      }
+    }
+    if (moneyPairs > 50) {
+      // P(деньги|деньги) ≈ 0.035/0.86 ≈ 4.1% против 17.5% при независимых бросках
+      expect(moneyThenMoney / moneyPairs).toBeLessThan(0.15);
     }
   });
 });
