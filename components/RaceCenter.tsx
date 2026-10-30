@@ -201,8 +201,6 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [allPlayers, setAllPlayers] = useState<any[]>([]);
 
-  const [showPaidConfirm, setShowPaidConfirm] = useState(false);
-  const [paidRaceId, setPaidRaceId] = useState(null);
   const [mainRaceCategory, setMainRaceCategory] = useState(null);
   const availableEpochs = useMemo(() => {
     return (RACES_DATA.epochs || []).filter((e: any) => e.year <= gameYear);
@@ -272,7 +270,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   const myEntryForRace = (raceId: string) =>
     entries.find(e => e.player_id === playerId && e.race_id === raceId);
 
-  const handleEnterCar = async (raceId: string, carId: string) => {
+  const handleEnterCar = async (raceId: string, carId: string, isPaidRace = false) => {
     if (!roomId || !playerId) return;
 
     // Проверка: участвует ли эта машина уже в другой гонке сегодня?
@@ -286,11 +284,19 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
       }
     }
 
+    // Платная гонка: взнос списывается только при фактической записи машины.
+    // Если игрок вышел из выбора без записи — деньги не трогаем.
+    if (carId && isPaidRace && playerMoney < 1000) {
+      alert('Недостаточно средств (нужно 1000)');
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (carId) {
         await submitRaceEntry(roomId, playerId, raceId, carId, currentDay);
         playEffect('race-entry');
+        if (isPaidRace && onMoneyChange) await onMoneyChange(-1000);
       } else {
         // Отмена заявки
         await supabase.from('race_entries').delete()
@@ -325,6 +331,9 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
     const myEntry = myEntryForRace(raceId);
     const myCar = myEntry ? cars.find(c => c.id === myEntry.car_id) : null;
     const otherEntries = entries.filter(e => e.race_id === raceId && e.player_id !== playerId);
+    // Платная гонка — первый заезд Мировой Серии: взнос $1000 списывается
+    // при записи машинки (см. handleEnterCar), а не при открытии выбора
+    const isPaidRace = isWorldSeries && raceIndex === 0;
 
     if (!roomId || !playerId || phase !== 'RACE_DAY') return null;
 
@@ -411,6 +420,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
           <div className="flex flex-col gap-1">
             <div className="text-[7px] text-[#888] mb-1">
               Выберите машину <span className="text-[#ffaa00]">{race.requirement ? `(Метка: ${race.requirement})` : ''}</span>
+              {isPaidRace && <span className="text-[#ffaa00]"> — взнос $1000 спишется при записи</span>}
               {isWorldSeries && <span className="text-[#00ff88]"> — одну машину можно заявить на все три заезда серии</span>}:
             </div>
             {cars.filter(c => checkRequirement(c, race.requirement) && !(isCityRace && c.tags?.some(t => t.toLowerCase() === 'автоспорт')) && !c.lockedForTournament).length === 0 ? (
@@ -438,7 +448,7 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
                     <button
                       key={car.id}
                       disabled={submitting || isAssignedElsewhere}
-                      onClick={() => handleEnterCar(raceId, car.id)}
+                      onClick={() => handleEnterCar(raceId, car.id, isPaidRace)}
                       className="text-[7px] px-2 py-1 border hover:border-[#00ff00] transition-colors"
                       style={{
                         backgroundColor: isAssignedElsewhere ? '#330000' : '#001a00',
@@ -484,14 +494,14 @@ const RaceCenter: React.FC<RaceCenterProps> = ({
   };
 
   
-  // Paid Race: confirm entry fee before car selection
-  const handlePaidRaceRegister = async (raceId) => {
+  // Платная гонка: подтверждение открывает выбор машины. Сам взнос $1000
+  // списывается только при фактической записи машинки (в handleEnterCar).
+  const handlePaidRaceRegister = (raceId) => {
     if (playerMoney < 1000) {
       alert('Недостаточно средств (нужно 1000)');
       return;
     }
-    if (window.confirm('Готовы заплатить 1000 за участие в Платной гонке?')) {
-      if (onMoneyChange) await onMoneyChange(-1000);
+    if (window.confirm('Записаться на Платную гонку? Взнос $1000 спишется при записи машинки.')) {
       setPickingRaceId(raceId);
     }
   };
