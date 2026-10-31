@@ -168,6 +168,15 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
           const co = car.coefficients || {};
           const remaining = (car.quantity || 1) - (purchaseCounts[car.id] || 0);
           const soldOut = remaining <= 0;
+          // Скидки именно этого салона: каждая даёт −15%, суммируются (максимум 100%).
+          // По расчётной цене проверяется и доступность покупки, и вид кнопки,
+          // и фактическая цена при покупке — иначе машина «не по карману» в салоне,
+          // хотя по скидке денег хватает
+          const discountCount = playerStorage.filter((item: any) => item?.type === 'discount' && item.dealer === selectedDealer).length;
+          const totalDiscountPct = Math.min(discountCount * 15, 100);
+          const discountedPrice = Math.round(car.price * (1 - totalDiscountPct / 100));
+          const effectivePrice = discountCount > 0 ? discountedPrice : car.price;
+          const canAfford = money >= effectivePrice;
           return (
             <div key={`${car.id}-${idx}`}
               className={`pixel-card p-0 flex flex-col overflow-hidden ${soldOut ? 'opacity-40' : ''}`}
@@ -227,34 +236,43 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
 
               {/* Нижняя часть: цена + кнопка */}
               <div className="border-t border-[#333] px-4 py-1.5 flex items-center justify-between">
-                <div className="text-[11px] text-[#00ff00]">${car.price.toLocaleString()}</div>
+                <div>
+                  {discountCount > 0 ? (
+                    <>
+                      <span className="text-[8px] text-[#888] line-through mr-1">${car.price.toLocaleString()}</span>
+                      <span className="text-[11px] text-[#00ff00]">${discountedPrice.toLocaleString()}</span>
+                      <span className="text-[7px] text-[#ffaa00] ml-1">−{totalDiscountPct}% ({discountCount} шт)</span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-[#00ff00]">${car.price.toLocaleString()}</span>
+                  )}
+                </div>
                 <button onClick={() => {
-                  const discounts = playerStorage.filter((item: any) => item.type === 'discount' && item.dealer === selectedDealer);
-                  if (discounts.length > 0) {
-                    const totalDiscount = discounts.length * 15;
-                    const discountedPrice = Math.round(car.price * (1 - Math.min(totalDiscount, 100) / 100));
-                    if (window.confirm(`У вас есть скидка -15% на ${selectedDealer} (${discounts.length} шт). Использовать? Цена: ${discountedPrice.toLocaleString()} вместо ${car.price.toLocaleString()}`)) {
+                  if (discountCount > 0 && money >= car.price) {
+                    // Полную цену игрок потянет — предложим использовать скидку или сохранить её
+                    const useDiscount = window.confirm(`У вас скидка −${totalDiscountPct}% на ${selectedDealer} (${discountCount} шт). Использовать? Цена: ${discountedPrice.toLocaleString()} вместо ${car.price.toLocaleString()}`);
+                    if (useDiscount) {
                       onUseDiscount(selectedDealer);
                       onBuyCar({ ...car, price: discountedPrice });
                     } else {
                       onBuyCar(car);
                     }
+                  } else if (discountCount > 0) {
+                    // Полную цену не потянуть, а по скидке хватает — применяем автоматически
+                    onUseDiscount(selectedDealer);
+                    onBuyCar({ ...car, price: discountedPrice });
                   } else {
                     onBuyCar(car);
                   }
                 }}
-                  disabled={(() => {
-                    const disc = playerStorage?.filter((item) => item.type === 'discount' && item.dealer === selectedDealer) || [];
-                    const effectivePrice = disc.length > 0 ? Math.round(car.price * 0.85) : car.price;
-                    return money < effectivePrice || soldOut;
-                  })()}
+                  disabled={!canAfford || soldOut}
                   className="retro-btn text-[8px] py-1 px-3"
                   style={{
-                    backgroundColor: soldOut ? '#1a1a1a' : money >= car.price ? '#003300' : '#1a1a1a',
-                    border: `2px solid ${soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#333'}`,
-                    color: soldOut ? '#ff4444' : money >= car.price ? '#00ff00' : '#555',
+                    backgroundColor: soldOut ? '#1a1a1a' : canAfford ? '#003300' : '#1a1a1a',
+                    border: `2px solid ${soldOut ? '#ff4444' : canAfford ? '#00ff00' : '#333'}`,
+                    color: soldOut ? '#ff4444' : canAfford ? '#00ff00' : '#555',
                   }}>
-                  {soldOut ? 'НЕТ' : money >= car.price ? 'КУПИТЬ' : '—'}
+                  {soldOut ? 'НЕТ' : canAfford ? 'КУПИТЬ' : '—'}
                 </button>
               </div>
             </div>

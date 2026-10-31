@@ -203,6 +203,16 @@ function checkSingleRequirement(car: any, r0: string): boolean {
   return ok;
 }
 
+// From Dealer.tsx — расчёт цены машины со скидками салона
+// (каждая скидка −15%, суммируются до 100%)
+function dealerDiscountPct(discountCount: number): number {
+  return Math.min(discountCount * 15, 100);
+}
+
+function dealerEffectivePrice(carPrice: number, discountCount: number): number {
+  return Math.round(carPrice * (1 - dealerDiscountPct(discountCount) / 100));
+}
+
 // Dealer access control logic
 function getAllowedDealersCount(playerCount: number, myRank: number): number {
   if (playerCount < 3) return 4;
@@ -712,6 +722,40 @@ describe('checkRequirement', () => {
   // Unknown requirement defaults to true
   it('unknown requirement returns true', () => {
     expect(checkRequirement(makeCar(), 'какое-то неизвестное требование')).toBe(true);
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// Скидки автосалона (Dealer)
+// ═══════════════════════════════════════════════════════
+
+describe('dealerEffectivePrice', () => {
+  it('без скидок цена салонная', () => {
+    expect(dealerEffectivePrice(21000, 0)).toBe(21000);
+    expect(dealerDiscountPct(0)).toBe(0);
+  });
+
+  it('одна скидка −15%', () => {
+    expect(dealerDiscountPct(1)).toBe(15);
+    expect(dealerEffectivePrice(21000, 1)).toBe(17850);
+    expect(dealerEffectivePrice(10000, 1)).toBe(8500);
+  });
+
+  it('скидки суммируются, максимум 100%', () => {
+    expect(dealerDiscountPct(2)).toBe(30);
+    expect(dealerEffectivePrice(21000, 2)).toBe(14700);
+    expect(dealerDiscountPct(7)).toBe(100);
+    expect(dealerEffectivePrice(21000, 7)).toBe(0);
+  });
+
+  it('сценарий из бага: 20 000 хватает на машину за 21 000 со скидкой', () => {
+    const price = dealerEffectivePrice(21000, 1);
+    expect(price).toBeLessThanOrEqual(20000);
+  });
+
+  it('цена всегда целая', () => {
+    expect(Number.isInteger(dealerEffectivePrice(9999, 1))).toBe(true);
+    expect(Number.isInteger(dealerEffectivePrice(5555, 3))).toBe(true);
   });
 });
 
