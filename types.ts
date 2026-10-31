@@ -87,6 +87,7 @@ export interface RaceResult {
   tireType?: string;        // эффективный тип шин в заезде (У/Г/В/С)
   rainAffected?: boolean;   // дождь влияет из-за шин — тучка над машинкой
   didNotStart?: boolean;    // слики + дождь + тяжёлое покрытие: не едет, без наград
+  pointsBased?: boolean;    // слалом/дрифт: в time лежат баллы (больше = лучше), а не секунды
 }
 
 export interface PlayerState {

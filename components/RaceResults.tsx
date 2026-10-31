@@ -28,6 +28,17 @@ function formatTime(seconds: number, raceName: string): string {
     return `${secs}.${ms.toString().padStart(2, '0')} сек`;
 }
 
+// Баллы слалома/дрифта: «1 234 балла» с правильным окончанием
+function formatScore(points: number): string {
+    const n = Math.round(points);
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    const word = (mod10 === 1 && mod100 !== 11) ? 'балл'
+        : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) ? 'балла'
+        : 'баллов';
+    return `${n.toLocaleString('ru-RU')} ${word}`;
+}
+
 // Цвета машинок по позициям
 const CAR_COLORS = ['#ffdd00', '#aaaaaa', '#cd7f32', '#4488ff', '#44ff44', '#ff8800', '#aa44ff', '#ff4444'];
 
@@ -417,8 +428,13 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, playe
 
                             <div className="flex flex-col gap-1">
                                 {gridOrder.map((r, i) => {
-                                    const minTime = Math.min(...currentRace.results.map(res => res.time));
-                                    const progressModifier = minTime / r.time;
+                                    // Балльные гонки (слалом/дрифт): лучший результат — максимум,
+                                    // секундные — минимум. Модификатор = доля от лучшего результата
+                                    const ptsRace = currentRace.results.some((res: any) => res.pointsBased);
+                                    const bestVal = ptsRace
+                                        ? Math.max(...currentRace.results.map(res => res.time))
+                                        : Math.min(...currentRace.results.map(res => res.time));
+                                    const progressModifier = bestVal > 0 ? (ptsRace ? r.time / bestVal : bestVal / r.time) : 0;
                                     const currentProgress = Math.min(95, animationProgress * progressModifier * 0.95);
                                     const color = CAR_COLORS[i % CAR_COLORS.length];
                                     // «Не едет»: слики + дождь + тяжёлое покрытие — отъезжает и остаётся на месте
@@ -503,6 +519,8 @@ export default function RaceResults({ roomId, currentDay, gameYear = 1960, playe
                                         )}
                                         {(r as any).didNotStart ? (
                                             <div className="text-[8px] text-[#ff6666]">🚫 не едет: слики + дождь</div>
+                                        ) : (r as any).pointsBased ? (
+                                            <div className="text-[8px] text-[#aaa]">🎯 {formatScore(r.time)}</div>
                                         ) : (
                                             <div className="text-[8px] text-[#aaa]">⏱ {formatTime(r.time, currentRace.race_name)}</div>
                                         )}

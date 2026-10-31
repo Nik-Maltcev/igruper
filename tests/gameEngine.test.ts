@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getEffectiveStats, simulateRace, getRoadCategory, normalizeStat } from '../services/gameEngine';
+import { getEffectiveStats, simulateRace, getRoadCategory, normalizeStat, isPointsRace } from '../services/gameEngine';
 import { Car, Track, Part } from '../types';
 
 // ─── Helpers ───
@@ -710,5 +710,86 @@ describe('simulateRace', () => {
     const sunny = simulateRace([sunnyCar], RALLY_TRACK, 'SUNNY', false);
     const rain = simulateRace([rainyCar], RALLY_TRACK, 'RAIN', false);
     expect(rain[0].time).toBe(sunny[0].time);
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// Балльные гонки (слалом/дрифт)
+// ═══════════════════════════════════════════════════════
+
+describe('isPointsRace', () => {
+  it('распознаёт слалом и дрифт в любом регистре и раскладке', () => {
+    expect(isPointsRace('Слалом')).toBe(true);
+    expect(isPointsRace('Дрифт 1')).toBe(true);
+    expect(isPointsRace('слалом-спринт')).toBe(true);
+    expect(isPointsRace('Slalom')).toBe(true);
+    expect(isPointsRace('Drift')).toBe(true);
+  });
+
+  it('остальные трассы — секундные', () => {
+    expect(isPointsRace('Дрэг 400 м')).toBe(false);
+    expect(isPointsRace('Сельская дорога 1')).toBe(false);
+    expect(isPointsRace('')).toBe(false);
+  });
+});
+
+describe('simulateRace — балльные гонки (слалом/дрифт)', () => {
+  beforeEach(() => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('результат — баллы формулы, а не секунды', () => {
+    const car = makeCar({ stats: { power: 300, torque: 400, topSpeed: 250, acceleration: 5, handling: 120, offroad: 40 } });
+    const results = simulateRace([car], DRIFT_TRACK, 'SUNNY', false);
+    expect(results[0].pointsBased).toBe(true);
+    // Старая формула (4 км / скорость) давала бы доли секунды; баллы — сотни
+    expect(results[0].time).toBeGreaterThan(100);
+  });
+
+  it('более цепкая машина набирает больше баллов и занимает место выше', () => {
+    const fast = makeCar({ id: 'fast', stats: { power: 800, torque: 900, topSpeed: 350, acceleration: 2.5, handling: 200, offroad: 80 } });
+    const slow = makeCar({ id: 'slow', stats: { power: 60, torque: 80, topSpeed: 120, acceleration: 20, handling: 30, offroad: 20 } });
+    const results = simulateRace([fast, slow], DRIFT_TRACK, 'SUNNY', false);
+    expect(results[0].carId).toBe('fast');
+    // Сортировка по убыванию баллов: у победителя баллов больше
+    expect(results[0].time).toBeGreaterThan(results[1].time);
+    expect(results[0].position).toBe(1);
+  });
+
+  it('flag pointsBased проставлен у всех результатов заезда', () => {
+    const results = simulateRace([makeCar({ id: 'a' }), makeCar({ id: 'b' })], DRIFT_TRACK, 'RAIN', false);
+    for (const r of results) expect(r.pointsBased).toBe(true);
+  });
+
+  it('не едет в балльной гонке — 0 баллов и последнее место', () => {
+    // Слики + дождь + снег (категория по слову «снегу») → DNS
+    const snowSlalom: Track = { ...DRIFT_TRACK, name: 'Слалом на снегу' };
+    const slick = makeCar({ id: 'slick', roadType: 'С' });
+    const normal = makeCar({ id: 'normal', roadType: 'У' });
+    const results = simulateRace([slick, normal], snowSlalom, 'RAIN', false);
+    const slickRes = results.find(r => r.carId === 'slick')!;
+    expect(slickRes.didNotStart).toBe(true);
+    expect(slickRes.time).toBe(0);
+    expect(slickRes.position).toBe(2);
+    expect(slickRes.earnings).toBe(0);
+    expect(slickRes.points).toBe(0);
+    // Едущая машина — первая, с баллами больше нуля
+    const normalRes = results.find(r => r.carId === 'normal')!;
+    expect(normalRes.position).toBe(1);
+    expect(normalRes.time).toBeGreaterThan(0);
+  });
+
+  it('ничья по баллам делит место, как в секундных гонках', () => {
+    const car1 = makeCar({ id: 'a' });
+    const car2 = makeCar({ id: 'b' });
+    const results = simulateRace([car1, car2], DRIFT_TRACK, 'SUNNY', false);
+    // Одинаковые машины с фиксированным рандомом дают одинаковые баллы
+    expect(results[0].time).toBe(results[1].time);
+    expect(results[0].position).toBe(1);
+    expect(results[1].position).toBe(1);
   });
 });

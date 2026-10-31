@@ -144,13 +144,19 @@ export function normalizeStat(
 
 // ─── Реалистичное время прохождения ───
 // Скорость считается универсальной формулой выше и НЕ меняется — меняется только
-// перевод скорости в секунды. Диапазоны по правилам:
+// перевод скорости в результат заезда. Диапазоны по правилам:
 //   дрэг 400 м → 6..20 с, дрэг 800 м → 10..27 с, дрэг 1600 м → 18..60 с,
-//   слалом и дрифт → старая формула (4 км / скорость),
+//   слалом и дрифт → БАЛЛЫ: расчётная скорость по формуле остаётся баллами,
+//     без перевода в секунды (мощные машины давали нереальные доли секунды),
 //   остальные трассы → 3..15 минут.
 // Эталоны (ниже) через веса конкретной трассы дают скорости, соответствующие границам
 // диапазона; промежуточные скорости ложатся на плавную степенную кривую между ними,
 // поэтому порядок финиша и относительные отрывы сохраняются.
+
+// Гонки, где результат измеряется в баллах (больше = лучше), а не в секундах
+export function isPointsRace(trackName: string): boolean {
+  return /слалом|дрифт|slalom|drift/.test((trackName || '').toLowerCase());
+}
 
 // Эталон «самой медленной» машины каталога (Citroen 2CV 4x4 Sahara, сток)
 const REF_SLOW_STATS: CarStats = { power: 14, torque: 25, topSpeed: 100, acceleration: 30, handling: 20, offroad: 90 };
@@ -216,6 +222,7 @@ export const simulateRace = (
   const roadCategory = getRoadCategory(track.name);
   const isWet = weather === 'RAIN' || weather === 'STORM';
   const timeModel = getRaceTimeModel(track.name);
+  const pointsRace = isPointsRace(track.name);
 
   // Базовая скорость машины без случайной прибавки (с погодой и шинами)
   // + флажки влияния дождя для визуализации
@@ -279,10 +286,13 @@ export const simulateRace = (
       tireType: info.tireType,
       rainAffected: info.rainAffected,
       didNotStart: info.didNotStart,
+      pointsBased: pointsRace,
     };
 
+    // «Не едет»: последнее место. В балльных гонках худший результат — 0 баллов
+    // (сортировка по убыванию), в секундных — DNS_TIME (сортировка по возрастанию)
     if (info.didNotStart) {
-      return { ...base, time: DNS_TIME };
+      return { ...base, time: pointsRace ? 0 : DNS_TIME };
     }
 
     let luck = luckBySpeed.get(info.baseSpeed);
@@ -293,8 +303,12 @@ export const simulateRace = (
     }
     const finalSpeed = Math.max(10, info.baseSpeed + luck);
 
-    // Перевод скорости в секунды: дрэги/обычные трассы — по реалистичной модели,
-    // слалом и дрифт — старая формула (4 км / скорость)
+    // Слалом и дрифт: расчётная скорость формулы остаётся баллами (больше = лучше).
+    // Остальные гонки: перевод скорости в секунды по реалистичной модели
+    // (для трасс без модели — старая формула 4 км / скорость)
+    if (pointsRace) {
+      return { ...base, time: Math.max(1, Math.round(finalSpeed)) };
+    }
     const timeSeconds = timeModel
       ? mapSpeedToTime(finalSpeed, timeModel, track.weights)
       : (4.0 / finalSpeed) * 3600;
@@ -302,7 +316,8 @@ export const simulateRace = (
     return { ...base, time: parseFloat(timeSeconds.toFixed(3)) };
   });
 
-  results.sort((a, b) => a.time - b.time);
+  // Секундные гонки: меньше время = выше место. Балльные (слалом/дрифт): больше = выше
+  results.sort((a, b) => pointsRace ? b.time - a.time : a.time - b.time);
 
   // Группа машин с одинаковым временем занимает диапазон мест k..k+n-1
   // (следующая машина получает место k+n). Награды по правилам ничьих:
