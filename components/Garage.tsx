@@ -313,7 +313,10 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                   const badges = boostBadges(part);
                   const targetCar = cars.find(c => c.id === installCarId);
                   const partLimit = targetCar ? (CLASS_PART_LIMITS[targetCar.carClass || 'A'] || 16) : 0;
+                  // Турбина/компрессор требуют интеркулер (part.requires) — как в магазине
+                  const needsIntercooler = !!targetCar && !!part.requires && !targetCar.installedParts.some(p => p.slot === part.requires);
                   const canInstall = targetCar && targetCar.installedParts.length < partLimit
+                    && !needsIntercooler
                     && (!part.slot || !targetCar.installedParts.some(p => p.slot === part.slot))
                     && !targetCar.installedParts.some(p => getPartBaseName(p.name) === getPartBaseName(part.name));
 
@@ -352,7 +355,7 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                         )}
                         {installCarId && !canInstall && targetCar && (
                           <span className="text-[7px] text-[#ff4444]">
-                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : targetCar.installedParts.some(p => getPartBaseName(p.name) === getPartBaseName(part.name)) ? 'Уже есть' : 'Слот занят'}
+                            {targetCar.installedParts.length >= partLimit ? 'Лимит' : targetCar.installedParts.some(p => getPartBaseName(p.name) === getPartBaseName(part.name)) ? 'Уже есть' : needsIntercooler ? 'Нужен интеркулер' : 'Слот занят'}
                           </span>
                         )}
                         

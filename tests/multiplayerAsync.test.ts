@@ -134,6 +134,20 @@ describe('buyPart', () => {
     expect(result.error).toBeUndefined();
   });
 
+  it('rejects a part whose family is already installed (Облегченные детали = Облегченные детали кузова)', async () => {
+    const car = makeCar({ id: 'my-car', installedParts: [makePart({ id: 'p1', name: 'Облегченные детали кузова 1' })] });
+    const player = makePlayer({ money: 10000, garage: [car] });
+    const result = await buyPart(player, 'my-car', makePart({ id: 'p2', name: 'Облегченные детали 3' }));
+    expect(result.error).toBe('Такая деталь уже установлена на эту машину');
+  });
+
+  it('rejects a part whose family is already installed (Расточка = Расточка двигателя)', async () => {
+    const car = makeCar({ id: 'my-car', installedParts: [makePart({ id: 'p1', name: 'Расточка двигателя 2' })] });
+    const player = makePlayer({ money: 10000, garage: [car] });
+    const result = await buyPart(player, 'my-car', makePart({ id: 'p2', name: 'Расточка 3' }));
+    expect(result.error).toBe('Такая деталь уже установлена на эту машину');
+  });
+
   it('records shop visit when part has brand', async () => {
     const car = makeCar({ id: 'my-car' });
     const player = makePlayer({ money: 10000, garage: [car] });
@@ -309,6 +323,8 @@ describe('removePartToStorage', () => {
 
 describe('installFromStorage', () => {
   beforeEach(() => {
+    // Очищаем историю вызовов: мок общий на файл, отказы проверяем через «не вызывался»
+    vi.mocked(supabase.from).mockClear();
     vi.mocked(supabase.from).mockReturnValue(mockChain() as any);
   });
 
@@ -322,6 +338,34 @@ describe('installFromStorage', () => {
     const part = makePart();
     const player = makePlayer({ storage: [part], garage: [] });
     await installFromStorage(player, 'nonexistent', 0);
+  });
+
+  it('refuses to install turbo without intercooler — prize part stays in storage', async () => {
+    const turbo = makePart({ id: 'turbo-3', name: 'Турбина 3', slot: 'turbo', requires: 'intercooler' });
+    const car = makeCar({ id: 'my-car' });
+    const player = makePlayer({ garage: [car], storage: [turbo] });
+    await installFromStorage(player, 'my-car', 0);
+    // Ничего не сохранилось: деталь не переехала со склада на машину
+    expect(supabase.from).not.toHaveBeenCalled();
+  });
+
+  it('installs turbo when intercooler is present', async () => {
+    const intercooler = makePart({ id: 'ic-1', name: 'Интеркулер 1', slot: 'intercooler' });
+    const turbo = makePart({ id: 'turbo-3', name: 'Турбина 3', slot: 'turbo', requires: 'intercooler' });
+    const car = makeCar({ id: 'my-car', installedParts: [intercooler] });
+    const player = makePlayer({ garage: [car], storage: [turbo] });
+    await installFromStorage(player, 'my-car', 0);
+    expect(supabase.from).toHaveBeenCalled();
+  });
+
+  it('refuses a second part in the same slot (turbo over turbo)', async () => {
+    const oldTurbo = makePart({ id: 'turbo-1', name: 'Турбина 1', slot: 'turbo' });
+    const newTurbo = makePart({ id: 'turbo-2', name: 'Турбина 2', slot: 'turbo', requires: 'intercooler' });
+    const intercooler = makePart({ id: 'ic-1', name: 'Интеркулер 1', slot: 'intercooler' });
+    const car = makeCar({ id: 'my-car', installedParts: [intercooler, oldTurbo] });
+    const player = makePlayer({ garage: [car], storage: [newTurbo] });
+    await installFromStorage(player, 'my-car', 0);
+    expect(supabase.from).not.toHaveBeenCalled();
   });
 
   it('moves part from storage to car', async () => {

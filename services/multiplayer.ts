@@ -347,6 +347,12 @@ export async function installFromStorage(player: RoomPlayer, carId: string, stor
 
   const partBase = getPartBaseName(part.name);
   if (garage[carIdx].installedParts.some(p => getPartBaseName(p.name) === partBase)) return;
+  // Пререквизит и занятость слота — те же правила, что в магазине:
+  // турбина/компрессор ставятся только при наличии интеркулера.
+  // Призовые детали попадают на склад в обход магазинной проверки,
+  // поэтому ограничение дублируется здесь
+  if (part.slot && garage[carIdx].installedParts.some(p => p.slot === part.slot)) return;
+  if (part.requires && !garage[carIdx].installedParts.some(p => p.slot === part.requires)) return;
 
   storage.splice(storageIndex, 1);
 
