@@ -44,9 +44,19 @@ function getUnlockedParts(currentYear: number): Part[] {
   return parts;
 }
 
-// Get the base name of a part (strip tier number suffix)
+// Get the base name of a part (strip tier number suffix).
+// Разные тиры одного семейства в данных названы по-разному:
+// «Облегченные детали кузова 1» (Таврия) против «Облегченные детали 3» (Ralliart),
+// «Расточка двигателя 1» против «Расточка 3». Сводим их к одному базовому имени —
+// иначе игра считает их разными деталями и позволяет поставить обе на одну машину
+const PART_BASE_ALIASES: Record<string, string> = {
+  'облегченные детали кузова': 'облегченные детали',
+  'расточка двигателя': 'расточка',
+};
+
 export function getPartBaseName(name: string): string {
-  return name.replace(/\s*\d+\s*$/, '').trim().toLowerCase();
+  const base = name.replace(/\s*\d+\s*$/, '').trim().toLowerCase();
+  return PART_BASE_ALIASES[base] || base;
 }
 
 // Find a part with the same base name but one tier higher

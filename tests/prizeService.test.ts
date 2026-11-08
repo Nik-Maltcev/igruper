@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateSinglePrize, generatePrizesForPlayer, generatePrizesForRace, getPrizeKind } from '../services/prizeService';
+import { generateSinglePrize, generatePrizesForPlayer, generatePrizesForRace, getPrizeKind, getPartBaseName } from '../services/prizeService';
 import { Part, PrizeDiscount, MoneyPrize, Prize } from '../types';
 
 function isPart(item: Prize): item is Part {
@@ -13,6 +13,31 @@ function isDiscount(item: Prize): item is PrizeDiscount {
 function isMoneyPrize(item: Prize): item is MoneyPrize {
   return 'type' in item && (item as any).type === 'money';
 }
+
+// ═══════════════════════════════════════════════════════
+// getPartBaseName
+// ═══════════════════════════════════════════════════════
+
+describe('getPartBaseName', () => {
+  it('отрезает номер тира и приводит к нижнему регистру', () => {
+    expect(getPartBaseName('Турбина 2')).toBe('турбина');
+    expect(getPartBaseName('Облегченные детали  4')).toBe('облегченные детали');
+  });
+
+  it('«Облегченные детали кузова» и «Облегченные детали» — одно семейство', () => {
+    expect(getPartBaseName('Облегченные детали кузова 1')).toBe(getPartBaseName('Облегченные детали 3'));
+    expect(getPartBaseName('Облегченные детали кузова 2')).toBe('облегченные детали');
+  });
+
+  it('«Расточка двигателя» и «Расточка» — одно семейство', () => {
+    expect(getPartBaseName('Расточка двигателя 1')).toBe(getPartBaseName('Расточка 3'));
+  });
+
+  it('обычные детали не задеты алиасами', () => {
+    expect(getPartBaseName('Интеркулер 1')).toBe('интеркулер');
+    expect(getPartBaseName('Тормозные диски 3')).toBe('тормозные диски');
+  });
+});
 
 // ═══════════════════════════════════════════════════════
 // generateSinglePrize
