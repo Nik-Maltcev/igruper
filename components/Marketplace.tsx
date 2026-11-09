@@ -3,6 +3,7 @@ import { SHOPS, AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, Part } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 import { getPartBaseName } from '../services/prizeService';
+import { getPowerCategoryIndex, POWER_CATEGORY_ROMAN } from '../services/multiplayer';
 
 
 function getCarClass(car) {
@@ -80,6 +81,18 @@ const CarStatsPanel: React.FC<{ car: Car | null; previewStats: CarStats | null; 
             </div>
           );
         })}
+        {/* Категория мощности главной гонки: деталь может перевести машину в другую категорию */}
+        {(() => {
+          const curCat = getPowerCategoryIndex(cur.power);
+          const newCat = previewStats ? getPowerCategoryIndex(previewStats.power) : null;
+          if (newCat === null || newCat === curCat) return null;
+          const up = newCat > curCat;
+          return (
+            <div className="text-[8px] mt-2 pt-1 border-t border-[#222] font-bold" style={{ color: up ? '#00ff00' : '#ff4444' }}>
+              КАТЕГОРИЯ: {POWER_CATEGORY_ROMAN[curCat]} → {POWER_CATEGORY_ROMAN[newCat]}
+            </div>
+          );
+        })()}
         {previewLabel && (
           <div className="text-[6px] text-[#ffaa00] mt-2 border-t border-[#222] pt-1 leading-tight">
             ПРЕДПРОСМОТР:<br />{previewLabel}

@@ -3,6 +3,7 @@ import { AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, Part, PrizeDiscount } from '../types';
 import { getEffectiveStats } from '../services/gameEngine';
 import { getPartBaseName } from '../services/prizeService';
+import PowerBadge from './PowerBadge';
 import CarTags from './CarTags';
 
 
@@ -143,9 +144,9 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                 const co = car.coefficients || {} as Partial<CarStats>;
                 const partLimit = CLASS_PART_LIMITS[getCarClass(car)] || 16;
                 return (
-                  <div key={`${car.id}-${idx}`}
-                    className="pixel-card p-0 flex flex-col overflow-hidden"
-                    style={{ borderColor: CLASS_COLORS[getCarClass(car) || ''] || '#333', borderWidth: '4px' }}>
+                  <div key={`${car.id}-${idx}`} style={{ position: 'relative' }}>
+                    <div className="pixel-card p-0 flex flex-col overflow-hidden"
+                      style={{ borderColor: CLASS_COLORS[getCarClass(car) || ''] || '#333', borderWidth: '4px' }}>
 
                     {/* Верхняя часть: имя+теги | картинка | статы */}
                     <div className="flex items-stretch" style={{ minHeight: '168px' }}>
@@ -246,6 +247,8 @@ const Garage: React.FC<GarageProps> = ({ cars, storage, gameStage = 0, onBack, o
                         )}
                       </div>
                     </div>
+                    </div>
+                    <PowerBadge power={effective.power} />
                   </div>
                 );
               })}

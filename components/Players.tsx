@@ -3,6 +3,7 @@ import { AVAILABLE_CARS } from '../constants';
 import { Car, CarStats, RoomPlayer } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 import { getEffectiveStats } from '../services/gameEngine';
+import PowerBadge from './PowerBadge';
 import CarTags from './CarTags';
 
 
@@ -89,8 +90,8 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                     const partLimit = CLASS_PART_LIMITS[getCarClass(car)] || 16;
 
                     return (
-                      <div key={`${car.id}-${idx}`}
-                        className="pixel-card p-0 flex flex-col overflow-hidden"
+                      <div key={`${car.id}-${idx}`} style={{ position: 'relative' }}>
+                      <div className="pixel-card p-0 flex flex-col overflow-hidden"
                         style={{ borderColor: CLASS_COLORS[getCarClass(car) || ''] || '#333', borderWidth: '4px' }}>
 
                         {/* Верхняя часть: имя+теги | картинка | статы */}
@@ -169,6 +170,8 @@ const Players: React.FC<PlayersProps> = ({ roomId, onBack }) => {
                             )}
                           </div>
                         </div>
+                      </div>
+                      <PowerBadge power={effective.power} />
                       </div>
                     );
                   })

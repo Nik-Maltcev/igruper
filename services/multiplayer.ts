@@ -543,6 +543,19 @@ export const POWER_CATEGORIES = [
   { label: '900+ лс', min: 901, max: Infinity },
 ];
 
+// Римские номера категорий мощности (I..VII) — для монетки на карточке машины
+export const POWER_CATEGORY_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'] as const;
+
+// Индекс категории мощности по ЭФФЕКТИВНОЙ мощности (с установленными деталями):
+// при смене деталей машина может переходить между категориями главной гонки
+export function getPowerCategoryIndex(power: number): number {
+  for (let i = 0; i < POWER_CATEGORIES.length; i++) {
+    const c = POWER_CATEGORIES[i];
+    if (power >= c.min && power <= c.max) return i;
+  }
+  return POWER_CATEGORIES.length - 1;
+}
+
 // Получить текущий день расписания по номеру дня
 export function getScheduleDay(dayNum: number) {
   // Первая неделя: дни 1-3 (пт-вс, квалификация)

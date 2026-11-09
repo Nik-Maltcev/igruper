@@ -5,6 +5,8 @@ import {
   getScheduleDay,
   WEEK_SCHEDULE,
   POWER_CATEGORIES,
+  POWER_CATEGORY_ROMAN,
+  getPowerCategoryIndex,
   shouldAutoAdvanceDay,
 } from '../services/multiplayer';
 
@@ -248,6 +250,35 @@ describe('POWER_CATEGORIES', () => {
       const matches = POWER_CATEGORIES.filter(c => val >= c.min && val <= c.max);
       expect(matches).toHaveLength(1);
     }
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// getPowerCategoryIndex (категория на монетке карточки)
+// ═══════════════════════════════════════════════════════
+
+describe('getPowerCategoryIndex', () => {
+  it('границы категорий дают римские I..VII', () => {
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(0)]).toBe('I');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(120)]).toBe('I');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(121)]).toBe('II');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(200)]).toBe('II');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(201)]).toBe('III');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(300)]).toBe('III');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(301)]).toBe('IV');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(450)]).toBe('IV');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(451)]).toBe('V');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(650)]).toBe('V');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(651)]).toBe('VI');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(900)]).toBe('VI');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(901)]).toBe('VII');
+    expect(POWER_CATEGORY_ROMAN[getPowerCategoryIndex(1500)]).toBe('VII');
+  });
+
+  it('переход при смене деталей: 120 → 121 лс меняет категорию, 120 → 120 — нет', () => {
+    // Сценарий «монетка следует за мощностью»: интеркулер +1 лс на границе
+    expect(getPowerCategoryIndex(121) - getPowerCategoryIndex(120)).toBe(1);
+    expect(getPowerCategoryIndex(120 + 0) - getPowerCategoryIndex(120)).toBe(0);
   });
 });
 

@@ -4,6 +4,7 @@ import { Car, RoomPlayer, PrizeDiscount } from '../types';
 import { fetchPlayers } from '../services/multiplayer';
 import { supabase } from '../services/supabase';
 import CarTags from './CarTags';
+import PowerBadge from './PowerBadge';
 
 interface DealerProps {
   money: number;
@@ -178,7 +179,8 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
           const effectivePrice = discountCount > 0 ? discountedPrice : car.price;
           const canAfford = money >= effectivePrice;
           return (
-            <div key={`${car.id}-${idx}`}
+            <div key={`${car.id}-${idx}`} style={{ position: 'relative' }}>
+            <div
               className={`pixel-card p-0 flex flex-col overflow-hidden ${soldOut ? 'opacity-40' : ''}`}
               style={{borderColor: CLASS_COLORS[car.carClass] || '#333', borderWidth: '3px'}}>
 
@@ -275,6 +277,8 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
                   {soldOut ? 'НЕТ' : canAfford ? 'КУПИТЬ' : '—'}
                 </button>
               </div>
+            </div>
+            <PowerBadge power={car.stats.power} />
             </div>
           );
         })}
