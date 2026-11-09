@@ -15,7 +15,7 @@ interface DealerProps {
   playerId: string;
   shopVisits: Record<string, string>;
   playerStorage: (any)[];
-  onUseDiscount: (dealerId: string) => void;
+  onUseDiscount: (dealerId: string, count?: number) => void;
 }
 
 const DEALERS = [
@@ -252,14 +252,14 @@ const Dealer: React.FC<DealerProps> = ({ money, gameYear, purchaseCounts, onBuyC
                     // Полную цену игрок потянет — предложим использовать скидку или сохранить её
                     const useDiscount = window.confirm(`У вас скидка −${totalDiscountPct}% на ${selectedDealer} (${discountCount} шт). Использовать? Цена: ${discountedPrice.toLocaleString()} вместо ${car.price.toLocaleString()}`);
                     if (useDiscount) {
-                      onUseDiscount(selectedDealer);
+                      onUseDiscount(selectedDealer, discountCount);
                       onBuyCar({ ...car, price: discountedPrice });
                     } else {
                       onBuyCar(car);
                     }
                   } else if (discountCount > 0) {
                     // Полную цену не потянуть, а по скидке хватает — применяем автоматически
-                    onUseDiscount(selectedDealer);
+                    onUseDiscount(selectedDealer, discountCount);
                     onBuyCar({ ...car, price: discountedPrice });
                   } else {
                     onBuyCar(car);

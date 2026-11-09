@@ -362,6 +362,23 @@ export async function installFromStorage(player: RoomPlayer, carId: string, stor
   await updatePlayerState(player.id, { garage, storage });
 }
 
+// --- Списание скидок автосалона после покупки ---
+// Покупка применяет ВСЕ скидки этого салона (шт × 15%, до 100%) — значит,
+// и списаться должны все применённые. Возвращает новый склад, исходный не меняет.
+export function consumeDiscounts(player: RoomPlayer, dealerId: string, count: number): (Part | PrizeDiscount)[] {
+  const storage = [...(player.storage || [])];
+  let left = Math.max(0, count);
+  // Идём с конца, чтобы splice не сбивал индексы
+  for (let i = storage.length - 1; i >= 0 && left > 0; i--) {
+    const item = storage[i] as any;
+    if (item && item.type === 'discount' && item.dealer === dealerId) {
+      storage.splice(i, 1);
+      left--;
+    }
+  }
+  return storage;
+}
+
 // --- Сброс визитов в магазины (при смене дня) ---
 export async function resetShopVisits(playerId: string): Promise<void> {
   await updatePlayerState(playerId, { shop_visits: {} });

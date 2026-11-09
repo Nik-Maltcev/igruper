@@ -27,8 +27,9 @@ import {
   updatePlayerState,
   updateRoomState,
   updateRoomPhase,
+  consumeDiscounts,
 } from '../services/multiplayer';
-import { RoomPlayer, Room, Car, Part } from '../types';
+import { RoomPlayer, Room, Car, Part, PrizeDiscount } from '../types';
 
 // ─── Helpers ───
 
@@ -619,5 +620,49 @@ describe('leaveRoom', () => {
     });
     await leaveRoom('room-1', 'player-1');
     expect(supabase.from).toHaveBeenCalledWith('room_players');
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// consumeDiscounts
+// ═══════════════════════════════════════════════════════
+
+describe('consumeDiscounts', () => {
+  const disc = (dealer: string, n: number): PrizeDiscount[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `d-${dealer}-${i}`,
+      type: 'discount' as const,
+      dealer,
+      discount: 15,
+      name: `Скидка 15% — ${dealer}`,
+      icon: '🏷️',
+    }));
+
+  it('списывает ВСЕ применённые скидки салона (2×15% — уходят обе)', () => {
+    const player = makePlayer({ storage: [...disc('АЛЬФА', 2), ...disc('БЕТА', 1)] });
+    const result = consumeDiscounts(player, 'АЛЬФА', 2);
+    const leftAlfa = result.filter(d => (d as any).type === 'discount' && (d as any).dealer === 'АЛЬФА');
+    expect(leftAlfa).toHaveLength(0);
+    expect(result).toHaveLength(1); // скидка БЕТА осталась
+  });
+
+  it('списывает только запрошенное количество', () => {
+    const player = makePlayer({ storage: [...disc('АЛЬФА', 3)] });
+    const result = consumeDiscounts(player, 'АЛЬФА', 2);
+    expect(result).toHaveLength(1);
+  });
+
+  it('не трогает детали, деньги и скидки других салонов', () => {
+    const part = makePart();
+    const player = makePlayer({ storage: [part, ...disc('БЕТА', 1)] });
+    const result = consumeDiscounts(player, 'АЛЬФА', 2);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toBe(part);
+  });
+
+  it('count = 0 — склад не меняется', () => {
+    const player = makePlayer({ storage: [...disc('АЛЬФА', 2)] });
+    const result = consumeDiscounts(player, 'АЛЬФА', 0);
+    expect(result).toHaveLength(2);
   });
 });
