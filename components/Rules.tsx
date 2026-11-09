@@ -4,199 +4,178 @@ interface RulesProps {
   onBack: () => void;
 }
 
-type Section = 'order' | 'weather' | 'parts' | 'competitions' | 'kings' | 'prices' | 'rewards' | 'penalties';
+type Section = 'general' | 'races' | 'cards' | 'tuning' | 'weather' | 'misc';
 
-const SECTIONS: { id: Section; title: string; emoji: string }[] = [
-  { id: 'order', title: 'ПОРЯДОК ХОДА', emoji: '📋' },
-  { id: 'weather', title: 'ВЛИЯНИЕ ОСАДКОВ', emoji: '🌧' },
-  { id: 'parts', title: 'ДЕТАЛИ', emoji: '🔧' },
-  { id: 'competitions', title: 'СОРЕВНОВАНИЯ', emoji: '🏆' },
-  { id: 'kings', title: 'КОРОЛИ ДИСЦИПЛИН', emoji: '👑' },
-  { id: 'prices', title: 'ЦЕНЫ НА АВТО', emoji: '💰' },
-  { id: 'rewards', title: 'НАГРАДЫ', emoji: '🎖' },
-  { id: 'penalties', title: 'НАКАЗАНИЯ', emoji: '⚠' },
+const SECTIONS: { id: Section; title: string }[] = [
+  { id: 'general', title: 'ОБЩИЕ ПОЛОЖЕНИЯ' },
+  { id: 'races', title: 'ОСОБЕННОСТИ ГОНОК' },
+  { id: 'cards', title: 'КАРТОЧКИ МАШИН' },
+  { id: 'tuning', title: 'ТЮНИНГ' },
+  { id: 'weather', title: 'ВЛИЯНИЕ ОСАДКОВ' },
+  { id: 'misc', title: 'РАЗНОЕ' },
 ];
 
-const Rules: React.FC<RulesProps> = ({ onBack }) => {
-  const [open, setOpen] = useState<Set<Section>>(new Set(['order']));
+const P: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
+  <p className={`text-[8px] leading-relaxed ${className}`}>{children}</p>
+);
 
-  const toggle = (s: Section) => {
-    setOpen(prev => {
-      const next = new Set(prev);
-      next.has(s) ? next.delete(s) : next.add(s);
-      return next;
-    });
-  };
+const Note: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="bg-[#2a2a00] border border-[#ffaa00] p-2 text-[8px] text-[#ffdd00] leading-relaxed">{children}</div>
+);
+
+const Rules: React.FC<RulesProps> = ({ onBack }) => {
+  const [tab, setTab] = useState<Section>('general');
 
   const tbl = "text-[7px] border border-[#222] p-1.5";
   const hdr = "text-[6px] border border-[#222] p-1.5 text-[#555] uppercase bg-[#111]";
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-3">
         <h2 className="text-sm retro-title">📖 ПРАВИЛА</h2>
         <button onClick={onBack} className="retro-btn text-[#aaa] text-[8px] py-1 px-3" style={{backgroundColor:'#1a1a2e', border:'2px solid #555'}}>НАЗАД</button>
       </div>
 
-      <div className="space-y-2">
+      {/* Подвкладки */}
+      <div className="flex flex-wrap gap-1.5 mb-3">
         {SECTIONS.map(sec => (
-          <div key={sec.id} className="pixel-card overflow-hidden">
-            <button onClick={() => toggle(sec.id)} className="w-full flex items-center gap-2 p-3 text-left hover:bg-[#222]/30">
-              <span>{sec.emoji}</span>
-              <span className="text-[8px] text-white flex-grow">{sec.title}</span>
-              <span className="text-[8px] text-[#555]">{open.has(sec.id) ? '▼' : '▶'}</span>
-            </button>
-
-            {open.has(sec.id) && (
-              <div className="px-3 pb-3 text-[7px] text-[#aaa] leading-relaxed space-y-2">
-
-                {sec.id === 'order' && <>
-                  <p>Сначала админ делает ход и сообщает об этом в чате. После этого игроки в любое время до 22:00 присылают в личку свои ходы о покупках и расстановке на трассы.</p>
-                  <p>В первый день совершаются покупки во всех городах. Во второй день — расстановка на трассы и сама гонка.</p>
-                  <p>До совершения расстановки объявляется, будет дождь или нет.</p>
-                  <p>Управляемость и Проходимость не могут быть ниже 1.</p>
-                  <p className="text-[#ffff00]">Если характеристика &lt; 1 из-за дождя — машина не едет, последнее место.</p>
-                  <p>Обмен и торговля только в пределах одного города. Тачки нельзя перевозить между городами, кроме отправленных на Турнир.</p>
-                </>}
-
-                {sec.id === 'weather' && (
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead><tr>
-                        <th className={hdr}>Трасса</th><th className={hdr}>Универс.</th><th className={hdr}>Гоночные</th><th className={hdr}>Внедор.</th><th className={hdr}>Слики</th>
-                      </tr></thead>
-                      <tbody>
-                        <tr><td className={tbl}>Песок/Болото</td><td className={`${tbl} text-[#ff6666]`}>-10П -10У +0.5с</td><td className={`${tbl} text-[#ff4444]`}>-15П -20У +1с</td><td className={`${tbl} text-[#44ff44]`}>0</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
-                        <tr><td className={tbl}>Снег/Лёд</td><td className={`${tbl} text-[#ff6666]`}>-15П -20У +1с</td><td className={`${tbl} text-[#ff4444]`}>-20П -25У +1.5с</td><td className={`${tbl} text-[#44ff44]`}>0</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
-                        <tr><td className={tbl}>Грунтовка</td><td className={`${tbl} text-[#ff6666]`}>-10П -5У</td><td className={`${tbl} text-[#ff4444]`}>-15П -10У</td><td className={`${tbl} text-[#44ff44]`}>0</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
-                        <tr><td className={tbl}>Село/Лес</td><td className={`${tbl} text-[#ff6666]`}>-5П</td><td className={`${tbl} text-[#ff4444]`}>-15У -5П +0.5с</td><td className={`${tbl} text-[#ffff00]`}>-5У</td><td className={`${tbl} text-[#ff4444]`}>-30У -10П +1.5с</td></tr>
-                        <tr><td className={tbl}>Асфальт</td><td className={`${tbl} text-[#44ff44]`}>0</td><td className={`${tbl} text-[#ff6666]`}>-20У</td><td className={`${tbl} text-[#ff6666]`}>-15У +1с</td><td className={`${tbl} text-[#ff4444]`}>-30У +1с</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {sec.id === 'parts' && (
-                  <ul className="space-y-1.5 list-none">
-                    <li>▸ Для турбины/компрессора нужен интеркулер.</li>
-                    <li>▸ Фиксированные км/ч плюсуются напрямую.</li>
-                    <li>▸ Процентный прирост зависит от коэффициента машины.</li>
-                    <li>▸ Распредвал — только один (Нижний/Верхний/Универсальный).</li>
-                    <li>▸ Шины — только одни (Слики/Гоночные/Универсальные/Внедорожные).</li>
-                    <li>▸ Дифференциал — только один (ДиффПТ или ДиффСБ).</li>
-                  </ul>
-                )}
-
-                {sec.id === 'competitions' && <>
-                  <div className="bg-[#111] border border-[#222] p-2 mb-2">
-                    <span className="text-[#4488ff]">CC</span> <span className="text-[#555]">—</span> City Challenge. День 1. Без АВТОСПОРТ. 1 машина на трассу. Деньги за заезд, баллы за город.
-                  </div>
-                  <div className="bg-[#111] border border-[#222] p-2 mb-2">
-                    <span className="text-[#44ff44]">NT</span> <span className="text-[#555]">—</span> National Tournament. Требование на 3 трассы. Баллы по сумме.
-                  </div>
-                  <div className="bg-[#111] border border-[#222] p-2 mb-2">
-                    <span className="text-[#ffff00]">WS</span> <span className="text-[#555]">—</span> World Series. Корона + бонус + главная гонка. Участие 1000. До 7 машин.
-                  </div>
-                  <div className="bg-[#111] border border-[#222] p-2 mb-2">
-                    <span className="text-[#aa44ff]">Турниры</span> <span className="text-[#555]">—</span> Ралли/Гонка Чемпионов. Только АВТОСПОРТ. 1 машина, 3 матча.
-                  </div>
-                  <div className="bg-[#111] border border-[#222] p-2 text-[6px]">
-                    <span className="text-[#555]">КАТЕГОРИИ:</span> 0-120 · 121-200 · 201-300 · 301-450 · 451-650 · 651-900 · 900+ лс
-                  </div>
-                </>}
-
-                {sec.id === 'kings' && <>
-                  <p>Титулы: Дрэг, Дрифт, Слалом, Мотокросс.</p>
-                  <p>Корону получает победитель WS в дисциплине.</p>
-                  <p>Корона позволяет ставить любые машины на CC в этой дисциплине.</p>
-                  <p>Корона переходит при поражении на следующем WS.</p>
-                </>}
-
-                {sec.id === 'prices' && (
-                  <table className="w-full border-collapse">
-                    <thead><tr><th className={hdr}>Класс</th><th className={hdr}>За этап</th><th className={hdr}>Лимит</th></tr></thead>
-                    <tbody>
-                      <tr><td className={tbl}>1</td><td className={`${tbl} text-[#ff4444]`}>−600</td><td className={tbl}>½ цены</td></tr>
-                      <tr><td className={tbl}>2</td><td className={`${tbl} text-[#ff6666]`}>−300</td><td className={tbl}>½ цены</td></tr>
-                      <tr><td className={tbl}>3</td><td className={`${tbl} text-[#888]`}>0</td><td className={tbl}>—</td></tr>
-                      <tr><td className={tbl}>4</td><td className={`${tbl} text-[#44ff44]`}>+500</td><td className={tbl}>—</td></tr>
-                      <tr><td className={tbl}>5</td><td className={`${tbl} text-[#44ff44]`}>+1000</td><td className={tbl}>—</td></tr>
-                    </tbody>
-                  </table>
-                )}
-
-                {sec.id === 'rewards' && (
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-[#4488ff] mb-1">CC (за гонку / баллы за город):</p>
-                      <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 3500 · 6б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 2700 · 5б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 2000 · 4б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 1500 · 3б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 1000 · 2б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 700 · 1б</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[#44ff44] mb-1">NT:</p>
-                      <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 5000 · 8б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 4400 · 6б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 3500 · 4б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 2500 · 2б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 1500 · 1б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 1300 · 1б</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[#ffff00] mb-1">WS — Корона:</p>
-                      <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 👑+5000</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 3800</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 2500</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 1000</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 500</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 0</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[#ffff00] mb-1">WS — Главная:</p>
-                      <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 13500</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 11000</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 10000</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 8500</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 7000</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 5000</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[#aa44ff] mb-1">Турнир:</p>
-                      <div className="grid grid-cols-3 gap-1 text-[6px]">
-                        <span className="bg-[#111] border border-[#222] p-1">1: 15000 · 25б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">2: 13000 · 20б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">3: 12500 · 15б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">4: 12000 · 11б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">5: 11500 · 8б</span>
-                        <span className="bg-[#111] border border-[#222] p-1">6: 10000 · 5б</span>
-                      </div>
-                    </div>
-                    <div className="bg-[#003300] border border-[#44ff44] p-2 text-[6px] text-[#44ff44]">
-                      Поддержка: последний получает 10000 после этапа. Лидер 2+ этапов подряд отдаёт 4000 последнему и 2500 предпоследнему.
-                    </div>
-                  </div>
-                )}
-
-                {sec.id === 'penalties' && <>
-                  <p>Игрок сам следит за правильностью хода.</p>
-                  <p className="text-[#ff4444]">Повторная деталь = штраф 2000 + снятие лишней детали.</p>
-                </>}
-
-              </div>
-            )}
-          </div>
+          <button key={sec.id} onClick={() => setTab(sec.id)}
+            className="retro-btn text-[7px] py-1.5 px-2"
+            style={{
+              backgroundColor: tab === sec.id ? '#1a1a4e' : '#0d0d20',
+              border: `2px solid ${tab === sec.id ? '#5555ff' : '#333'}`,
+              color: tab === sec.id ? '#fff' : '#888',
+            }}>
+            {sec.title}
+          </button>
         ))}
+      </div>
+
+      <div className="pixel-card p-4 space-y-2.5 text-[#aaa]">
+
+        {/* ══════════ ОБЩИЕ ПОЛОЖЕНИЯ ══════════ */}
+        {tab === 'general' && <>
+          <P>Вы — молодой управляющий гоночной команды, и Ваша задача — за 60 лет своей карьеры набрать больше победных баллов, чем конкуренты.</P>
+          <P>В игре события привязаны к календарю и времени. <span className="text-[#ffdd00]">Неделя считается за 2 игровых года.</span></P>
+          <P><span className="text-[#ffaa00]">Понедельник</span> — игроки готовят машины к состязаниям: заходят в Расписание, решают, какая тачка на какую гонку отправится, и покупают новые детали, улучшающие характеристики.</P>
+          <P><span className="text-[#ffdd00]">Вторник</span> — Городские Состязания. Призы тут небольшие, и сюда не допускаются машины из мира автоспорта с соответствующей меткой. Но игнорировать эти гонки не стоит: победа и даже просто участие приносят Вам победные баллы.</P>
+          <P><span className="text-[#ffaa00]">Среда</span> — снова есть время подумать и тюнинговать свои авто.</P>
+          <P><span className="text-[#ffdd00]">Четверг</span> — Национальные Соревнования. В этих гонках и призы побольше, и сюда допускаются тачки с меткой «Автоспорт».</P>
+          <P><span className="text-[#ffaa00]">Пятница</span> — снова время тюнинга.</P>
+          <P><span className="text-[#ff4444]">Суббота</span> — самое интересное: <span className="text-[#ffdd00]">Мировая Серия</span>. Она состоит из трёх гонок, которые проходят не одновременно, поэтому одну и ту же машинку можно отправить на все три гонки.</P>
+          <P><span className="text-[#ffaa00]">1) Платная гонка</span>. Участие стоит 1000, но и принести может 11000. Занявший последнее место ничего не получает — стоит изучить соперников, прежде чем подтверждать участие.</P>
+          <P><span className="text-[#ffaa00]">2) Бонусная гонка</span>. За победу можно получить не только деньги, но и призы — уникальные детали, которые ещё не открыты в магазинах.</P>
+          <P><span className="text-[#ffaa00]">3) Главная гонка</span>. Сюда отправляются машины из разных категорий мощности (смотри вкладку «Карточки машин»). Например, требование к гонке — хэтчбеки: значит, все Ваши хэтчбеки могут участвовать в этой гонке и принести деньги. Главное — заранее, с понедельника, заглянуть в Расписание и решить, какая машинка в какой категории мощности будет соревноваться, и всю неделю готовить машинки для этой гонки, чтобы на одну категорию не попали две машины.</P>
+          <Note>Важно! Смена дня проходит в 22:00, поэтому все действия текущего игрового дня (закупка деталей, запись на гонки) надо сделать до 22:00.</Note>
+        </>}
+
+        {/* ══════════ ОСОБЕННОСТИ ГОНОК ══════════ */}
+        {tab === 'races' && <>
+          <P>Каждая трасса имеет свои особенности: где-то важна только скорость, где-то ключевое значение имеет управляемость, а есть испытания для внедорожников, где важна проходимость.</P>
+          <P>Важность той или иной характеристики выражается в <span className="text-[#ffdd00]">коэффициентах от 0 до 8</span>, которые Вы можете видеть над каждой характеристикой во вкладках «Расписание» и «Гоночный центр».</P>
+          <div className="bg-[#111] border border-[#222] p-2">
+            <P>Например, трасса ДРЭГ: если над разгоном стоит коэффициент 5, а над управляемостью 0 — на такую трассу нужно отправлять машинки с самым быстрым разгоном, игнорируя управляемость.</P>
+          </div>
+          <P>Все трассы могут встретиться и на Городских состязаниях, и на Национальных соревнованиях, и в Мировой серии.</P>
+          <P>Кроме того, раз в 4 игровых года проводятся <span className="text-[#aa44ff]">Турниры</span>. Турнир начинается в понедельник и завершается в субботу.</P>
+          <div className="bg-[#1a0033] border border-[#aa44ff] p-2 space-y-1">
+            <P className="!text-[#ccbbff]">Машина, отправленная на Турнир, всю неделю не находится у игрока в гараже. Игрок в это время не может её тюнинговать или записывать на другие гонки.</P>
+            <P className="!text-[#ccbbff]">Машинка возвращается к игроку в субботу, после окончания игрового года.</P>
+            <P className="!text-[#ccbbff]">На Турнир отправляются машины только с меткой «Автоспорт».</P>
+          </div>
+        </>}
+
+        {/* ══════════ КАРТОЧКИ МАШИН ══════════ */}
+        {tab === 'cards' && <>
+          <P>У каждой карточки машинки есть метки: <span className="text-[#ffdd00]">класс, эпоха, кузов, редкость, страна</span>.</P>
+          <P>На некоторых машинках есть особые, дополнительные метки: <span className="text-[#ff8800]">комфорт, автоспорт, widow maker, hot hatch, muscle car и коллекция</span>.</P>
+          <P>Некоторые машинки сочетают в себе несколько особых меток. Такие наиболее ценные, потому что могут закрыть многие требования на гонках.</P>
+          <P>Также существуют <span className="text-[#ffdd00]">категории мощности</span> — чтобы на главной гонке Мировой Серии машины состязались с равными конкурентами. Категория показана римской цифрой на монетке справа от карточки машины.</P>
+          <div className="grid grid-cols-2 gap-1">
+            {[
+              ['I', 'до 120 лс'],
+              ['II', '121–200 лс'],
+              ['III', '201–300 лс'],
+              ['IV', '301–450 лс'],
+              ['V', '451–650 лс'],
+              ['VI', '651–900 лс'],
+              ['VII', 'выше 900 лс'],
+            ].map(([rom, label]) => (
+              <div key={rom} className="bg-[#111] border border-[#222] p-1.5 text-[8px] flex items-center gap-2">
+                <span className="text-[#ffdd00] font-bold">{rom}</span>
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+        </>}
+
+        {/* ══════════ ТЮНИНГ ══════════ */}
+        {tab === 'tuning' && <>
+          <P>Каждую характеристику каждой машины можно улучшить, купив соответствующие детали.</P>
+          <Note>Важно: каждый день тюнинга одна машина может отправиться только в один магазин. В другой магазин Вы можете её отправить только на следующий день тюнинга.</Note>
+          <P>В магазинах запчастей даются подсказки, что именно какая деталь улучшает или ухудшает.</P>
+          <P>В зависимости от класса на машину можно установить <span className="text-[#ffdd00]">от 4 до 16 деталей</span>.</P>
+          <P>Прирост по характеристикам обусловлен и показателями самой детали, и коэффициентами машинки:</P>
+          <div className="bg-[#001a00] border border-[#00aa55] p-2 space-y-1">
+            <P className="!text-[#88ffaa]">У машины мощность 100 лс, коэффициент под этой графой 0,8. Игрок покупает деталь, прибавляющую 10 лс — машинка получает 8 лс (10 × 0,8).</P>
+            <P className="!text-[#88ffaa]">Если бы коэффициент был 1,2 — игрок получил бы 12 лс к своей машинке.</P>
+          </div>
+          <P>Чтобы установить <span className="text-[#ffdd00]">турбину или компрессор</span>, сначала нужно обязательно установить <span className="text-[#ffdd00]">интеркулер</span>.</P>
+          <P><span className="text-[#ffdd00]">Распредвал</span> можно установить только один: Нижний, Верхний или Универсальный.</P>
+          <P><span className="text-[#ffdd00]">Шины</span> можно установить только одни: Слики, Гоночные, Универсальные, Внедорожные.</P>
+          <P><span className="text-[#ffdd00]">Дифференциал</span> можно установить только один: повышенного трения (ДиффПТ — акцент на Управляемости) или СамоБлокирующийся (ДиффСБ — акцент на Проходимости).</P>
+          <P>Каждую деталь (кроме расточки — это действие необратимо) можно снять у <span className="text-[#ff8800]">Jam Shoot</span> и впоследствии заменить на новую. Операция бесплатна, но снятую деталь Jam Shoot в качестве оплаты забирает себе.</P>
+        </>}
+
+        {/* ══════════ ВЛИЯНИЕ ОСАДКОВ ══════════ */}
+        {tab === 'weather' && <>
+          <P>С вероятностью 25% во время гонок может пойти дождь. И то, какие шины установлены на машине, может повлиять на результат заезда.</P>
+          <P>Изменения поведения машины в дождь при разных шинах на разных дорожных покрытиях:</P>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead><tr>
+                <th className={hdr}>Трасса</th><th className={hdr}>Универс.</th><th className={hdr}>Гоночные</th><th className={hdr}>Внедор.</th><th className={hdr}>Слики</th>
+              </tr></thead>
+              <tbody>
+                <tr><td className={tbl}>Песок / Болото</td><td className={`${tbl} text-[#ff6666]`}>-10П -10У +0,5с</td><td className={`${tbl} text-[#ff4444]`}>-15П -20У +1с</td><td className={`${tbl} text-[#44ff44]`}>без изменений</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
+                <tr><td className={tbl}>Снег / Лёд / Полигон</td><td className={`${tbl} text-[#ff6666]`}>-15П -20У +1с</td><td className={`${tbl} text-[#ff4444]`}>-20П -25У +1,5с</td><td className={`${tbl} text-[#44ff44]`}>без изменений</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
+                <tr><td className={tbl}>Грунтовка / Мотокросс</td><td className={`${tbl} text-[#ff6666]`}>-10П -5У</td><td className={`${tbl} text-[#ff4444]`}>-15П -10У</td><td className={`${tbl} text-[#44ff44]`}>без изменений</td><td className={`${tbl} text-[#ff4444]`}>Не едет</td></tr>
+                <tr><td className={tbl}>Сельская дорога / Лес</td><td className={`${tbl} text-[#ff6666]`}>-5П</td><td className={`${tbl} text-[#ff4444]`}>-15У -5П +0,5с</td><td className={`${tbl} text-[#ffff00]`}>-5У</td><td className={`${tbl} text-[#ff4444]`}>-30У -10П +1,5с</td></tr>
+                <tr><td className={tbl}>Асфальт (все остальные трассы)</td><td className={`${tbl} text-[#44ff44]`}>без изменений</td><td className={`${tbl} text-[#ff6666]`}>-20У</td><td className={`${tbl} text-[#ff6666]`}>-15У +1с</td><td className={`${tbl} text-[#ff4444]`}>-30У +1с</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <P>Таким образом, слики хоть и дают максимальный прирост характеристик, опасны на трассах с плохим покрытием.</P>
+        </>}
+
+        {/* ══════════ РАЗНОЕ ══════════ */}
+        {tab === 'misc' && <>
+          <P className="text-white font-bold">🤝 Поддержка отстающих</P>
+          <P>Игрок, занимающий последнее место в турнирной таблице, получает утешительные <span className="text-[#00ff00]">10000</span> от спонсоров.</P>
+          <P>Если какой-то игрок 2 и более раз остаётся первым в турнирной таблице по окончанию игрового года (суббота), он выделяет <span className="text-[#00ff00]">4000</span> последнему игроку и <span className="text-[#00ff00]">2500</span> предпоследнему.</P>
+
+          <P className="text-white font-bold mt-2">🏪 Автосалоны</P>
+          <P>Игрок, занимающий первое место, может купить авто лишь в одном автосалоне; игроки на последних местах могут закупаться во всех четырёх. Игроки на промежуточных местах закупаются в 2-ух / 3-ёх автосалонах.</P>
+          <P>Автосалоны открываются в <span className="text-[#ffdd00]">22:00 субботы</span> и открыты до <span className="text-[#ffdd00]">22:00 воскресенья</span>. За эти сутки нужно успеть купить автомобили — среди недели такой возможности не будет.</P>
+          <P>Количество каждой модели ограничено её редкостью: если редкость 1 — таких моделей в салоне 5, и наоборот, машины с редкостью 5 существуют в штучном экземпляре.</P>
+          <P>Рекомендуется к открытию автосалонов примерно знать, какая машина Вам нужна. Иначе, пока Вы думаете, редкие машины раскупят другие игроки.</P>
+          <P>Создать искусственный дефицит не получится: продавать только что купленную машину запрещено. Продавать можно только б/у машины.</P>
+
+          <P className="text-white font-bold mt-2">💰 Цены на б/у машины</P>
+          <P>Цены меняются с годами соответственно редкости (каждые 2 игровых года):</P>
+          <table className="w-full border-collapse">
+            <thead><tr><th className={hdr}>Редкость</th><th className={hdr}>Изменение цены</th><th className={hdr}>Предел</th></tr></thead>
+            <tbody>
+              <tr><td className={tbl}>Р 1</td><td className={`${tbl} text-[#ff4444]`}>−600</td><td className={tbl}>пока не опустится до половины изначальной</td></tr>
+              <tr><td className={tbl}>Р 2</td><td className={`${tbl} text-[#ff4444]`}>−300</td><td className={tbl}>пока не опустится до половины изначальной</td></tr>
+              <tr><td className={tbl}>Р 3</td><td className={tbl}>без изменений</td><td className={tbl}>—</td></tr>
+              <tr><td className={tbl}>Р 4</td><td className={`${tbl} text-[#44ff44]`}>+500</td><td className={tbl}>—</td></tr>
+              <tr><td className={tbl}>Р 5</td><td className={`${tbl} text-[#44ff44]`}>+1000</td><td className={tbl}>—</td></tr>
+            </tbody>
+          </table>
+          <P>Таким образом, купленные в начале игры редкие машины со временем станут хорошим капиталовложением. Но не спешите продавать их все: требования на старые эпохи могут быть и в конце игры.</P>
+        </>}
+
       </div>
     </div>
   );
