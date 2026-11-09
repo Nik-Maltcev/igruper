@@ -840,9 +840,13 @@ describe('getAllowedDealersCount', () => {
 // Расточка двигателя — non-removable parts
 // ═══════════════════════════════════════════════════════
 
-describe('Non-removable parts (Расточка двигателя)', () => {
-  function isRemovable(part: { name: string; slot?: string }): boolean {
-    return !part.name.toLowerCase().includes('расточк') && part.slot !== 'bore';
+describe('Non-removable parts (Расточка двигателя, интеркулер с турбиной)', () => {
+  // Как в Jam Shoot (Marketplace.tsx): расточка не снимается; интеркулер
+  // не снимается, пока на машине стоят турбина/компрессор
+  function isRemovable(part: { name: string; slot?: string }, installedSlots: string[] = []): boolean {
+    if (part.name.toLowerCase().includes('расточк') || part.slot === 'bore') return false;
+    if (part.slot === 'intercooler' && (installedSlots.includes('turbo') || installedSlots.includes('compressor'))) return false;
+    return true;
   }
 
   it('Расточка двигателя 1 is NOT removable', () => {
@@ -869,8 +873,21 @@ describe('Non-removable parts (Расточка двигателя)', () => {
     expect(isRemovable({ name: 'Турбина 1', slot: 'turbo' })).toBe(true);
   });
 
-  it('Интеркулер 1 IS removable', () => {
+  it('Интеркулер 1 IS removable without turbo/compressor', () => {
     expect(isRemovable({ name: 'Интеркулер 1', slot: 'intercooler' })).toBe(true);
+  });
+
+  it('Интеркулер НЕ снимается, пока стоит турбина', () => {
+    expect(isRemovable({ name: 'Интеркулер 1', slot: 'intercooler' }, ['intercooler', 'turbo'])).toBe(false);
+  });
+
+  it('Интеркулер НЕ снимается, пока стоит компрессор', () => {
+    expect(isRemovable({ name: 'Интеркулер 1', slot: 'intercooler' }, ['intercooler', 'compressor'])).toBe(false);
+  });
+
+  it('Турбина и компрессор сами снимаются свободно (потом уйдёт и интеркулер)', () => {
+    expect(isRemovable({ name: 'Турбина 3', slot: 'turbo' }, ['intercooler', 'turbo'])).toBe(true);
+    expect(isRemovable({ name: 'Компрессор 2', slot: 'compressor' }, ['intercooler', 'compressor'])).toBe(true);
   });
 
   it('Слики 1 IS removable', () => {

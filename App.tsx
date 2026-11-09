@@ -165,8 +165,17 @@ const App = () => {
   const handleJamshutRemove = async (carId: string, partIndex: number) => {
     if (!player) return;
     const garage = [...player.garage]; const ci = garage.findIndex(c => c.id === carId); if (ci === -1) return;
-    const car = { ...garage[ci] }; car.installedParts = car.installedParts.filter((_: any, i: number) => i !== partIndex); garage[ci] = car;
-    const sv = { ...player.shop_visits, [carId]: '\u0414\u0436\u0430\u043c\u0448\u0443\u0442' };
+    const srcCar = garage[ci];
+    const part = srcCar.installedParts?.[partIndex];
+    if (!part) return;
+    // Интеркулер нельзя снять, пока на машине стоят турбина/компрессор —
+    // они должны охлаждаться (страховка на случай обхода проверки интерфейса)
+    if (part.slot === 'intercooler' && srcCar.installedParts.some((p: any) => p.slot === 'turbo' || p.slot === 'compressor')) {
+      alert('Турбина и Компрессор должны охлаждаться интеркулером');
+      return;
+    }
+    const car = { ...srcCar }; car.installedParts = srcCar.installedParts.filter((_: any, i: number) => i !== partIndex); garage[ci] = car;
+    const sv = { ...player.shop_visits, [carId]: 'Jam Shoot' };
     await supabase.from('room_players').update({ garage, shop_visits: sv }).eq('id', playerId); await refreshPlayer();
   };
   const handleSellCar = async (carId: string, price: number) => { if (!player) return; const ng = player.garage.filter((c: Car) => c.id !== carId); await supabase.from('room_players').update({ garage: ng, money: player.money + price }).eq('id', playerId); await refreshPlayer(); };
