@@ -4,7 +4,7 @@ import { supabase } from './services/supabase';
 import {
   fetchPlayer, fetchPurchaseCounts,
   buyPart, buyCar, removePart, removePartToStorage, installFromStorage,
-  getScheduleDay, fetchRaceDayResults, consumeDiscounts,
+  getScheduleDay, fetchRaceDayResults, consumeDiscountsForPlayer,
 } from './services/multiplayer';
 import { findActiveSession, signOut } from './services/auth';
 import { isSoundEnabled, setSoundEnabled, startMusic, pauseMusic, playEffect } from './services/sound';
@@ -140,14 +140,13 @@ const App = () => {
   const handleLogout = async () => { await signOut(); handleRoomLeft(); setAuthUser(null); };
   const navigate = (view: View) => { if (view !== 'RACE_RESULTS') playEffect('menu'); setCurrentView(view); };
 
-  // Списание скидок после покупки: применили N скидок — все N уходят со склада
+  // Списание скидок после покупки: применили N скидок — все N уходят со склада.
+  // Читаем свежие данные игрока из БД: снапшот в интерфейсе может отстать,
+  // и тогда часть применённых скидок осталась бы на складе
   const handleUseDiscount = async (dealerId: string, count: number = 1) => {
-    if (!player) return;
-    const storage = consumeDiscounts(player, dealerId, count);
-    if (storage.length !== (player.storage || []).length) {
-      await supabase.from('room_players').update({ storage }).eq('id', playerId);
-      await refreshPlayer();
-    }
+    if (!playerId) return;
+    await consumeDiscountsForPlayer(playerId, dealerId, count);
+    await refreshPlayer();
   };
 
   const handleMoneyChange = async (delta: number) => {

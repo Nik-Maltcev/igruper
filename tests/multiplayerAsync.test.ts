@@ -28,6 +28,7 @@ import {
   updateRoomState,
   updateRoomPhase,
   consumeDiscounts,
+  consumeDiscountsForPlayer,
 } from '../services/multiplayer';
 import { RoomPlayer, Room, Car, Part, PrizeDiscount } from '../types';
 
@@ -664,5 +665,55 @@ describe('consumeDiscounts', () => {
     const player = makePlayer({ storage: [...disc('АЛЬФА', 2)] });
     const result = consumeDiscounts(player, 'АЛЬФА', 0);
     expect(result).toHaveLength(2);
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// consumeDiscountsForPlayer (read-modify-write по свежим данным из БД)
+// ═══════════════════════════════════════════════════════
+
+describe('consumeDiscountsForPlayer', () => {
+  const disc = (dealer: string, n: number): PrizeDiscount[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `d-${dealer}-${i}`,
+      type: 'discount' as const,
+      dealer,
+      discount: 15,
+      name: `Скидка 15% — ${dealer}`,
+      icon: '🏷️',
+    }));
+
+  beforeEach(() => {
+    vi.mocked(supabase.from).mockClear();
+    vi.mocked(supabase.from).mockReturnValue(mockChain() as any);
+  });
+
+  it('списывает применённые скидки со СВЕЖИХ данных из БД (2×15% уходят обе)', async () => {
+    const freshPlayer = makePlayer({ storage: [...disc('АЛЬФА', 2), ...disc('БЕТА', 1)] });
+    const updateChain = mockChain();
+    vi.mocked(supabase.from)
+      .mockImplementationOnce(() => mockChain({ data: freshPlayer, error: null }) as any) // fetchPlayer
+      .mockImplementationOnce(() => updateChain as any); // updatePlayerState
+    const changed = await consumeDiscountsForPlayer('player-1', 'АЛЬФА', 2);
+    expect(changed).toBe(true);
+    expect(updateChain.update).toHaveBeenCalledWith({ storage: [...disc('БЕТА', 1)] });
+  });
+
+  it('нет скидок этого салона — БД не трогается', async () => {
+    const freshPlayer = makePlayer({ storage: [...disc('БЕТА', 1)] });
+    vi.mocked(supabase.from)
+      .mockImplementationOnce(() => mockChain({ data: freshPlayer, error: null }) as any);
+    const changed = await consumeDiscountsForPlayer('player-1', 'АЛЬФА', 2);
+    expect(changed).toBe(false);
+    // единственный вызов from — select игрока; update не выполнялся
+    expect(supabase.from).toHaveBeenCalledTimes(1);
+  });
+
+  it('игрок не найден — ничего не делает', async () => {
+    vi.mocked(supabase.from)
+      .mockImplementationOnce(() => mockChain({ data: null, error: null }) as any);
+    const changed = await consumeDiscountsForPlayer('ghost', 'АЛЬФА', 1);
+    expect(changed).toBe(false);
+    expect(supabase.from).toHaveBeenCalledTimes(1);
   });
 });

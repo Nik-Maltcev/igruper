@@ -379,6 +379,18 @@ export function consumeDiscounts(player: RoomPlayer, dealerId: string, count: nu
   return storage;
 }
 
+// Списывает применённые скидки по СВЕЖИМ данным из БД (read-modify-write):
+// снапшот игрока в интерфейсе может отставать от базы (realtime-задержка),
+// и тогда часть применённых скидок осталась бы на складе
+export async function consumeDiscountsForPlayer(playerId: string, dealerId: string, count: number): Promise<boolean> {
+  const fresh = await fetchPlayer(playerId);
+  if (!fresh) return false;
+  const storage = consumeDiscounts(fresh, dealerId, count);
+  if (storage.length === (fresh.storage || []).length) return false;
+  await updatePlayerState(playerId, { storage });
+  return true;
+}
+
 // --- Сброс визитов в магазины (при смене дня) ---
 export async function resetShopVisits(playerId: string): Promise<void> {
   await updatePlayerState(playerId, { shop_visits: {} });
