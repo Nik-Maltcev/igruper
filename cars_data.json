@@ -9851,7 +9851,7 @@
       "хэтчбек",
       "США"
     ],
-    "carClass": "А",
+    "carClass": "A",
     "rarity": 1,
     "epoch": 70,
     "year": 1978,
@@ -9886,7 +9886,7 @@
       "Франция",
       "комфорт"
     ],
-    "carClass": "А",
+    "carClass": "A",
     "rarity": 2,
     "epoch": 70,
     "year": 1978,
@@ -9921,7 +9921,7 @@
       "США",
       "комфорт"
     ],
-    "carClass": "В",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 70,
     "year": 1978,
@@ -9955,7 +9955,7 @@
       "внедорожник",
       "США"
     ],
-    "carClass": "В",
+    "carClass": "B",
     "rarity": 2,
     "epoch": 70,
     "year": 1978,
@@ -9989,7 +9989,7 @@
       "внедорожник",
       "США"
     ],
-    "carClass": "С",
+    "carClass": "C",
     "rarity": 2,
     "epoch": 70,
     "year": 1978,
@@ -32013,9 +32013,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "хэтчбек",
       "США"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "A",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32046,9 +32047,10 @@
       "offroad": 1.1
     },
     "tags": [
+      "внедорожник",
       "Франция"
     ],
-    "carClass": "внедорожник",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32079,9 +32081,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Германия"
     ],
-    "carClass": "купе",
+    "carClass": "C",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32112,10 +32115,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "США",
       "muscle car"
     ],
-    "carClass": "купе",
+    "carClass": "D",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -32146,10 +32150,11 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "Германия",
       "автоспорт"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32180,10 +32185,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Германия",
       "коллекция"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32214,9 +32220,10 @@
       "offroad": 1.1
     },
     "tags": [
+      "внедорожник",
       "Германия"
     ],
-    "carClass": "внедорожник",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32247,10 +32254,11 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "США",
       "widow maker"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32281,10 +32289,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Италия",
       "коллекция"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32315,10 +32324,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "внедорожник",
       "США",
       "коллекция"
     ],
-    "carClass": "внедорожник",
+    "carClass": "R",
     "rarity": 5,
     "epoch": 10,
     "year": 2016,
@@ -32349,10 +32359,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Италия",
       "автоспорт"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 5,
     "epoch": 10,
     "year": 2016,
@@ -32383,9 +32394,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "хэтчбек",
       "США"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "A",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32416,9 +32428,10 @@
       "offroad": 1.1
     },
     "tags": [
+      "внедорожник",
       "Франция"
     ],
-    "carClass": "внедорожник",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32449,9 +32462,10 @@
       "offroad": 1.1
     },
     "tags": [
+      "внедорожник",
       "США"
     ],
-    "carClass": "внедорожник",
+    "carClass": "B",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -32482,9 +32496,10 @@
       "offroad": 0.9
     },
     "tags": [
+      "внедорожник",
       "Германия"
     ],
-    "carClass": "внедорожник",
+    "carClass": "D",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -32515,9 +32530,10 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "Германия"
     ],
-    "carClass": "купе",
+    "carClass": "D",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32548,9 +32564,10 @@
       "offroad": 1.2
     },
     "tags": [
+      "внедорожник",
       "Германия"
     ],
-    "carClass": "внедорожник",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32581,9 +32598,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Германия"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32614,10 +32632,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Германия",
       "автоспорт"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32648,10 +32667,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Италия",
       "автоспорт"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32682,10 +32702,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Италия",
       "коллекция"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 5,
     "epoch": 10,
     "year": 2016,
@@ -32716,10 +32737,11 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Италия",
       "автоспорт"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32750,9 +32772,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "хэтчбек",
       "Франция"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32783,9 +32806,10 @@
       "offroad": 1
     },
     "tags": [
+      "внедорожник",
       "Франция"
     ],
-    "carClass": "внедорожник",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -32816,9 +32840,10 @@
       "offroad": 1
     },
     "tags": [
+      "внедорожник",
       "Германия"
     ],
-    "carClass": "внедорожник",
+    "carClass": "C",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -32849,9 +32874,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "внедорожник",
       "США"
     ],
-    "carClass": "внедорожник",
+    "carClass": "C",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32882,11 +32908,12 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "США",
       "muscle car",
       "коллекция"
     ],
-    "carClass": "купе",
+    "carClass": "D",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -32917,9 +32944,10 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "США"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -32950,10 +32978,11 @@
       "offroad": 0.9
     },
     "tags": [
+      "хэтчбек",
       "США",
       "автоспорт"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "D",
     "rarity": 5,
     "epoch": 10,
     "year": 2016,
@@ -32984,9 +33013,10 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "США"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -33017,9 +33047,10 @@
       "offroad": 0.6
     },
     "tags": [
+      "купе",
       "Италия"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -33050,11 +33081,12 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Италия",
       "коллекция",
       "widow maker"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
@@ -33085,9 +33117,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "хэтчбек",
       "Франция"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "B",
     "rarity": 1,
     "epoch": 10,
     "year": 2016,
@@ -33118,10 +33151,11 @@
       "offroad": 1
     },
     "tags": [
+      "седан",
       "США",
       "комфорт"
     ],
-    "carClass": "седан",
+    "carClass": "B",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -33152,10 +33186,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "США",
       "muscle car"
     ],
-    "carClass": "купе",
+    "carClass": "C",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -33186,10 +33221,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "США",
       "muscle car"
     ],
-    "carClass": "купе",
+    "carClass": "D",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -33220,10 +33256,11 @@
       "offroad": 1
     },
     "tags": [
+      "внедорожник",
       "США",
       "комфорт"
     ],
-    "carClass": "внедорожник",
+    "carClass": "D",
     "rarity": 2,
     "epoch": 10,
     "year": 2016,
@@ -33254,9 +33291,10 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "США"
     ],
-    "carClass": "купе",
+    "carClass": "E",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -33287,10 +33325,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "хэтчбек",
       "Франция",
       "автоспорт"
     ],
-    "carClass": "хэтчбек",
+    "carClass": "D",
     "rarity": 5,
     "epoch": 10,
     "year": 2016,
@@ -33321,10 +33360,11 @@
       "offroad": 0.7
     },
     "tags": [
+      "купе",
       "Италия",
       "комфорт"
     ],
-    "carClass": "купе",
+    "carClass": "R",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -33355,9 +33395,10 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Италия"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 3,
     "epoch": 10,
     "year": 2016,
@@ -33388,10 +33429,11 @@
       "offroad": 0.8
     },
     "tags": [
+      "купе",
       "Италия",
       "коллекция"
     ],
-    "carClass": "купе",
+    "carClass": "S",
     "rarity": 4,
     "epoch": 10,
     "year": 2016,
